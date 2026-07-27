@@ -1,0 +1,102 @@
+/* ListRow — tokens only. */
+
+.ui-row {
+  display: flex;
+  align-items: center;
+  gap: var(--s3);
+  width: 100%;
+  padding: var(--s3) var(--s4);
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius);
+  font-family: var(--font);
+  color: var(--text-primary);
+  text-align: left;
+  cursor: pointer;
+  transition:
+    background-color var(--transition),
+    border-color var(--transition);
+}
+
+.ui-row:hover {
+  background: var(--surface-hover);
+  border-color: var(--border-default);
+}
+
+/* Fixed box, left-justified: markers stay on one rail regardless of digits.
+   flex: none or the id column collapses as soon as a title gets long. */
+.ui-row-id {
+  flex: none;
+  width: var(--s7);
+  font-size: var(--text-lg);
+  font-weight: var(--weight-bold);
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.ui-row-tile {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: var(--s5);
+  height: var(--s5);
+  border-radius: var(--radius-sm);
+}
+
+/* The tile sets `color`; the icon inside draws with currentColor. That is what
+   keeps the glyph and its ground from ever drifting apart. */
+.ui-row-tile svg {
+  width: var(--s3);
+  height: var(--s3);
+}
+
+.ui-row-tile[data-tone="brand"] {
+  background: rgb(var(--brand-rgb) / 12%);
+  color: var(--brand);
+}
+.ui-row-tile[data-tone="danger"] {
+  background: rgb(var(--danger-rgb) / 12%);
+  color: var(--danger);
+}
+.ui-row-tile[data-tone="warn"] {
+  background: rgb(var(--warn-rgb) / 12%);
+  color: var(--warn);
+}
+.ui-row-tile[data-tone="info"] {
+  background: rgb(var(--info-rgb) / 12%);
+  color: var(--info);
+}
+.ui-row-tile[data-tone="violet"] {
+  background: rgb(var(--violet-rgb) / 12%);
+  color: var(--violet);
+}
+.ui-row-tile[data-tone="muted"] {
+  background: var(--surface-raised);
+  color: var(--text-tertiary);
+}
+
+/* min-width: 0 is load-bearing — a flex child will not shrink below its content
+   without it, and the ellipsis never appears. */
+.ui-row-title {
+  flex: 1;
+  min-width: 0;
+  font-size: var(--text-base);
+  font-weight: var(--weight-medium);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ui-row-meta {
+  flex: none;
+  font-size: var(--text-xs);
+  color: var(--text-hint);
+  white-space: nowrap;
+}
+
+/* The least load-bearing thing in the row goes first. */
+@media (max-width: 640px) {
+  .ui-row-meta {
+    display: none;
+  }
+}

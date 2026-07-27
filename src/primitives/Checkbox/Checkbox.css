@@ -1,0 +1,76 @@
+/* Checkbox — a button wearing role="checkbox". Tokens only. */
+
+.ui-check {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s2);
+  padding: var(--s1) var(--s2);
+  margin-inline-start: calc(var(--s2) * -1); /* optical: box aligns to the grid */
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-family: var(--font);
+  font-size: var(--text-md);
+  cursor: pointer;
+  text-align: start;
+  transition: background-color var(--transition);
+}
+
+.ui-check:hover:not(:disabled) {
+  background: var(--surface-hover);
+}
+
+.ui-check:disabled {
+  cursor: not-allowed;
+  color: var(--text-disabled);
+}
+
+.ui-check-box {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: var(--s4);
+  height: var(--s4);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  background: var(--surface-inset);
+  transition:
+    background-color var(--transition),
+    border-color var(--transition);
+}
+
+.ui-check-box[data-state="on"],
+.ui-check-box[data-state="mixed"] {
+  background: var(--brand);
+  border-color: var(--brand);
+  color: var(--brand-on);
+}
+
+.ui-check:disabled .ui-check-box {
+  border-color: var(--border-default);
+}
+
+.ui-check:disabled .ui-check-box[data-state="on"],
+.ui-check:disabled .ui-check-box[data-state="mixed"] {
+  background: var(--text-disabled);
+  border-color: var(--text-disabled);
+}
+
+.ui-check-tick {
+  width: var(--s3);
+  height: var(--s3);
+}
+
+.ui-check-dash {
+  width: var(--s2);
+  height: 2px;
+  border-radius: var(--radius-pill);
+  background: currentcolor;
+}
+
+.ui-check-label {
+  font-weight: var(--weight-medium);
+  line-height: 1.4;
+}

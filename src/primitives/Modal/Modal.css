@@ -1,0 +1,126 @@
+/* Modal — tokens only. */
+
+.ui-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--s4);
+  background: var(--overlay);
+}
+
+.ui-modal {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 460px;
+
+  /* A modal never grows past the window — its body scrolls instead. Without
+     this the footer walks off the bottom of the screen and the primary action
+     becomes unreachable. */
+  max-height: calc(100vh - var(--s8));
+  background: var(--surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius);
+  box-shadow: 0 var(--s4) var(--s7) var(--shadow);
+  overflow: hidden;
+}
+
+.ui-modal-head {
+  display: flex;
+  align-items: center;
+  gap: var(--s3);
+  flex: none;
+  padding: var(--s4);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.ui-modal-tile {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: var(--s5);
+  height: var(--s5);
+  border-radius: var(--radius-sm);
+}
+
+.ui-modal-tile svg {
+  width: var(--s3);
+  height: var(--s3);
+}
+
+.ui-modal-tile[data-tone="brand"] {
+  background: rgb(var(--brand-rgb) / 12%);
+  color: var(--brand);
+}
+.ui-modal-tile[data-tone="danger"] {
+  background: rgb(var(--danger-rgb) / 12%);
+  color: var(--danger);
+}
+.ui-modal-tile[data-tone="warn"] {
+  background: rgb(var(--warn-rgb) / 12%);
+  color: var(--warn);
+}
+.ui-modal-tile[data-tone="info"] {
+  background: rgb(var(--info-rgb) / 12%);
+  color: var(--info);
+}
+.ui-modal-tile[data-tone="violet"] {
+  background: rgb(var(--violet-rgb) / 12%);
+  color: var(--violet);
+}
+
+.ui-modal-title {
+  flex: 1;
+  min-width: 0;
+  font-size: var(--text-lg);
+  font-weight: var(--weight-semibold);
+  color: var(--text-primary);
+}
+
+.ui-modal-x {
+  display: grid;
+  place-items: center;
+  flex: none;
+  padding: var(--s1);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  color: var(--text-hint);
+  cursor: pointer;
+  transition:
+    background-color var(--transition),
+    color var(--transition);
+}
+
+.ui-modal-x:hover {
+  background: var(--surface-hover);
+  color: var(--text-primary);
+}
+
+.ui-modal-x svg {
+  width: var(--s4);
+  height: var(--s4);
+}
+
+.ui-modal-body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: var(--s4);
+  font-size: var(--text-base);
+  color: var(--text-secondary);
+}
+
+/* Actions bottom-right, primary last — the caller passes them in that order. */
+.ui-modal-foot {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--s2);
+  flex: none;
+  padding: var(--s3) var(--s4);
+  border-top: 1px solid var(--border-subtle);
+  background: var(--surface-inset);
+}

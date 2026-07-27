@@ -1,0 +1,113 @@
+/* ContextMenu — the house right-click menu. Tokens only.
+ *
+ * Deliberately the SAME surface / border / shadow trio as the Select popover:
+ * every floating panel in the app is one family, so a menu never reads as a
+ * different app's chrome. Position (left/top/visibility) is computed inline by
+ * the component after measuring; nothing about placement lives here.
+ *
+ *   panel bg      -> --surface        (same as Select's popover)
+ *   border        -> --border-default
+ *   shadow        -> 0 8px 24px --shadow
+ *   chosen row    -> rgb(--brand-rgb / 10%) + --brand text (Select's row)
+ *   hover row     -> --surface-hover
+ *   z-index       -> --z-tooltip      (above modals: a menu opened from inside
+ *                                      a modal must not slide under it)
+ */
+
+.ui-cmenu {
+  position: fixed;
+  z-index: var(--z-tooltip);
+  min-width: 190px;
+  max-width: 320px;
+  padding: var(--s1);
+  background: var(--surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius);
+  box-shadow: 0 var(--s2) var(--s5) var(--shadow);
+  /* A long menu (a page index, say) scrolls inside itself rather than growing
+     past the window — the component measures this clamped height when it
+     positions, so the two stay honest. */
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+/* What the menu acts on — "Line", "3 Lines". Quiet: it is a label, not a row. */
+.ui-cmenu-title {
+  padding: var(--s1) var(--s2);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  color: var(--text-hint);
+}
+
+.ui-cmenu-heading {
+  padding: var(--s1) var(--s2);
+  font-size: var(--text-xs);
+  color: var(--text-tertiary);
+}
+
+.ui-cmenu-sep {
+  height: 1px;
+  margin: var(--s1) 0;
+  background: var(--border-subtle);
+}
+
+.ui-cmenu-item {
+  display: flex;
+  align-items: center;
+  gap: var(--s2);
+  width: 100%;
+  padding: var(--s1) var(--s2);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-xs);
+  color: var(--text-primary);
+  font-family: var(--font);
+  font-size: var(--text-base);
+  text-align: left;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color var(--transition);
+}
+
+.ui-cmenu-item:hover:not(:disabled),
+.ui-cmenu-item:focus-visible {
+  background: var(--surface-hover);
+  outline: none;
+}
+
+.ui-cmenu-item:disabled {
+  color: var(--text-disabled);
+  cursor: default;
+}
+
+/* The current value. Reading the tick is half the point of opening the menu. */
+.ui-cmenu-item.is-on {
+  background: rgb(var(--brand-rgb) / 10%);
+  color: var(--brand);
+}
+
+.ui-cmenu-item.is-danger:not(:disabled) {
+  color: var(--danger);
+}
+
+/* Always rendered, empty when the row carries no tick — labels line up. */
+.ui-cmenu-tick {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+}
+
+.ui-cmenu-tick svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* The gallery specimen: the same panel, sitting in the layout instead of at a
+   pointer. Display only — a real menu is never inline. */
+.ui-cmenu.is-inline {
+  position: static;
+  box-shadow: none;
+}

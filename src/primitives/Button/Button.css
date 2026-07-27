@@ -1,0 +1,159 @@
+/* Button — tokens only. Sizes are the two we actually use; a third is a
+ * conversation, not a one-off.
+ *
+ * THE RULE (Josh, 2026-07-16) — one tint recipe, and the BORDER is the
+ * affordance:
+ *
+ *   tint + border      -> a BUTTON. You can press it.
+ *   tint, no border    -> a BADGE. It is a label, it does nothing.
+ *
+ * Every variant is the same three-part recipe, only the hue changes:
+ *   ground  12%  ·  border 35%  ·  hover deepens the ground to 20%
+ *
+ * HOVER DEEPENS THE GROUND, IT DOES NOT MOVE THE BORDER. The border is the
+ * button's identity; animating it makes the control feel like it is changing
+ * shape under the cursor. The ground is the thing that responds.
+ *
+ * WHY PRIMARY IS NOT A SOLID FILL: it used to be (`background: var(--brand)`,
+ * dark label), on convention alone. Josh challenged it and convention lost.
+ * Hierarchy comes from HUE, not from fill — brand-green = primary, neutral =
+ * secondary, red = danger. A solid block only buys scanability on a cluttered
+ * screen, and the house rule is that screens don't get cluttered
+ * ([[feedback_simple_clean_ui]]). Contrast doesn't rescue the argument either:
+ * #3ecf8e on a 12% green ground over #1c1c1c is ~9:1.
+ *
+ * The precedent is jb-dash's filter pills — tinted ground, real border,
+ * clickable. Josh had already invented this rule; nothing recorded it, so every
+ * new button drifted back to convention. That is why this comment is long.
+ *
+ * --*-rgb tokens are SPACE-separated. `rgb(var(--x-rgb) / 12%)` with a
+ * comma-separated token is invalid CSS and is silently dropped — the button
+ * renders with no ground at all and looks like a tuning problem. It isn't.
+ */
+
+.ui-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s2);
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  font-family: var(--font);
+  font-weight: var(--weight-semibold);
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    background-color var(--transition),
+    border-color var(--transition),
+    color var(--transition);
+}
+
+.ui-btn[data-size="sm"] {
+  padding: var(--s1) var(--s3);
+  font-size: var(--text-sm);
+  min-height: var(--s5);
+}
+
+.ui-btn[data-size="md"] {
+  padding: var(--s2) var(--s4);
+  font-size: var(--text-md);
+  min-height: var(--s6);
+}
+
+.ui-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+/* ---- primary — brand hue carries the "this is the main action" ----------- */
+.ui-btn[data-variant="primary"] {
+  background: rgb(var(--brand-rgb) / 12%);
+  border-color: rgb(var(--brand-rgb) / 35%);
+  color: var(--brand);
+}
+
+.ui-btn[data-variant="primary"]:hover:not(:disabled) {
+  background: rgb(var(--brand-rgb) / 20%);
+}
+
+/* ---- secondary — same recipe, neutral hue. The absence of colour is what
+       makes it read as secondary; nothing else about it is different.
+
+   TEXT IS --text-secondary, NOT --text-primary. On a dark ground pure #fff is
+   BRIGHTER than the brand green, so a white-labelled secondary shouts louder
+   than the primary and the hierarchy inverts. That was live until Josh spotted
+   it — "why is the small plus icon white?" The icon was only inheriting the
+   button's colour via currentColor; the button was the problem. It went unseen
+   while primary was still a solid green block that dominated regardless.
+   The LMS gets this right too: its secondary uses hsl(var(--foreground)) = 78%
+   = #c7c7c7, a soft white, deliberately not pure. -------------------------- */
+.ui-btn[data-variant="secondary"] {
+  background: rgb(var(--muted-rgb) / 12%);
+  border-color: rgb(var(--muted-rgb) / 35%);
+  color: var(--text-secondary);
+}
+
+/* Hover deepens the ground like every other variant, and brightens the label to
+   full strength — secondary is the one variant whose resting label is dimmed, so
+   hover is where it comes up to meet you. The border still never moves. */
+.ui-btn[data-variant="secondary"]:hover:not(:disabled) {
+  background: rgb(var(--muted-rgb) / 20%);
+  color: var(--text-primary);
+}
+
+/* ---- ghost — the ONE exception to border-means-button. No border, no ground,
+       so hover has to carry the whole affordance by itself. Use it only where
+       the surrounding context already says "this is a control" (a modal footer,
+       a row action) — never floating on its own. ----------------------------- */
+.ui-btn[data-variant="ghost"] {
+  background: transparent;
+  border-color: transparent;
+  color: var(--text-secondary);
+}
+
+.ui-btn[data-variant="ghost"]:hover:not(:disabled) {
+  background: var(--surface-hover);
+  color: var(--text-primary);
+}
+
+/* ---- danger ------------------------------------------------------------- */
+.ui-btn[data-variant="danger"] {
+  background: rgb(var(--danger-rgb) / 12%);
+  border-color: rgb(var(--danger-rgb) / 35%);
+  color: var(--danger);
+}
+
+.ui-btn[data-variant="danger"]:hover:not(:disabled) {
+  background: rgb(var(--danger-rgb) / 20%);
+}
+
+/* ---- icon / spinner ----------------------------------------------------- */
+.ui-btn-icon,
+.ui-btn-spinner {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: var(--s4);
+  height: var(--s4);
+}
+
+.ui-btn-spinner {
+  border: 2px solid currentcolor;
+  border-top-color: transparent;
+  border-radius: var(--radius-pill);
+  animation: ui-btn-spin 0.7s linear infinite;
+  opacity: 0.9;
+}
+
+/* base.css neutralises this under prefers-reduced-motion — don't fight it. */
+@keyframes ui-btn-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.ui-btn-label {
+  display: inline-block;
+}

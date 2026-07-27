@@ -1,0 +1,306 @@
+/* Card — the LMS dashboard card treatments, ported as named kinds. Tokens only.
+ * ---------------------------------------------------------------------------
+ * Josh picks the house standard from these. Each kind is a VERBATIM port of a
+ * real lab-portal treatment (values below are the LMS source, then the token we
+ * mapped each onto). Where an LMS value has no token twin we kept the literal
+ * and noted it — matching the house number beats snapping to a scale it never
+ * used (same call the Badge port made for its 3px/10px padding).
+ *
+ * FORK HISTORY: the LMS grew three dashboard cards independently and never
+ * reconciled them. This primitive puts all three side by side so Josh can choose:
+ *
+ *   plain  — NOT an LMS port. The card this file used to render, invented from a
+ *            mockup. Kept as the default so existing screens are untouched.
+ *
+ *   stat   — components/DeptDashboard/StatCard.tsx:62-113 (the shared one, 4 sites)
+ *              bg      hsl(var(--card))      #1a1a1a -> var(--surface)        (#1c1c1c, ~1% lighter; nearest surface token)
+ *              border  hsl(var(--border))    #2b2b2b -> var(--border-default) (#333333, ~3% lighter; nearest border token)
+ *              radius  8px                           -> var(--radius)         (8px, exact)
+ *              padding 14px 16px                     -> 14px var(--s4)        (16px exact; 14px has NO token, kept literal)
+ *              head    mb 6px, gap 8px, icon 14px    -> 6px literal, var(--s2)
+ *              label   11px / 600 / upper / .05em    -> var(--text-sm) / var(--weight-semibold)  (muted, or tone)
+ *              value   24px / 700 / -0.5px           -> 24px literal (no token past 22px), always foreground
+ *              hover   bg hsl(var(--secondary)) #262626 -> var(--surface-raised) (#242424, per the surface-raised<-#262626 convention)
+ *                      border hsl(var(--primary))        -> var(--brand)   (always brand, independent of tone)
+ *              tone    colours icon + label only; the number stays foreground (StatCard behaviour)
+ *
+ *   tile   — app/jb-dash/page.tsx:1739-1748 (the idle tile; ~34 sibling call sites)
+ *              bg      var(--surface-elevated) #2d2d2d -> var(--surface-raised) (#242424 — NO close twin; loosest mapping, flagged)
+ *              border  var(--border-strong)    #404040 -> var(--border-strong)  (#404040, EXACT)
+ *              radius  12px                            -> var(--radius-lg)       (12px, exact)
+ *              padding 24px                            -> var(--s5)              (24px, exact)
+ *              width   220px, centred                  -> 220px literal, text-align center
+ *              head    mb 18px, gap 8px, icon 20px     -> 18px literal, var(--s2)
+ *              label   15px / 600 / sentence-case      -> var(--text-lg) / var(--weight-semibold), --text-primary
+ *              value   32px / 700                      -> 32px literal, tone (default foreground)
+ *              hover   bg var(--surface-hover) #252525 -> var(--surface-hover)   (#252525, EXACT); border unchanged
+ *                      (jb-dash's per-card coloured borders are data logic, not the base tile — out of scope)
+ *
+ *   accent — app/josh-dash/page.tsx:319-437 (Josh likes these; a THIRD treatment)
+ *              bg      rgba(accent, 0.08)              -> rgb(var(--<tone>-rgb) / 8%)
+ *              border  1px rgba(accent, 0.25)          -> rgb(var(--<tone>-rgb) / 25%)
+ *              radius  rounded-xl 12px                 -> var(--radius-lg)
+ *              padding p-5 20px                        -> 20px literal (between s4/s5; no token)
+ *              head    mb 8px, gap 8px, icon 16px      -> var(--s2)
+ *              label   text-xs 12px / 700 / upper /.05em -> var(--text-md) / var(--weight-bold), muted (--text-secondary)
+ *              value   text-3xl 30px / 700            -> 30px literal, tone (default brand)
+ *              foot    text-xs 12px, mt 4px           -> var(--text-md), var(--s1), muted
+ *              hover   NONE — clickable, but only transition-colors, no bg/border change. Ported as-is.
+ *              tone    colours the whole tint (bg + border + icon + value); defaults to brand.
+ *
+ * TOKEN MAPPING NOTES (LMS -> workspace):
+ *   hsl(var(--card))            #1a1a1a -> var(--surface)         (~1% delta)
+ *   hsl(var(--border))          #2b2b2b -> var(--border-default)  (~3% delta)
+ *   hsl(var(--secondary))       #262626 -> var(--surface-raised)  (established convention)
+ *   hsl(var(--primary))         brand   -> var(--brand)           (exact concept)
+ *   hsl(var(--muted-foreground))#999999 -> var(--text-secondary)  (#a0a0a0, nearest of secondary/tertiary)
+ *   var(--surface-elevated)     #2d2d2d -> var(--surface-raised)  (NO good twin — loosest mapping)
+ *   var(--border-strong)        #404040 -> var(--border-strong)   (EXACT)
+ *   var(--surface-hover)        #252525 -> var(--surface-hover)   (EXACT)
+ *   var(--text-primary)         #ffffff -> var(--text-primary)    (EXACT)
+ *   Per-card accent hexes (lime #84cc16, amber #f59e0b, purple #a855f7, blue
+ *     #4a9eff, green #3ecf8e, lavender #c084fc, etc.) have NO token twins and are
+ *     more numerous than the 5 tones — the port standardises them to the tone set
+ *     (brand/danger/warn/info/violet). That collapse is the point of tokenising.
+ * ========================================================================== */
+
+/* -------- plain (default) — the untouched original ------------------------- */
+.ui-card {
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius);
+  padding: var(--s4);
+}
+
+.ui-card-label {
+  margin-bottom: var(--s2);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-hint);
+}
+
+/* Tabular numerals so a column of cards keeps its digits on the same rails —
+   without it "14" and "11" are visibly different widths and the row jitters. */
+.ui-card-value {
+  font-size: var(--text-2xl);
+  font-weight: var(--weight-bold);
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-primary);
+}
+
+.ui-card-value[data-tone="brand"] {
+  color: var(--brand);
+}
+.ui-card-value[data-tone="danger"] {
+  color: var(--danger);
+}
+.ui-card-value[data-tone="warn"] {
+  color: var(--warn);
+}
+.ui-card-value[data-tone="info"] {
+  color: var(--info);
+}
+.ui-card-value[data-tone="violet"] {
+  color: var(--violet);
+}
+
+.ui-card-foot {
+  margin-top: var(--s1);
+  font-size: var(--text-sm);
+  color: var(--text-tertiary);
+}
+
+/* Clickable cards are <button>; strip the UA chrome so only our treatment shows. */
+.ui-card.is-clickable {
+  width: 100%;
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background var(--transition), border-color var(--transition);
+}
+
+/* Shared header row for stat / tile / accent (plain keeps its standalone label). */
+.ui-card-head {
+  display: flex;
+  align-items: center;
+  gap: var(--s2);
+}
+
+.ui-card-icon {
+  display: inline-flex;
+  align-items: center;
+}
+
+/* =========================== stat ========================================= */
+.ui-card[data-kind="stat"] {
+  background: var(--surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius);
+  padding: 14px var(--s4);
+}
+.ui-card[data-kind="stat"] .ui-card-head {
+  margin-bottom: 6px;
+}
+.ui-card[data-kind="stat"] .ui-card-label {
+  margin-bottom: 0;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+.ui-card[data-kind="stat"] .ui-card-icon {
+  color: var(--text-secondary);
+}
+/* Tone tints the icon + label; the number stays foreground (StatCard rule). */
+.ui-card[data-kind="stat"] .ui-card-value {
+  font-size: 24px;
+  letter-spacing: -0.5px;
+  color: var(--text-primary);
+}
+.ui-card[data-kind="stat"][data-tone="brand"] .ui-card-label,
+.ui-card[data-kind="stat"][data-tone="brand"] .ui-card-icon {
+  color: var(--brand);
+}
+.ui-card[data-kind="stat"][data-tone="danger"] .ui-card-label,
+.ui-card[data-kind="stat"][data-tone="danger"] .ui-card-icon {
+  color: var(--danger);
+}
+.ui-card[data-kind="stat"][data-tone="warn"] .ui-card-label,
+.ui-card[data-kind="stat"][data-tone="warn"] .ui-card-icon {
+  color: var(--warn);
+}
+.ui-card[data-kind="stat"][data-tone="info"] .ui-card-label,
+.ui-card[data-kind="stat"][data-tone="info"] .ui-card-icon {
+  color: var(--info);
+}
+.ui-card[data-kind="stat"][data-tone="violet"] .ui-card-label,
+.ui-card[data-kind="stat"][data-tone="violet"] .ui-card-icon {
+  color: var(--violet);
+}
+.ui-card[data-kind="stat"].is-clickable:hover {
+  background: var(--surface-raised);
+  border-color: var(--brand);
+}
+
+/* =========================== tile ========================================= */
+.ui-card[data-kind="tile"] {
+  width: 220px;
+  background: var(--surface-raised);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-lg);
+  padding: var(--s5);
+  text-align: center;
+}
+.ui-card[data-kind="tile"] .ui-card-head {
+  justify-content: center;
+  margin-bottom: 18px;
+}
+.ui-card[data-kind="tile"] .ui-card-label {
+  margin-bottom: 0;
+  font-size: var(--text-lg);
+  font-weight: var(--weight-semibold);
+  letter-spacing: normal;
+  text-transform: none;
+  color: var(--text-primary);
+}
+.ui-card[data-kind="tile"] .ui-card-value {
+  font-size: 32px;
+  letter-spacing: normal;
+  color: var(--text-primary);
+}
+.ui-card[data-kind="tile"][data-tone="brand"] .ui-card-value,
+.ui-card[data-kind="tile"][data-tone="brand"] .ui-card-icon {
+  color: var(--brand);
+}
+.ui-card[data-kind="tile"][data-tone="danger"] .ui-card-value,
+.ui-card[data-kind="tile"][data-tone="danger"] .ui-card-icon {
+  color: var(--danger);
+}
+.ui-card[data-kind="tile"][data-tone="warn"] .ui-card-value,
+.ui-card[data-kind="tile"][data-tone="warn"] .ui-card-icon {
+  color: var(--warn);
+}
+.ui-card[data-kind="tile"][data-tone="info"] .ui-card-value,
+.ui-card[data-kind="tile"][data-tone="info"] .ui-card-icon {
+  color: var(--info);
+}
+.ui-card[data-kind="tile"][data-tone="violet"] .ui-card-value,
+.ui-card[data-kind="tile"][data-tone="violet"] .ui-card-icon {
+  color: var(--violet);
+}
+.ui-card[data-kind="tile"] .ui-card-foot {
+  font-size: var(--text-md);
+  font-weight: var(--weight-medium);
+  color: var(--text-secondary);
+}
+.ui-card[data-kind="tile"].is-clickable:hover {
+  background: var(--surface-hover);
+}
+
+/* =========================== accent ======================================= */
+/* The tint IS the card. Default to brand so an untoned accent still renders. */
+.ui-card[data-kind="accent"] {
+  background: rgb(var(--brand-rgb) / 8%);
+  border: 1px solid rgb(var(--brand-rgb) / 25%);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+}
+.ui-card[data-kind="accent"] .ui-card-head {
+  margin-bottom: var(--s2);
+}
+.ui-card[data-kind="accent"] .ui-card-label {
+  margin-bottom: 0;
+  font-size: var(--text-md);
+  font-weight: var(--weight-bold);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+.ui-card[data-kind="accent"] .ui-card-icon {
+  color: var(--brand);
+}
+.ui-card[data-kind="accent"] .ui-card-value {
+  font-size: 30px;
+  letter-spacing: normal;
+  color: var(--brand);
+}
+.ui-card[data-kind="accent"] .ui-card-foot {
+  font-size: var(--text-md);
+  color: var(--text-secondary);
+}
+.ui-card[data-kind="accent"][data-tone="danger"] {
+  background: rgb(var(--danger-rgb) / 8%);
+  border-color: rgb(var(--danger-rgb) / 25%);
+}
+.ui-card[data-kind="accent"][data-tone="danger"] .ui-card-icon,
+.ui-card[data-kind="accent"][data-tone="danger"] .ui-card-value {
+  color: var(--danger);
+}
+.ui-card[data-kind="accent"][data-tone="warn"] {
+  background: rgb(var(--warn-rgb) / 8%);
+  border-color: rgb(var(--warn-rgb) / 25%);
+}
+.ui-card[data-kind="accent"][data-tone="warn"] .ui-card-icon,
+.ui-card[data-kind="accent"][data-tone="warn"] .ui-card-value {
+  color: var(--warn);
+}
+.ui-card[data-kind="accent"][data-tone="info"] {
+  background: rgb(var(--info-rgb) / 8%);
+  border-color: rgb(var(--info-rgb) / 25%);
+}
+.ui-card[data-kind="accent"][data-tone="info"] .ui-card-icon,
+.ui-card[data-kind="accent"][data-tone="info"] .ui-card-value {
+  color: var(--info);
+}
+.ui-card[data-kind="accent"][data-tone="violet"] {
+  background: rgb(var(--violet-rgb) / 8%);
+  border-color: rgb(var(--violet-rgb) / 25%);
+}
+.ui-card[data-kind="accent"][data-tone="violet"] .ui-card-icon,
+.ui-card[data-kind="accent"][data-tone="violet"] .ui-card-value {
+  color: var(--violet);
+}

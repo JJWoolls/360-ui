@@ -1,0 +1,106 @@
+/* OptionPickerModal — tokens only.
+ *
+ * Ported from the LMS OptionPickerModal.tsx. The frame (overlay, panel,
+ * header, close button) comes from the house Modal primitive; only the search
+ * box and the option list live here.
+ *
+ * LMS values -> tokens, with mappings where no exact twin exists:
+ *   search input: bg hsl(--background) #121212 -> --bg #121212 (exact)
+ *   row hover:    hsl(--accent) #262626        -> --surface-hover #252525
+ *   row selected: hsl(--secondary) #262626     -> --surface-raised #242424
+ *   row text:     hsl(--foreground) #c7c7c7    -> --text-primary #ffffff
+ *   text-sm 14px                               -> --text-base 13px
+ *   input focus ring 2px rgba(brand,.5) ported as :focus outline below.
+ */
+
+.ui-optionpicker-search {
+  position: relative;
+  margin-bottom: var(--s2);
+}
+
+.ui-optionpicker-search svg {
+  position: absolute;
+  top: 50%;
+  left: var(--s3);
+  width: 14px;
+  height: 14px;
+  color: var(--text-secondary);
+  translate: 0 -50%;
+  pointer-events: none;
+}
+
+.ui-optionpicker-search input {
+  width: 100%;
+
+  /* LMS pl-9 = 36px: icon sits at 12px, text clears it. */
+  padding: var(--s2) var(--s3) var(--s2) calc(var(--s5) + var(--s3));
+  background: var(--bg);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius);
+  color: var(--text-primary);
+  font-family: var(--font);
+  font-size: var(--text-base);
+}
+
+/* LMS focus:ring-2 ring-primary/50 — mouse focus included, so :focus not
+   :focus-visible. */
+.ui-optionpicker-search input:focus {
+  outline: 2px solid rgb(var(--brand-rgb) / 50%);
+  outline-offset: 0;
+}
+
+.ui-optionpicker-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s1);
+}
+
+.ui-optionpicker-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s2);
+  width: 100%;
+  padding: var(--s2) var(--s3);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius);
+  color: var(--text-primary);
+  font-family: var(--font);
+  font-size: var(--text-base);
+  font-weight: var(--weight-normal);
+  text-align: left;
+  cursor: pointer;
+  transition: background-color var(--transition);
+}
+
+.ui-optionpicker-row:hover {
+  background: var(--surface-hover);
+}
+
+.ui-optionpicker-row[data-selected] {
+  background: var(--surface-raised);
+  font-weight: var(--weight-semibold);
+}
+
+.ui-optionpicker-row-label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* The selected row's check — LMS: 16px, brand. */
+.ui-optionpicker-row svg {
+  flex: none;
+  width: var(--s4);
+  height: var(--s4);
+  color: var(--brand);
+}
+
+.ui-optionpicker-empty {
+  padding: var(--s5) 0;
+  color: var(--text-secondary);
+  font-size: var(--text-base);
+  text-align: center;
+}

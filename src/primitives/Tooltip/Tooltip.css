@@ -1,0 +1,47 @@
+/* Tooltip — tokens only. */
+
+.ui-tip-host {
+  position: relative;
+  display: inline-flex;
+}
+
+.ui-tip {
+  position: absolute;
+  bottom: calc(100% + var(--s2));
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: var(--z-tooltip);
+  padding: var(--s1) var(--s2);
+  background: var(--surface-raised);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-size: var(--text-md);
+  font-weight: var(--weight-medium);
+  white-space: nowrap;
+  box-shadow: 0 var(--s1) var(--s5) var(--shadow);
+  opacity: 0;
+  transition: opacity var(--transition);
+
+  /* The tip must never eat the pointer. Without this it can sit between the
+     cursor and the control it describes, and hovering closer dismisses it. */
+  pointer-events: none;
+}
+
+.ui-tip-host:hover .ui-tip,
+.ui-tip-host:focus-within .ui-tip,
+.ui-tip[data-always] {
+  opacity: 1;
+}
+
+/* The arrow. Border-trick triangle: transparent on three sides, the tip's own
+   border color on top, so it reads as a notch cut from the same shape. */
+.ui-tip::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: var(--s1) solid transparent;
+  border-top-color: var(--border-default);
+}

@@ -1,0 +1,103 @@
+/* Toast — tokens only. The left border carries the severity; the rest of the
+   chrome is identical across tones on purpose, so a stack of toasts reads as
+   one family and the stripe is the only thing your eye has to sort. */
+
+.ui-toast {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--s3);
+  max-width: 380px;
+  padding: var(--s3) var(--s4);
+  background: var(--surface-raised);
+  border: 1px solid var(--border-default);
+  border-left: 3px solid var(--brand);
+  border-radius: var(--radius-sm);
+  box-shadow: 0 var(--s2) var(--s5) var(--shadow);
+}
+
+.ui-toast[data-tone="success"] {
+  border-left-color: var(--brand);
+}
+
+.ui-toast[data-tone="warn"] {
+  border-left-color: var(--warn);
+}
+
+.ui-toast[data-tone="danger"] {
+  border-left-color: var(--danger);
+}
+
+.ui-toast[data-tone="muted"] {
+  border-left-color: rgb(var(--muted-rgb));
+}
+
+/* The icon takes the tone too — the stripe alone is 3px and easy to miss. */
+.ui-toast-icon {
+  display: inline-flex;
+  flex: none;
+  width: var(--s4);
+  height: var(--s4);
+}
+
+.ui-toast-icon svg {
+  width: var(--s4);
+  height: var(--s4);
+}
+
+.ui-toast[data-tone="success"] .ui-toast-icon {
+  color: var(--brand);
+}
+
+.ui-toast[data-tone="warn"] .ui-toast-icon {
+  color: var(--warn);
+}
+
+.ui-toast[data-tone="danger"] .ui-toast-icon {
+  color: var(--danger);
+}
+
+.ui-toast[data-tone="muted"] .ui-toast-icon {
+  color: var(--text-tertiary);
+}
+
+.ui-toast-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.ui-toast-title {
+  font-size: var(--text-base);
+  font-weight: var(--weight-semibold);
+  color: var(--text-primary);
+}
+
+.ui-toast-body {
+  margin-top: var(--s1);
+  font-size: var(--text-md);
+  color: var(--text-tertiary);
+}
+
+.ui-toast-x {
+  display: grid;
+  place-items: center;
+  flex: none;
+  padding: var(--s1);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  color: var(--text-hint);
+  cursor: pointer;
+  transition:
+    background-color var(--transition),
+    color var(--transition);
+}
+
+.ui-toast-x:hover {
+  background: var(--surface-hover);
+  color: var(--text-primary);
+}
+
+.ui-toast-x svg {
+  width: var(--s3);
+  height: var(--s3);
+}

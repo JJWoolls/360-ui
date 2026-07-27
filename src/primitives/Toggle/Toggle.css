@@ -1,0 +1,117 @@
+/* Toggle — ported from the LMS, not designed here.
+ *
+ * Source: app/cases/new/page.tsx:86 (the only real named Toggle component, and
+ * the only one with role="switch" + aria-checked) and app/employees/page.tsx:1071
+ * (the same control hand-rolled inline). Both are `h-5 w-9` — a 20x36 track with
+ * a 16px thumb sliding 16px.
+ *
+ * WHY THE FIRST ATTEMPT LOOKED WRONG (Josh: "the toggles are ugly"): it was
+ * built from the scale instead of from the LMS. 32x16 track, 12px thumb, a
+ * visible border on the track, a GREY thumb when off and a near-BLACK thumb when
+ * on, and no shadow. That reads as a small dark blob in a bordered box. The LMS
+ * is a WHITE thumb with a real drop shadow on a clean borderless pill — the
+ * shadow is what makes it read as a physical switch rather than a rectangle with
+ * a dot in it. The shadow is not decoration; it is the whole effect.
+ *
+ * OFF-SCALE ON PURPOSE: 20x36 and the 16px thumb are the LMS's real numbers. The
+ * 4px scale has no 20 or 36, and matching the house standard beats snapping to
+ * the scale — same call as the badge's 3x10 padding. Do not "fix" these to
+ * --s5/--s6; that is what made it ugly the first time.
+ *
+ * KNOWN FORK, resolved: employees uses `bg-white` for the thumb, cases/new uses
+ * `bg-background` — which is #121212, i.e. a DARK thumb. Same control, opposite
+ * thumbs. White + shadow is ported here because it is the one that reads as a
+ * toggle. If Josh wants the dark thumb, it is one line: --toggle-thumb.
+ */
+
+.ui-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s2);
+  padding: var(--s1) var(--s2);
+  margin-inline-start: calc(var(--s2) * -1);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-family: var(--font);
+  font-size: var(--text-md);
+  cursor: pointer;
+  text-align: start;
+  transition: background-color var(--transition);
+}
+
+.ui-toggle:hover:not(:disabled) {
+  background: var(--surface-hover);
+}
+
+.ui-toggle:disabled {
+  cursor: not-allowed;
+  color: var(--text-disabled);
+}
+
+/* 20x36, borderless. The LMS carries `border-2 border-transparent` so the track
+   keeps its box size without drawing an edge — we get the same by simply not
+   having a border. An edge here would also collide with the house rule that a
+   border means "you can press it": the whole toggle is the control, not the
+   track. */
+.ui-toggle-track {
+  position: relative;
+  flex: none;
+  width: 36px;
+  height: 20px;
+  border-radius: var(--radius-pill);
+  background: var(--border-default);
+  transition: background-color var(--transition);
+}
+
+/* 16px, white, and the shadow is doing the work — it lifts the thumb off the
+   track so the control reads as physical. */
+.ui-toggle-thumb {
+  position: absolute;
+  inset-block-start: 2px;
+  inset-inline-start: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: var(--radius-pill);
+  background: var(--toggle-thumb);
+
+  /* --shadow, not a literal. Stylelint caught a hardcoded rgb() here and was
+     right to: --shadow is map-aware (0.45 on the dark maps, 0.12 on Atlas Light)
+     so the thumb keeps its lift on every ground instead of going muddy on the
+     light ones. Two layers: a soft one for depth, a tight one for the edge. */
+  box-shadow:
+    0 1px 3px var(--shadow),
+    0 1px 2px var(--shadow);
+  transition: transform var(--transition);
+}
+
+/* ON: translucent brand, not solid. A solid #3ecf8e track is the loudest thing
+   on the screen and fights a UI whose entire language is tinted grounds — the
+   toggle would outshout its own primary button. At 75% it still reads
+   unambiguously green and "on", but the ground shows through and it sits in the
+   same family as everything else. The white thumb still has ~5:1 against it, so
+   the state stays legible.
+
+   This is the one knob: raise toward 100% for louder, drop toward 50% for
+   quieter. Everything else about the toggle is the LMS's geometry. */
+.ui-toggle[aria-checked="true"] .ui-toggle-track {
+  background: rgb(var(--brand-rgb) / 75%);
+}
+
+/* travel = track - thumb - both insets = 36 - 16 - 2 - 2 = 16 */
+.ui-toggle[aria-checked="true"] .ui-toggle-thumb {
+  transform: translateX(16px);
+}
+
+/* Disabled dims the whole control rather than recolouring the parts — recolouring
+   made the off state and the disabled state look identical. */
+.ui-toggle:disabled .ui-toggle-track,
+.ui-toggle:disabled .ui-toggle-thumb {
+  opacity: 0.5;
+}
+
+.ui-toggle-label {
+  font-weight: var(--weight-medium);
+  line-height: 1.4;
+}

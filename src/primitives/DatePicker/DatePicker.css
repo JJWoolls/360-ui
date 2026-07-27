@@ -1,0 +1,224 @@
+/* DatePicker + DateField — tokens only.
+ *
+ * Grid values are ported from the LMS's MODAL-picker calendar
+ * (components/DeptDashboard/MiniCalendar.tsx — the grid AppointmentPickerModal
+ * embeds), NOT from date-time-picker.tsx's inline dropdown, which the
+ * Workspace bans as a shell. The one borrow from the dropdown is the day-cell
+ * hover (date-time-picker.tsx:353) because MiniCalendar defines none.
+ *
+ * LITERAL px VALUES below are LMS-real values with no step on the Workspace
+ * scale (36px field height, 10px panel padding, 6px cell padding, 2px grid
+ * gap, 9px day-of-week label). Kept literal rather than silently rounded or
+ * silently tokenized — flagged for Josh; the scale is the conversation.
+ *
+ * COLOR TRANSLATIONS (LMS dark hsl -> nearest Workspace token) are listed
+ * per-rule; exact matches say "exact".
+ */
+
+/* ---- DateField — the trigger --------------------------------------------
+ * Geometry ported from the LMS date trigger (date-time-picker.tsx:280-284:
+ * h-9 rounded-lg border px-3 gap-2). States are Josh's field rule: grayed
+ * "Not Set" -> brand when set; data-state="past" is the follow-up-quick-set
+ * overdue tone (#ff6b81 bold -> --danger, --weight-bold). */
+
+.ui-datefield {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s2); /* LMS gap-2 = 8px, exact */
+  width: 100%;
+  height: 36px; /* LMS h-9 = 36px — off scale, kept literal */
+  padding: 0 var(--s3); /* LMS px-3 = 12px, exact */
+  background: transparent; /* LMS bg-transparent */
+  border: 1px solid var(--border-default); /* LMS --border #2b2b2b -> #333333 nearest */
+  border-radius: var(--radius); /* LMS rounded-lg = 8px, exact */
+  color: var(--text-secondary); /* LMS placeholder muted-foreground #999999 -> #a0a0a0 nearest */
+  font-family: var(--font);
+  font-size: var(--text-base); /* LMS text-sm 14px -> 13px nearest */
+  font-weight: var(--weight-medium);
+  text-align: left;
+  cursor: pointer;
+  transition:
+    border-color var(--transition),
+    color var(--transition);
+}
+
+/* LMS hover:border-[hsl(--secondary)] = #262626 -> --surface-hover #252525
+   nearest. Yes, the LMS hover border is DARKER than the resting border —
+   that is the real value, not a typo. */
+.ui-datefield:hover:not(:disabled) {
+  border-color: var(--surface-hover);
+}
+
+.ui-datefield[data-state="set"] {
+  color: var(--brand);
+}
+
+.ui-datefield[data-state="past"] {
+  color: var(--danger); /* follow-up-quick-set overdue #ff6b81 -> --danger nearest */
+  font-weight: var(--weight-bold); /* overdue/today fontWeight 700, exact */
+}
+
+.ui-datefield:disabled {
+  cursor: not-allowed;
+  opacity: 0.55; /* house Button disabled recipe */
+}
+
+.ui-datefield-icon {
+  display: inline-flex;
+  flex: none;
+}
+
+.ui-datefield-icon svg {
+  width: 14px; /* LMS Calendar size 14 */
+  height: 14px;
+}
+
+.ui-datefield-text {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ui-datefield-x {
+  display: inline-flex;
+  flex: none;
+  color: var(--text-secondary);
+  transition: opacity var(--transition);
+}
+
+.ui-datefield-x:hover {
+  opacity: 0.7; /* LMS hover: muted-foreground/0.7 */
+}
+
+.ui-datefield-x svg {
+  width: 12px; /* LMS X size 12 */
+  height: 12px;
+}
+
+/* ---- Preset row (cs-dash "Set follow-up" popover) ------------------------
+ * Buttons are the house Button (secondary/sm) per the one-tint-recipe rule;
+ * the row layout ports the popover: flex, gap 4px, wrap, flex:1 min 60px. */
+
+.ui-datepicker-presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s1); /* cs-dash gap: 4, exact */
+  margin-bottom: var(--s3);
+}
+
+.ui-datepicker-presets > .ui-btn {
+  flex: 1;
+  min-width: 60px; /* cs-dash minWidth: 60 */
+}
+
+/* ---- Calendar panel (MiniCalendar.tsx:53) -------------------------------- */
+
+.ui-datepicker-cal {
+  width: 240px; /* MiniCalendar width: 240, exact */
+  margin: 0 auto;
+  padding: 10px; /* MiniCalendar padding: 10 — off scale, kept literal */
+  background: var(--bg); /* LMS hsl(--background) #121212 = --bg, exact */
+  border: 1px solid var(--border-default); /* LMS --border #2b2b2b -> #333333 nearest */
+  border-radius: var(--radius); /* MiniCalendar borderRadius: 8, exact */
+}
+
+.ui-datepicker-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--s2); /* MiniCalendar mb-2 = 8px, exact */
+}
+
+.ui-datepicker-month {
+  color: var(--text-primary); /* LMS foreground #c7c7c7 -> #ffffff nearest */
+  font-size: var(--text-md); /* MiniCalendar text-xs = 12px, exact */
+  font-weight: var(--weight-semibold); /* font-semibold, exact */
+}
+
+/* MiniCalendar nav: p-1 rounded, muted-foreground, hover bg secondary,
+   disabled opacity-30. */
+.ui-datepicker-nav {
+  display: grid;
+  place-items: center;
+  padding: var(--s1); /* p-1 = 4px, exact */
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-xs); /* "rounded" = 4px, exact */
+  color: var(--text-secondary); /* muted-foreground #999999 -> #a0a0a0 nearest */
+  cursor: pointer;
+  transition: background-color var(--transition);
+}
+
+.ui-datepicker-nav:hover:not(:disabled) {
+  background: var(--surface-hover); /* hover:bg-secondary #262626 -> #252525 nearest */
+}
+
+.ui-datepicker-nav:disabled {
+  cursor: not-allowed;
+  opacity: 0.3; /* disabled:opacity-30, exact */
+}
+
+.ui-datepicker-nav svg {
+  width: 14px; /* ChevronLeft/Right size 14, exact */
+  height: 14px;
+}
+
+.ui-datepicker-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px; /* MiniCalendar gap-0.5 = 2px — off scale, kept literal */
+}
+
+.ui-datepicker-dow {
+  padding: var(--s1) 0; /* py-1 = 4px, exact */
+  color: var(--text-secondary); /* muted-foreground -> nearest */
+  font-size: 9px; /* MiniCalendar text-[9px] — off scale, kept literal */
+  font-weight: var(--weight-semibold); /* font-semibold, exact */
+  text-align: center;
+}
+
+.ui-datepicker-day {
+  padding: 6px 0; /* MiniCalendar padding: '6px 0' — off scale, kept literal */
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-xs); /* "rounded" = 4px, exact */
+  color: var(--text-primary); /* LMS foreground #c7c7c7 -> #ffffff nearest */
+  font-family: var(--font);
+  font-size: var(--text-sm); /* text-[11px] = 11px, exact */
+  font-weight: var(--weight-normal); /* fontWeight 400, exact */
+  cursor: pointer;
+  transition:
+    background-color var(--transition),
+    color var(--transition);
+}
+
+/* The one dropdown-picker borrow: hover:bg-[hsl(--secondary)] (#262626 ->
+   --surface-hover nearest). MiniCalendar has no hover at all. */
+.ui-datepicker-day:hover:not(:disabled):not([data-selected]) {
+  background: var(--surface-hover);
+}
+
+.ui-datepicker-day[data-adjacent] {
+  color: var(--text-secondary); /* muted-foreground -> nearest */
+  opacity: 0.6; /* MiniCalendar opacity 0.6, exact */
+}
+
+.ui-datepicker-day[data-today]:not([data-selected]) {
+  background: var(--surface-hover); /* today bg hsl(--secondary) #262626 -> nearest */
+  font-weight: var(--weight-bold); /* fontWeight 700, exact */
+}
+
+.ui-datepicker-day[data-selected] {
+  background: var(--brand); /* MiniCalendar background var(--brand), exact token */
+  color: var(--brand-on); /* selected text #1c1c1c -> --brand-on #0a0a0a nearest */
+  font-weight: var(--weight-bold); /* fontWeight 700, exact */
+}
+
+.ui-datepicker-day:disabled {
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: not-allowed;
+  opacity: 0.6; /* MiniCalendar disabled opacity 0.6, exact */
+}

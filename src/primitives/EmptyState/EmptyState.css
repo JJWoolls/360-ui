@@ -1,0 +1,32 @@
+/* EmptyState — deliberately small. No illustration slot: there is nowhere to
+   put one, which is the enforcement. Tokens only. */
+
+.ui-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--s2);
+  padding: var(--s6) var(--s4);
+  border: 1px dashed var(--border-default);
+  border-radius: var(--radius);
+  background: var(--surface-inset);
+  text-align: center;
+}
+
+.ui-empty-title {
+  margin: 0;
+  font-size: var(--text-md);
+  font-weight: var(--weight-semibold);
+  color: var(--text-secondary);
+}
+
+.ui-empty-body {
+  margin: 0;
+  max-width: 48ch;
+  font-size: var(--text-sm);
+  color: var(--text-hint);
+}
+
+.ui-empty-action {
+  margin-block-start: var(--s1);
+}

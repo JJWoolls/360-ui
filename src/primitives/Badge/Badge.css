@@ -1,0 +1,104 @@
+/* Badge — ported from the LMS's StatusBadge. Josh picked this one ("A") on
+ * 2026-07-16 out of four real LMS treatments shown side by side.
+ *
+ * Source of truth: components/status-badge.tsx + STATUS_CONFIG/STAGE_CONFIG in
+ * lib/constants.ts. That is the only genuinely SHARED badge in the LMS — every
+ * other treatment is a one-off. The recipe:
+ *   background : rgba(color, 0.12)   -> 12% tint ground
+ *   border     : none                -> the ground IS the badge; no outline
+ *   color      : full-strength
+ *   type       : 11px / 600 / Title Case (NOT uppercase) / letter-spacing .3px
+ *   shape      : 4px radius, padding 3px 10px
+ *   dot        : 6px circle, full-strength colour, for STATUS only
+ *
+ * THE DOT IS A RULE, NOT A DECORATION:
+ *   dot     -> a live STATUS. The state of a thing right now (Open, Cancelled,
+ *              Out for Try-In). The dot is what makes it read as state.
+ *   no dot  -> a fixed LABEL. A category that doesn't change (Bug, Future).
+ * One shape, one ground, one type. The dot is the only signal. If you find
+ * yourself wanting a third look, that's a conversation, not a new class.
+ *
+ * NOT ported: jb-dash's filter pills (15% ground / 40% border). Those are
+ * clickable controls with on/off states, not labels — they belong in a separate
+ * FilterChip primitive and are SUPPOSED to look heavier. Don't fold them in here.
+ *
+ * The --*-rgb tokens are SPACE-separated on purpose. `rgb(var(--brand-rgb) / 12%)`
+ * with a comma-separated token expands to `rgb(62, 207, 142 / 12%)` — invalid CSS,
+ * silently dropped, badge renders with NO background at all. That shipped for
+ * hours and looked like "the tint is too dark" rather than "there is no tint".
+ */
+
+.ui-badge {
+  display: inline-flex;
+  align-items: center;
+  /* 6px gap between dot and label, per status-badge.tsx (gap-1.5). */
+  gap: 6px;
+  /* The LMS's real numbers. --s1 is 4px, so the scale has no 3px/10px step:
+     matching the house standard beats snapping to the scale here. */
+  padding: 3px 10px;
+  /* 4px — Tailwind `rounded`, exactly what status-badge.tsx uses. NOT
+     --radius-sm (6px); that was a near-miss caught by reading the computed
+     style off the real bundle rather than trusting the source. */
+  border-radius: var(--radius-xs);
+  font-family: var(--font);
+  font-size: var(--text-sm); /* 11px */
+  font-weight: var(--weight-semibold);
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+
+  /* No border, ever. Border means pressable (see Button.css). A badge is a
+     label — it does nothing, so it has no edge. */
+}
+
+/* SHAPE IS DRIVEN BY MEANING, NOT BY TASTE — see BadgeKind in Badge.tsx.
+ *
+ * status + stage appear TOGETHER on a case row. Drawn identically you cannot
+ * tell which one you're reading, which is exactly what Josh spotted in the
+ * gallery. The shape is the tell:
+ *   status -> square + dot  (what it IS right now, live)
+ *   stage  -> oval, no dot  (where it IS in the pipeline)
+ *   label  -> square, no dot (what it's CALLED, fixed)
+ */
+.ui-badge[data-kind="stage"] {
+  border-radius: var(--radius-pill);
+}
+
+.ui-badge__dot {
+  flex: none;
+  width: 6px;
+  height: 6px;
+  border-radius: var(--radius-pill);
+  background: currentcolor;
+}
+
+.ui-badge[data-tone="brand"] {
+  background: rgb(var(--brand-rgb) / 12%);
+  color: var(--brand);
+}
+
+.ui-badge[data-tone="danger"] {
+  background: rgb(var(--danger-rgb) / 12%);
+  color: var(--danger);
+}
+
+.ui-badge[data-tone="warn"] {
+  background: rgb(var(--warn-rgb) / 12%);
+  color: var(--warn);
+}
+
+.ui-badge[data-tone="info"] {
+  background: rgb(var(--info-rgb) / 12%);
+  color: var(--info);
+}
+
+.ui-badge[data-tone="violet"] {
+  background: rgb(var(--violet-rgb) / 12%);
+  color: var(--violet);
+}
+
+/* The "needs no attention" tone. LMS equivalent: the Closed/Audit badge —
+   #555 text on rgba(85,85,85,0.12). */
+.ui-badge[data-tone="muted"] {
+  background: rgb(var(--muted-rgb) / 12%);
+  color: var(--text-tertiary);
+}

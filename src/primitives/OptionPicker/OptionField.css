@@ -1,0 +1,57 @@
+/* OptionField — tokens only.
+ *
+ * Ported from the LMS modal-picker trigger (CustomShadeCaseModal.tsx fieldBtn):
+ *   padding 8/16 · radius 8 · weight 500 · gap 8 · hover = opacity .8
+ *   set   = rgba(brand,.12) ground, brand text, rgba(brand,.35) border
+ *   unset = hsl(--muted) ground, hsl(--muted-foreground) text, hsl(--border)
+ *
+ * Token mappings where the LMS shadcn-HSL value has no exact twin here
+ * (the workspace deliberately ported only the LMS's semantic hex set):
+ *   hsl(--muted) #262626            -> --surface-raised #242424
+ *   hsl(--muted-foreground) #999999 -> --text-secondary #a0a0a0
+ *   hsl(--border) #2b2b2b           -> --border-default #333333
+ *   text-sm 14px                    -> --text-base 13px (scale has no 14)
+ *   icon size 15px                  -> --s4 16px
+ */
+
+.ui-optionfield {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s2);
+  padding: var(--s2) var(--s4);
+  background: var(--surface-raised);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius);
+  color: var(--text-secondary);
+  font-family: var(--font);
+  font-size: var(--text-base);
+  font-weight: var(--weight-medium);
+  cursor: pointer;
+  transition: opacity var(--transition);
+}
+
+.ui-optionfield:hover:not(:disabled) {
+  opacity: 0.8;
+}
+
+.ui-optionfield:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+/* Value chosen — the field lights up brand, same recipe as a primary Button. */
+.ui-optionfield[data-set] {
+  background: rgb(var(--brand-rgb) / 12%);
+  border-color: rgb(var(--brand-rgb) / 35%);
+  color: var(--brand);
+}
+
+.ui-optionfield-icon {
+  display: inline-flex;
+  flex: none;
+}
+
+.ui-optionfield-icon svg {
+  width: var(--s4);
+  height: var(--s4);
+}
