@@ -52,7 +52,14 @@
   color-scheme: dark;
 }
 
-:root[data-map="atlas-light"] {
+/* [data-theme="light"] is the LMS's own light switch. The kit answers to it as
+   well as to the map attribute, so a token the LMS does not define itself still
+   flips with the rest of the page instead of staying stuck on its dark value —
+   an undefined or wrong-mode var here renders as nothing at all, with no error.
+   The LMS's globals.css loads AFTER this file and keeps winning on every token
+   it defines; only the handful it has no name for come from here. */
+:root[data-map="atlas-light"],
+[data-theme="light"] {
   --bg:              #f7f7f7;
   --surface:         #ffffff;
   --surface-raised:  #f5f6f8;
