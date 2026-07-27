@@ -44,7 +44,7 @@ export { Table } from "./Table/Table";
 export type { TableProps, TableColumn } from "./Table/Table";
 
 export { Tooltip } from "./Tooltip/Tooltip";
-export type { TooltipProps } from "./Tooltip/Tooltip";
+export type { TooltipProps, TooltipPosition } from "./Tooltip/Tooltip";
 
 export { Toast } from "./Toast/Toast";
 export type { ToastProps, ToastTone } from "./Toast/Toast";

@@ -1,15 +1,27 @@
-/* Tooltip — tokens only. */
+/* Tooltip — tokens only.
+ *
+ * Rewritten 2026-07-27 when the LMS implementation was promoted into the kit.
+ * The old version positioned itself with `position: absolute` inside the
+ * trigger, which is simpler and wrong: it inherits `overflow: hidden` from any
+ * scroller above it, so a tip on a table row gets clipped by the table. The
+ * promoted one is fixed-position in a portal, placed from JS, and the arrow
+ * went with the old approach — an arrow has to point at the trigger, and once
+ * the box can flip sides to stay on screen the arrow is a second thing that has
+ * to agree with it. Border and offset carry the association instead.
+ *
+ * NO DROP SHADOW, deliberately. `--shadow` does not mean the same thing in both
+ * apps: in the LMS it is a whole shadow ("0 2px 8px rgba(…)") and in this kit's
+ * own token file it is a shadow COLOUR. A rule written against either one is
+ * broken in the other app, silently. The border and the raised surface already
+ * separate the tip from the page.
+ */
 
 .ui-tip-host {
-  position: relative;
   display: inline-flex;
 }
 
 .ui-tip {
-  position: absolute;
-  bottom: calc(100% + var(--s2));
-  left: 50%;
-  transform: translateX(-50%);
+  position: fixed;
   z-index: var(--z-tooltip);
   padding: var(--s1) var(--s2);
   background: var(--surface-raised);
@@ -19,8 +31,6 @@
   font-size: var(--text-md);
   font-weight: var(--weight-medium);
   white-space: nowrap;
-  box-shadow: 0 var(--s1) var(--s5) var(--shadow);
-  opacity: 0;
   transition: opacity var(--transition);
 
   /* The tip must never eat the pointer. Without this it can sit between the
@@ -28,20 +38,17 @@
   pointer-events: none;
 }
 
-.ui-tip-host:hover .ui-tip,
-.ui-tip-host:focus-within .ui-tip,
-.ui-tip[data-always] {
-  opacity: 1;
+/* Multi-line: keep the authored newlines and let the box grow, capped so a long
+   tip does not become a paragraph stretched across the window. */
+.ui-tip[data-multiline] {
+  white-space: pre-line;
+  max-width: 320px;
+  line-height: 1.5;
 }
 
-/* The arrow. Border-trick triangle: transparent on three sides, the tip's own
-   border color on top, so it reads as a notch cut from the same shape. */
-.ui-tip::after {
-  content: "";
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  border: var(--s1) solid transparent;
-  border-top-color: var(--border-default);
+/* Wide: the caller has lines that must not wrap — a small table of values, say.
+   The cap comes off and the box takes the width of its longest line. */
+.ui-tip[data-wide] {
+  white-space: pre;
+  max-width: none;
 }
