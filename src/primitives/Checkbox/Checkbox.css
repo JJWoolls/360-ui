@@ -74,3 +74,13 @@
   font-weight: var(--weight-medium);
   line-height: 1.4;
 }
+
+/* The invisible-label variant — a table cell whose column header is already the
+   name. No text means the gap and the optical negative margin are both wrong:
+   the gap reserves space for nothing, and the margin exists to pull a labelled
+   control back onto the text grid. Neither applies when the box IS the control,
+   so it can sit centred in its cell. */
+.ui-check[data-bare] {
+  gap: 0;
+  margin-inline-start: 0;
+}
