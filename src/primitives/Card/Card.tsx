@@ -69,6 +69,21 @@ export interface CardProps {
    */
   extra?: ReactNode;
   /**
+   * There is nothing here. The card greys out and the value fades nearly into
+   * the border, so an empty card stops competing for the eye — Josh's rule,
+   * 2026-07-27, promoted from the dashboards where it grew up.
+   *
+   * EXPLICIT, not inferred from value === "0". A count of zero is usually
+   * nothing to see; "$0.00" owed on an overdue account is the opposite, and a
+   * component cannot tell those apart from the string. The caller knows.
+   *
+   * This is NOT how you hide a card. A card never removes itself — whoever
+   * builds the list of cards decides which ones exist, because only the row
+   * knows whether losing one leaves a hole. See the LMS's own visibleForView
+   * predicate, which is the house pattern.
+   */
+  empty?: boolean;
+  /**
    * Makes the card a button. Hover treatment is applied only when clickable, and
    * only for kinds that have one — stat lifts, tile lifts, accent does NOT change
    * on hover (josh-dash's cards are clickable but only fade via transition-colors).
@@ -84,13 +99,14 @@ export function Card({
   kind = "plain",
   icon,
   extra,
+  empty = false,
   onClick,
 }: CardProps) {
   const clickable = typeof onClick === "function";
 
   // Plain is the untouched original: same DOM, same classes, data-tone on the
   // value element. Keeps every existing screen call site rendering byte-for-byte.
-  if (kind === "plain" && !clickable && !extra) {
+  if (kind === "plain" && !clickable && !extra && !empty) {
     return (
       <div className="ui-card">
         <div className="ui-card-label">{label}</div>
@@ -137,6 +153,7 @@ export function Card({
         className="ui-card is-clickable"
         data-kind={dataKind}
         data-tone={tone}
+        data-empty={empty ? "" : undefined}
         onClick={onClick}
       >
         {body}
@@ -145,7 +162,12 @@ export function Card({
   }
 
   return (
-    <div className="ui-card" data-kind={dataKind} data-tone={tone}>
+    <div
+      className="ui-card"
+      data-kind={dataKind}
+      data-tone={tone}
+      data-empty={empty ? "" : undefined}
+    >
       {body}
     </div>
   );

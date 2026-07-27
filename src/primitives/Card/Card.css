@@ -320,3 +320,40 @@
 .ui-card[data-kind="accent"][data-tone="violet"] .ui-card-value {
   color: var(--violet);
 }
+
+/* ---------------------------------------------------------------------------
+   EMPTY — nothing here.
+   Josh, 2026-07-27, promoting the dashboards' behaviour to the house rule: a
+   card with nothing in it stops competing for the eye. The label goes quiet and
+   the number falls back nearly to the border, so a wall of cards reads as "these
+   four have work" instead of twelve equally-loud zeros.
+
+   The card still occupies its cell. Emptiness is a LOOK, never a disappearance
+   — whoever builds the list decides which cards exist, because only the row
+   knows whether losing one leaves a hole in the grid.
+
+   Every selector is repeated at tone/kind strength on purpose. The per-tone
+   rules above are four-part selectors, so a single .ui-card[data-empty] rule
+   loses to them and the card stays brightly coloured while claiming to be
+   empty — silently, since a losing CSS rule reports nothing.
+   ------------------------------------------------------------------------- */
+.ui-card[data-empty] .ui-card-label,
+.ui-card[data-empty] .ui-card-icon,
+.ui-card[data-empty][data-kind][data-tone] .ui-card-label,
+.ui-card[data-empty][data-kind][data-tone] .ui-card-icon {
+  color: var(--text-secondary);
+}
+
+.ui-card[data-empty] .ui-card-value,
+.ui-card[data-empty][data-kind] .ui-card-value,
+.ui-card[data-empty][data-kind][data-tone] .ui-card-value {
+  color: var(--border-default);
+}
+
+/* Accent carries its tint as its identity, so an empty accent card drops the
+   wash too — otherwise it still shouts in colour with a grey number in it. */
+.ui-card[data-empty][data-kind="accent"],
+.ui-card[data-empty][data-kind="accent"][data-tone] {
+  background: var(--surface);
+  border-color: var(--border-subtle);
+}
