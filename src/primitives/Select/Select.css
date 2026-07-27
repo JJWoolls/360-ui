@@ -130,7 +130,7 @@
 }
 
 .ui-select-row[data-selected] {
-  background: rgb(var(--brand-rgb) / 10%);
+  background: rgba(var(--brand-rgb), 0.1);
 }
 
 /* LMS: Check mr-2 h-3.5 w-3.5 primary, opacity swap keeps labels aligned. */

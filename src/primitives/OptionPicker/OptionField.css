@@ -41,8 +41,8 @@
 
 /* Value chosen — the field lights up brand, same recipe as a primary Button. */
 .ui-optionfield[data-set] {
-  background: rgb(var(--brand-rgb) / 12%);
-  border-color: rgb(var(--brand-rgb) / 35%);
+  background: rgba(var(--brand-rgb), 0.12);
+  border-color: rgba(var(--brand-rgb), 0.35);
   color: var(--brand);
 }
 

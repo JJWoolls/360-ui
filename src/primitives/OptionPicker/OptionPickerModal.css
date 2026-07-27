@@ -45,7 +45,7 @@
 /* LMS focus:ring-2 ring-primary/50 — mouse focus included, so :focus not
    :focus-visible. */
 .ui-optionpicker-search input:focus {
-  outline: 2px solid rgb(var(--brand-rgb) / 50%);
+  outline: 2px solid rgba(var(--brand-rgb), 0.5);
   outline-offset: 0;
 }
 

@@ -96,7 +96,7 @@
    This is the one knob: raise toward 100% for louder, drop toward 50% for
    quieter. Everything else about the toggle is the LMS's geometry. */
 .ui-toggle[aria-checked="true"] .ui-toggle-track {
-  background: rgb(var(--brand-rgb) / 75%);
+  background: rgba(var(--brand-rgb), 0.75);
 }
 
 /* travel = track - thumb - both insets = 36 - 16 - 2 - 2 = 16 */

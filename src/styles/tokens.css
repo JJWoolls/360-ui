@@ -34,30 +34,34 @@
   --text-disabled:   #444444;
   --brand:           #3ecf8e;
   --brand-hover:     #35b87e;
-  --brand-rgb:       62 207 142;
+  --brand-rgb:       62, 207, 142;
   --brand-on:        #0a0a0a;
   --danger:          #ff4757;
-  --danger-rgb:      255 71 87;
+  --danger-rgb:      255, 71, 87;
   --warn:            #f5a623;
-  --warn-rgb:        245 166 35;
+  --warn-rgb:        245, 166, 35;
   --info:            #4a9eff;
-  --info-rgb:        74 158 255;
+  --info-rgb:        74, 158, 255;
   --violet:          #a78bfa;
-  --violet-rgb:      167 139 250;
+  --violet-rgb:      167, 139, 250;
   /* Neutral badge tone. The LMS "Audit" badge is #666 on rgba(102,102,102,.1). */
-  --muted-rgb:       102 102 102;
+  --muted-rgb:       102, 102, 102;
   --toggle-thumb:    #ffffff;
   --overlay:         rgba(0, 0, 0, 0.6);
   --shadow:          rgba(0, 0, 0, 0.45);
   color-scheme: dark;
 }
 
-/* [data-theme="light"] is the LMS's own light switch. The kit answers to it as
-   well as to the map attribute, so a token the LMS does not define itself still
-   flips with the rest of the page instead of staying stuck on its dark value —
-   an undefined or wrong-mode var here renders as nothing at all, with no error.
-   The LMS's globals.css loads AFTER this file and keeps winning on every token
-   it defines; only the handful it has no name for come from here. */
+/* [data-theme="light"] is the LMS's own light switch, kept here so this file
+   works if it is ever the token source for an app that themes that way.
+
+   THE LMS DOES NOT LOAD THIS FILE. It did for a few hours on 2026-07-27, on the
+   assumption that import order in the app decides the winner. It does not —
+   Next emitted the two stylesheets as separate chunks and linked this one LAST,
+   so these values silently overrode the LMS's on all 53 shared tokens. Most
+   were identical; the -rgb ones were not, and 422 tinted backgrounds went
+   transparent with no error anywhere. An app owns its tokens; the kit reads
+   them. Do not import this into an app that already has a token file. */
 :root[data-map="atlas-light"],
 [data-theme="light"] {
   --bg:              #f7f7f7;
@@ -75,17 +79,17 @@
   --text-disabled:   #c0c4cc;
   --brand:           #1f9d63;
   --brand-hover:     #17804f;
-  --brand-rgb:       31 157 99;
+  --brand-rgb:       31, 157, 99;
   --brand-on:        #ffffff;
   --danger:          #dc2626;
-  --danger-rgb:      220 38 38;
+  --danger-rgb:      220, 38, 38;
   --warn:            #b45309;
-  --warn-rgb:        180 83 9;
+  --warn-rgb:        180, 83, 9;
   --info:            #1d4ed8;
-  --info-rgb:        29 78 216;
+  --info-rgb:        29, 78, 216;
   --violet:          #6d28d9;
-  --violet-rgb:      109 40 217;
-  --muted-rgb:       75 85 99;
+  --violet-rgb:      109, 40, 217;
+  --muted-rgb:       75, 85, 99;
   --toggle-thumb:    #ffffff;
   --overlay:         rgba(0, 0, 0, 0.3);
   --shadow:          rgba(0, 0, 0, 0.12);
@@ -109,17 +113,17 @@
   --text-disabled:   #3d4453;
   --brand:           #5b9cff;
   --brand-hover:     #4785e6;
-  --brand-rgb:       91 156 255;
+  --brand-rgb:       91, 156, 255;
   --brand-on:        #0b0f18;
   --danger:          #ff5c6c;
-  --danger-rgb:      255 92 108;
+  --danger-rgb:      255, 92, 108;
   --warn:            #f0a93c;
-  --warn-rgb:        240 169 60;
+  --warn-rgb:        240, 169, 60;
   --info:            #56c8e8;
-  --info-rgb:        86 200 232;
+  --info-rgb:        86, 200, 232;
   --violet:          #b28cfa;
-  --violet-rgb:      178 140 250;
-  --muted-rgb:       125 135 154;
+  --violet-rgb:      178, 140, 250;
+  --muted-rgb:       125, 135, 154;
   --toggle-thumb:    #f2f5fa;
   --overlay:         rgba(0, 0, 0, 0.65);
   --shadow:          rgba(0, 0, 0, 0.5);
@@ -143,17 +147,17 @@
   --text-disabled:   #4a4038;
   --brand:           #f0a03c;
   --brand-hover:     #d6872a;
-  --brand-rgb:       240 160 60;
+  --brand-rgb:       240, 160, 60;
   --brand-on:        #14100d;
   --danger:          #f2634f;
-  --danger-rgb:      242 99 79;
+  --danger-rgb:      242, 99, 79;
   --warn:            #e8c33f;
-  --warn-rgb:        232 195 63;
+  --warn-rgb:        232, 195, 63;
   --info:            #5fb0c4;
-  --info-rgb:        95 176 196;
+  --info-rgb:        95, 176, 196;
   --violet:          #c294e0;
-  --violet-rgb:      194 148 224;
-  --muted-rgb:       148 133 119;
+  --violet-rgb:      194, 148, 224;
+  --muted-rgb:       148, 133, 119;
   --toggle-thumb:    #fdf6ee;
   --overlay:         rgba(0, 0, 0, 0.65);
   --shadow:          rgba(0, 0, 0, 0.5);
@@ -177,17 +181,17 @@
   --text-disabled:   #3c4a43;
   --brand:           #3ecf8e;
   --brand-hover:     #35b87e;
-  --brand-rgb:       62 207 142;
+  --brand-rgb:       62, 207, 142;
   --brand-on:        #08110d;
   --danger:          #ff5f6d;
-  --danger-rgb:      255 95 109;
+  --danger-rgb:      255, 95, 109;
   --warn:            #e9b23c;
-  --warn-rgb:        233 178 60;
+  --warn-rgb:        233, 178, 60;
   --info:            #4fb8d8;
-  --info-rgb:        79 184 216;
+  --info-rgb:        79, 184, 216;
   --violet:          #a78bfa;
-  --violet-rgb:      167 139 250;
-  --muted-rgb:       122 143 132;
+  --violet-rgb:      167, 139, 250;
+  --muted-rgb:       122, 143, 132;
   --toggle-thumb:    #f0f7f3;
   --overlay:         rgba(0, 0, 0, 0.65);
   --shadow:          rgba(0, 0, 0, 0.5);
@@ -211,17 +215,17 @@
   --text-disabled:   #bdb6a6;
   --brand:           #1f8f5f;
   --brand-hover:     #17744c;
-  --brand-rgb:       31 143 95;
+  --brand-rgb:       31, 143, 95;
   --brand-on:        #ffffff;
   --danger:          #c2402f;
-  --danger-rgb:      194 64 47;
+  --danger-rgb:      194, 64, 47;
   --warn:            #9a6512;
-  --warn-rgb:        154 101 18;
+  --warn-rgb:        154, 101, 18;
   --info:            #1f5f9e;
-  --info-rgb:        31 95 158;
+  --info-rgb:        31, 95, 158;
   --violet:          #6b3fb5;
-  --violet-rgb:      107 63 181;
-  --muted-rgb:       107 100 85;
+  --violet-rgb:      107, 63, 181;
+  --muted-rgb:       107, 100, 85;
   --toggle-thumb:    #ffffff;
   --overlay:         rgba(40, 34, 20, 0.4);
   --shadow:          rgba(60, 50, 30, 0.13);

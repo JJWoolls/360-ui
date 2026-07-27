@@ -26,9 +26,15 @@
  * clickable. Josh had already invented this rule; nothing recorded it, so every
  * new button drifted back to convention. That is why this comment is long.
  *
- * --*-rgb tokens are SPACE-separated. `rgb(var(--x-rgb) / 12%)` with a
- * comma-separated token is invalid CSS and is silently dropped — the button
+ * --*-rgb tokens are COMMA-separated and alpha is written
+ * `rgba(var(--x-rgb), 0.12)`. The two conventions cannot mix: a comma-separated
+ * token inside `rgb(var(--x-rgb) / 12%)`, or a space-separated one inside
+ * `rgba(…, 0.12)`, is invalid CSS the browser silently drops — the button
  * renders with no ground at all and looks like a tuning problem. It isn't.
+ *
+ * This kit used the space-and-slash form until 2026-07-27. It changed because
+ * the LMS writes the comma form at 422 call sites against 45 here, and the LMS
+ * is the basis. Both apps are on commas now; do not reintroduce the other.
  */
 
 .ui-btn {
@@ -68,13 +74,13 @@
 
 /* ---- primary — brand hue carries the "this is the main action" ----------- */
 .ui-btn[data-variant="primary"] {
-  background: rgb(var(--brand-rgb) / 12%);
-  border-color: rgb(var(--brand-rgb) / 35%);
+  background: rgba(var(--brand-rgb), 0.12);
+  border-color: rgba(var(--brand-rgb), 0.35);
   color: var(--brand);
 }
 
 .ui-btn[data-variant="primary"]:hover:not(:disabled) {
-  background: rgb(var(--brand-rgb) / 20%);
+  background: rgba(var(--brand-rgb), 0.2);
 }
 
 /* ---- secondary — same recipe, neutral hue. The absence of colour is what
@@ -89,8 +95,8 @@
    The LMS gets this right too: its secondary uses hsl(var(--foreground)) = 78%
    = #c7c7c7, a soft white, deliberately not pure. -------------------------- */
 .ui-btn[data-variant="secondary"] {
-  background: rgb(var(--muted-rgb) / 12%);
-  border-color: rgb(var(--muted-rgb) / 35%);
+  background: rgba(var(--muted-rgb), 0.12);
+  border-color: rgba(var(--muted-rgb), 0.35);
   color: var(--text-secondary);
 }
 
@@ -98,7 +104,7 @@
    full strength — secondary is the one variant whose resting label is dimmed, so
    hover is where it comes up to meet you. The border still never moves. */
 .ui-btn[data-variant="secondary"]:hover:not(:disabled) {
-  background: rgb(var(--muted-rgb) / 20%);
+  background: rgba(var(--muted-rgb), 0.2);
   color: var(--text-primary);
 }
 
@@ -119,13 +125,13 @@
 
 /* ---- danger ------------------------------------------------------------- */
 .ui-btn[data-variant="danger"] {
-  background: rgb(var(--danger-rgb) / 12%);
-  border-color: rgb(var(--danger-rgb) / 35%);
+  background: rgba(var(--danger-rgb), 0.12);
+  border-color: rgba(var(--danger-rgb), 0.35);
   color: var(--danger);
 }
 
 .ui-btn[data-variant="danger"]:hover:not(:disabled) {
-  background: rgb(var(--danger-rgb) / 20%);
+  background: rgba(var(--danger-rgb), 0.2);
 }
 
 /* ---- icon / spinner ----------------------------------------------------- */

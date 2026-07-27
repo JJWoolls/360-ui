@@ -52,23 +52,23 @@
 }
 
 .ui-modal-tile[data-tone="brand"] {
-  background: rgb(var(--brand-rgb) / 12%);
+  background: rgba(var(--brand-rgb), 0.12);
   color: var(--brand);
 }
 .ui-modal-tile[data-tone="danger"] {
-  background: rgb(var(--danger-rgb) / 12%);
+  background: rgba(var(--danger-rgb), 0.12);
   color: var(--danger);
 }
 .ui-modal-tile[data-tone="warn"] {
-  background: rgb(var(--warn-rgb) / 12%);
+  background: rgba(var(--warn-rgb), 0.12);
   color: var(--warn);
 }
 .ui-modal-tile[data-tone="info"] {
-  background: rgb(var(--info-rgb) / 12%);
+  background: rgba(var(--info-rgb), 0.12);
   color: var(--info);
 }
 .ui-modal-tile[data-tone="violet"] {
-  background: rgb(var(--violet-rgb) / 12%);
+  background: rgba(var(--violet-rgb), 0.12);
   color: var(--violet);
 }
 

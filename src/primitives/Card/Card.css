@@ -287,8 +287,8 @@
 /* =========================== accent ======================================= */
 /* The tint IS the card. Default to brand so an untoned accent still renders. */
 .ui-card[data-kind="accent"] {
-  background: rgb(var(--brand-rgb) / 8%);
-  border: 1px solid rgb(var(--brand-rgb) / 25%);
+  background: rgba(var(--brand-rgb), 0.08);
+  border: 1px solid rgba(var(--brand-rgb), 0.25);
   border-radius: var(--radius-lg);
   padding: 20px;
 }
@@ -316,32 +316,32 @@
   color: var(--text-secondary);
 }
 .ui-card[data-kind="accent"][data-tone="danger"] {
-  background: rgb(var(--danger-rgb) / 8%);
-  border-color: rgb(var(--danger-rgb) / 25%);
+  background: rgba(var(--danger-rgb), 0.08);
+  border-color: rgba(var(--danger-rgb), 0.25);
 }
 .ui-card[data-kind="accent"][data-tone="danger"] .ui-card-icon,
 .ui-card[data-kind="accent"][data-tone="danger"] .ui-card-value {
   color: var(--danger);
 }
 .ui-card[data-kind="accent"][data-tone="warn"] {
-  background: rgb(var(--warn-rgb) / 8%);
-  border-color: rgb(var(--warn-rgb) / 25%);
+  background: rgba(var(--warn-rgb), 0.08);
+  border-color: rgba(var(--warn-rgb), 0.25);
 }
 .ui-card[data-kind="accent"][data-tone="warn"] .ui-card-icon,
 .ui-card[data-kind="accent"][data-tone="warn"] .ui-card-value {
   color: var(--warn);
 }
 .ui-card[data-kind="accent"][data-tone="info"] {
-  background: rgb(var(--info-rgb) / 8%);
-  border-color: rgb(var(--info-rgb) / 25%);
+  background: rgba(var(--info-rgb), 0.08);
+  border-color: rgba(var(--info-rgb), 0.25);
 }
 .ui-card[data-kind="accent"][data-tone="info"] .ui-card-icon,
 .ui-card[data-kind="accent"][data-tone="info"] .ui-card-value {
   color: var(--info);
 }
 .ui-card[data-kind="accent"][data-tone="violet"] {
-  background: rgb(var(--violet-rgb) / 8%);
-  border-color: rgb(var(--violet-rgb) / 25%);
+  background: rgba(var(--violet-rgb), 0.08);
+  border-color: rgba(var(--violet-rgb), 0.25);
 }
 .ui-card[data-kind="accent"][data-tone="violet"] .ui-card-icon,
 .ui-card[data-kind="accent"][data-tone="violet"] .ui-card-value {
