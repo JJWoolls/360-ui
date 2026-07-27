@@ -59,6 +59,16 @@ export interface CardProps {
   /** Optional header glyph (e.g. a lucide icon node). Shown on stat/tile/accent. */
   icon?: ReactNode;
   /**
+   * Sits on the value's baseline, to its right. For the counts that qualify the
+   * number rather than replace it — the LMS dashboard's rush / at-risk /
+   * snoozed pills are the reason this exists.
+   *
+   * It is NOT a general children slot. A card is a number and what it means; if
+   * what you want to put here isn't attached to the number, you want a different
+   * component. Omit it and the DOM is unchanged from before this prop existed.
+   */
+  extra?: ReactNode;
+  /**
    * Makes the card a button. Hover treatment is applied only when clickable, and
    * only for kinds that have one — stat lifts, tile lifts, accent does NOT change
    * on hover (josh-dash's cards are clickable but only fade via transition-colors).
@@ -66,12 +76,21 @@ export interface CardProps {
   onClick?: () => void;
 }
 
-export function Card({ label, value, foot, tone, kind = "plain", icon, onClick }: CardProps) {
+export function Card({
+  label,
+  value,
+  foot,
+  tone,
+  kind = "plain",
+  icon,
+  extra,
+  onClick,
+}: CardProps) {
   const clickable = typeof onClick === "function";
 
   // Plain is the untouched original: same DOM, same classes, data-tone on the
   // value element. Keeps every existing screen call site rendering byte-for-byte.
-  if (kind === "plain" && !clickable) {
+  if (kind === "plain" && !clickable && !extra) {
     return (
       <div className="ui-card">
         <div className="ui-card-label">{label}</div>
@@ -93,7 +112,18 @@ export function Card({ label, value, foot, tone, kind = "plain", icon, onClick }
           <span className="ui-card-label">{label}</span>
         </div>
       )}
-      <div className="ui-card-value">{value}</div>
+      {/* No extra means no wrapper — the value element stays exactly where it
+          was, so nothing already on screen shifts. */}
+      {extra ? (
+        <div className="ui-card-valuerow">
+          <div className="ui-card-value" data-tone={tone}>
+            {value}
+          </div>
+          <div className="ui-card-extra">{extra}</div>
+        </div>
+      ) : (
+        <div className="ui-card-value">{value}</div>
+      )}
       {foot && <div className="ui-card-foot">{foot}</div>}
     </>
   );

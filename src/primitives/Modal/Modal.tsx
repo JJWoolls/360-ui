@@ -36,6 +36,17 @@ export interface ModalProps {
   iconTone?: ModalTone;
   /** Buttons. Bottom-right, primary LAST — the eye lands there. */
   footer?: ReactNode;
+  /**
+   * How wide the dialog is allowed to get, in px. Omit and it stays at the house
+   * 460, which is right for a confirm and wrong for a form.
+   *
+   * This exists because the LMS has ~400 modal shells at widths chosen per
+   * screen, and one width for all of them is not a standard, it is a regression.
+   * It is a MAX, not a fixed size: the dialog is still 100% wide below it and
+   * still refuses to grow past the window, so a number here can never push the
+   * primary button off a narrow screen.
+   */
+  width?: number;
   children: ReactNode;
 }
 
@@ -66,6 +77,7 @@ export function Modal({
   icon,
   iconTone = "brand",
   footer,
+  width,
   children,
 }: ModalProps) {
   const id = useId();
@@ -159,6 +171,9 @@ export function Modal({
     >
       <div
         className="ui-modal"
+        // Overrides the stylesheet's max-width only when a caller asked. No
+        // width prop means no inline style at all, so the house 460 stands.
+        style={width == null ? undefined : { maxWidth: width }}
         ref={dialogRef}
         role="dialog"
         aria-modal="true"

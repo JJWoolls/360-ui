@@ -107,6 +107,22 @@
   color: var(--violet);
 }
 
+/* The value and whatever qualifies it, on one baseline. Only rendered when a
+   caller passes `extra`; without it the value element is a direct child exactly
+   as before, so no existing card moves. Baseline alignment, not centre: the
+   pills are small and must sit ON the number's feet, not float beside it. */
+.ui-card-valuerow {
+  display: flex;
+  align-items: baseline;
+  gap: var(--s2);
+}
+
+.ui-card-extra {
+  display: flex;
+  align-items: center;
+  gap: var(--s2);
+}
+
 .ui-card-foot {
   margin-top: var(--s1);
   font-size: var(--text-sm);
