@@ -114,6 +114,12 @@
   color: var(--text-secondary);
 }
 
+/* padded={false} — the content brings its own edges. A full-bleed table or a
+   list that has to touch the sides; the head and footer keep their padding. */
+.ui-modal-body[data-padded="false"] {
+  padding: 0;
+}
+
 /* Actions bottom-right, primary last — the caller passes them in that order. */
 .ui-modal-foot {
   display: flex;

@@ -26,10 +26,22 @@ import "./Modal.css";
 
 export type ModalTone = "brand" | "danger" | "warn" | "info" | "violet";
 
-export interface ModalProps {
+/**
+ * A dialog announces itself by its title. A titled modal points at the title it
+ * already shows; an untitled one MUST carry an ariaLabel, because a dialog that
+ * announces nothing is just a trap for anyone not looking at the screen.
+ *
+ * The union is what enforces it — you cannot compile a modal that has neither.
+ * Untitled is a real case, not an oversight: a confirm dialog whose whole
+ * content is one sentence looks wrong with a header bar over it.
+ */
+type ModalLabel =
+  | { title: string; ariaLabel?: never }
+  | { title?: undefined; ariaLabel: string };
+
+interface ModalBase {
   open: boolean;
   onClose: () => void;
-  title: string;
   /** Glyph for the head tile. An inert <svg> using currentColor. */
   icon?: ReactNode;
   /** Tints the head tile. `danger` for destructive confirms. */
@@ -47,8 +59,22 @@ export interface ModalProps {
    * primary button off a narrow screen.
    */
   width?: number;
+  /**
+   * Body padding. Off when the content brings its own edge-to-edge layout — a
+   * full-bleed table or a list that needs to touch the sides. The head and the
+   * footer keep their padding either way; only the body goes flush.
+   */
+  padded?: boolean;
+  /**
+   * Whether clicking the backdrop closes. Leave it on for anything ordinary.
+   * Turn it OFF for a destructive confirm or a half-finished form, where a
+   * stray click outside should not throw the work away.
+   */
+  closeOnBackdrop?: boolean;
   children: ReactNode;
 }
+
+export type ModalProps = ModalBase & ModalLabel;
 
 const FOCUSABLE = [
   "a[href]",
@@ -74,10 +100,13 @@ export function Modal({
   open,
   onClose,
   title,
+  ariaLabel,
   icon,
   iconTone = "brand",
   footer,
   width,
+  padded = true,
+  closeOnBackdrop = true,
   children,
 }: ModalProps) {
   const id = useId();
@@ -166,7 +195,7 @@ export function Modal({
       // mousedown, not click: a click that STARTS inside the dialog and ends on
       // the backdrop (a drag across a text selection) must not close it.
       onMouseDown={(e) => {
-        if (e.target === e.currentTarget) onClose();
+        if (closeOnBackdrop && e.target === e.currentTarget) onClose();
       }}
     >
       <div
@@ -177,36 +206,46 @@ export function Modal({
         ref={dialogRef}
         role="dialog"
         aria-modal="true"
-        aria-labelledby={titleId}
+        // Point at the visible title when there is one; fall back to the label
+        // the type system insisted on when there isn't.
+        aria-labelledby={title == null ? undefined : titleId}
+        aria-label={title == null ? ariaLabel : undefined}
       >
-        <div className="ui-modal-head">
-          {icon && (
-            <span className="ui-modal-tile" data-tone={iconTone} aria-hidden="true">
-              {icon}
+        {/* No title, no head. An untitled modal is one sentence and its
+            buttons; a bar carrying nothing but an X sits above it looking like
+            a mistake, and the footer already offers the way out. */}
+        {title != null && (
+          <div className="ui-modal-head">
+            {icon && (
+              <span className="ui-modal-tile" data-tone={iconTone} aria-hidden="true">
+                {icon}
+              </span>
+            )}
+            <span className="ui-modal-title" id={titleId}>
+              {title}
             </span>
-          )}
-          <span className="ui-modal-title" id={titleId}>
-            {title}
-          </span>
-          <button
-            type="button"
-            className="ui-modal-x"
-            aria-label="Close"
-            onClick={onClose}
-          >
-            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-              <path
-                d="M18 6L6 18M6 6l12 12"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-              />
-            </svg>
-          </button>
-        </div>
+            <button
+              type="button"
+              className="ui-modal-x"
+              aria-label="Close"
+              onClick={onClose}
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path
+                  d="M18 6L6 18M6 6l12 12"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                />
+              </svg>
+            </button>
+          </div>
+        )}
 
-        <div className="ui-modal-body">{children}</div>
+        <div className="ui-modal-body" data-padded={padded ? undefined : "false"}>
+          {children}
+        </div>
 
         {footer && <div className="ui-modal-foot">{footer}</div>}
       </div>
