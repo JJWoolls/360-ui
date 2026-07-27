@@ -106,7 +106,7 @@ export function Card({
 
   // Plain is the untouched original: same DOM, same classes, data-tone on the
   // value element. Keeps every existing screen call site rendering byte-for-byte.
-  if (kind === "plain" && !clickable && !extra && !empty) {
+  if (kind === "plain" && !clickable && !extra && !empty && !icon) {
     return (
       <div className="ui-card">
         <div className="ui-card-label">{label}</div>
@@ -120,7 +120,12 @@ export function Card({
 
   const body = (
     <>
-      {kind === "plain" ? (
+      {/* An icon is not tied to a treatment. Plain tones the VALUE and stat
+          tones the LABEL, and a card can want either one with a glyph beside
+          the label — the LMS analytics cards are exactly that: muted label,
+          coloured icon, coloured number. Plain with no icon still emits the
+          original standalone label, so nothing already on screen moves. */}
+      {kind === "plain" && !icon ? (
         <div className="ui-card-label">{label}</div>
       ) : (
         <div className="ui-card-head">

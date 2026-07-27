@@ -107,6 +107,33 @@
   color: var(--violet);
 }
 
+/* Plain WITH an icon. The rules above key off the value element, which only
+   carries data-tone when the card has an `extra`; these key off the root, which
+   always does. :not([data-kind]) is what says "plain" — plain is the only kind
+   that renders no data-kind attribute — so stat, tile and accent are untouched
+   and keep tinting whatever they tint. The icon follows the value here, because
+   on a plain card the number is the thing and the glyph is its label. */
+.ui-card:not([data-kind])[data-tone="brand"] .ui-card-value,
+.ui-card:not([data-kind])[data-tone="brand"] .ui-card-icon {
+  color: var(--brand);
+}
+.ui-card:not([data-kind])[data-tone="danger"] .ui-card-value,
+.ui-card:not([data-kind])[data-tone="danger"] .ui-card-icon {
+  color: var(--danger);
+}
+.ui-card:not([data-kind])[data-tone="warn"] .ui-card-value,
+.ui-card:not([data-kind])[data-tone="warn"] .ui-card-icon {
+  color: var(--warn);
+}
+.ui-card:not([data-kind])[data-tone="info"] .ui-card-value,
+.ui-card:not([data-kind])[data-tone="info"] .ui-card-icon {
+  color: var(--info);
+}
+.ui-card:not([data-kind])[data-tone="violet"] .ui-card-value,
+.ui-card:not([data-kind])[data-tone="violet"] .ui-card-icon {
+  color: var(--violet);
+}
+
 /* The value and whatever qualifies it, on one baseline. Only rendered when a
    caller passes `extra`; without it the value element is a direct child exactly
    as before, so no existing card moves. Baseline alignment, not centre: the
@@ -340,13 +367,16 @@
 .ui-card[data-empty] .ui-card-label,
 .ui-card[data-empty] .ui-card-icon,
 .ui-card[data-empty][data-kind][data-tone] .ui-card-label,
-.ui-card[data-empty][data-kind][data-tone] .ui-card-icon {
+.ui-card[data-empty][data-kind][data-tone] .ui-card-icon,
+.ui-card[data-empty]:not([data-kind])[data-tone] .ui-card-label,
+.ui-card[data-empty]:not([data-kind])[data-tone] .ui-card-icon {
   color: var(--text-secondary);
 }
 
 .ui-card[data-empty] .ui-card-value,
 .ui-card[data-empty][data-kind] .ui-card-value,
-.ui-card[data-empty][data-kind][data-tone] .ui-card-value {
+.ui-card[data-empty][data-kind][data-tone] .ui-card-value,
+.ui-card[data-empty]:not([data-kind])[data-tone] .ui-card-value {
   color: var(--border-default);
 }
 
