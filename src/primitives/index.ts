@@ -32,10 +32,10 @@ export { Spinner, Skeleton } from "./Loading/Loading";
 export type { SpinnerProps, SkeletonProps } from "./Loading/Loading";
 
 export { Badge } from "./Badge/Badge";
-export type { BadgeProps, BadgeTone } from "./Badge/Badge";
+export type { BadgeProps, BadgeTone, BadgeKind } from "./Badge/Badge";
 
 export { Card } from "./Card/Card";
-export type { CardProps, CardTone } from "./Card/Card";
+export type { CardProps, CardTone, CardKind } from "./Card/Card";
 
 export { ListRow } from "./ListRow/ListRow";
 export type { ListRowProps, ListRowTone } from "./ListRow/ListRow";
