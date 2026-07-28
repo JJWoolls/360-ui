@@ -67,7 +67,7 @@ export type { SelectProps, SelectOption } from "./Select/Select";
 // without the chevron. They live next to each other in the barrel because they
 // must stay identical in shape; see the note at the top of Input.css.
 export { Input, Textarea } from "./Input/Input";
-export type { InputProps, TextareaProps } from "./Input/Input";
+export type { InputProps, TextareaProps, InputSize } from "./Input/Input";
 
 export { ContextMenu, useContextMenu } from "./ContextMenu/ContextMenu";
 export type { ContextMenuProps, ContextMenuItem } from "./ContextMenu/ContextMenu";

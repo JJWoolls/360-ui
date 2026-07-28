@@ -60,6 +60,24 @@
   outline-color: var(--danger);
 }
 
+/* The INLINE size — a field that appears in place inside a row or a card,
+ * where a 36px box would push the row apart. Same border, same radius, same
+ * focus: only the box and the type shrink, which is the rule the Badge already
+ * states ("size is free; the treatment is not").
+ *
+ * --s5 is 24px and too tight for typed text with a 1px border, so the height
+ * is 28px — the same relationship the Button's sm has to its own md. */
+.ui-input[data-size="sm"] {
+  height: 28px;
+  padding: var(--s1) var(--s2);
+  font-size: var(--text-sm);
+}
+
+.ui-textarea[data-size="sm"] {
+  height: auto;
+  min-height: 56px;
+}
+
 /* ---- prefix / suffix ------------------------------------------------------
  * A mark INSIDE the field's edge: a currency sign, a search icon, a unit. The
  * field keeps its own box and the mark is laid over it, so the border, height

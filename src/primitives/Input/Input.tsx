@@ -27,13 +27,31 @@ import "./Input.css";
  * a <label htmlFor> at it, or pass aria-label when there is no visible label.
  */
 
+/**
+ * The two the apps actually draw, named the same as the Button's so a form and
+ * its buttons can be asked for the same size in the same word.
+ *
+ *   "md" — the default, and the Select trigger's size. A form field.
+ *   "sm" — an INLINE editor: a field that appears in place inside a row or a
+ *          card, where a 36px box would push the row apart. The LMS edits a
+ *          tracking number and a line quantity this way.
+ *
+ * Size is free; the treatment is not — same border, same radius, same focus.
+ */
+export type InputSize = "sm" | "md";
+
 type Shared = {
   /** Failed validation. Draws the danger edge and sets aria-invalid. */
   invalid?: boolean;
+  size?: InputSize;
 };
 
+// `size` and `prefix` are both real HTML attributes — size is a character
+// count, prefix is a legacy RDFa string. Left in place they would intersect
+// with ours to `never` and `string`, so an element prefix would not compile.
+// Omitted here so the house meanings win.
 export type InputProps = Shared &
-  Omit<InputHTMLAttributes<HTMLInputElement>, "className"> & {
+  Omit<InputHTMLAttributes<HTMLInputElement>, "className" | "size" | "prefix"> & {
     /**
      * A fixed mark inside the field's left edge — a currency sign, a search
      * icon, a unit. NOT a label and not a hint: it is part of the value's
@@ -51,11 +69,13 @@ export type InputProps = Shared &
 export type TextareaProps = Shared &
   Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, "className">;
 
-export function Input({ invalid, prefix, suffix, ...rest }: InputProps) {
+
+export function Input({ invalid, size = "md", prefix, suffix, ...rest }: InputProps) {
   const field = (
     <input
       {...rest}
       className="ui-input"
+      data-size={size}
       data-invalid={invalid || undefined}
       aria-invalid={invalid || undefined}
     />
@@ -87,12 +107,13 @@ export function Input({ invalid, prefix, suffix, ...rest }: InputProps) {
  * how tall it starts; the user can drag it taller and not narrower, because a
  * field narrower than the form it sits in just looks like a mistake.
  */
-export function Textarea({ invalid, rows = 3, ...rest }: TextareaProps) {
+export function Textarea({ invalid, size = "md", rows = 3, ...rest }: TextareaProps) {
   return (
     <textarea
       {...rest}
       rows={rows}
       className="ui-input ui-textarea"
+      data-size={size}
       data-invalid={invalid || undefined}
       aria-invalid={invalid || undefined}
     />
