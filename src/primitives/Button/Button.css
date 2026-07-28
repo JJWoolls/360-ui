@@ -72,14 +72,18 @@
   opacity: 0.55;
 }
 
-/* ---- primary — brand hue carries the "this is the main action" ----------- */
-.ui-btn[data-variant="primary"] {
+/* ---- primary — brand hue carries the "this is the main action" -----------
+   `tone="brand"` is the same hue under the colour vocabulary's own name, so
+   the two share a rule rather than drifting apart as separate copies. */
+.ui-btn[data-variant="primary"],
+.ui-btn[data-variant="brand"] {
   background: rgba(var(--brand-rgb), 0.12);
   border-color: rgba(var(--brand-rgb), 0.35);
   color: var(--brand);
 }
 
-.ui-btn[data-variant="primary"]:hover:not(:disabled) {
+.ui-btn[data-variant="primary"]:hover:not(:disabled),
+.ui-btn[data-variant="brand"]:hover:not(:disabled) {
   background: rgba(var(--brand-rgb), 0.2);
 }
 
@@ -132,6 +136,50 @@
 
 .ui-btn[data-variant="danger"]:hover:not(:disabled) {
   background: rgba(var(--danger-rgb), 0.2);
+}
+
+/* ---- the rest of the colour vocabulary — see ButtonTone in Button.tsx ----
+ *
+ * Identical recipe to every variant above: ground 12%, border 35%, hover
+ * deepens the ground to 20%. Only the hue changes, which is the whole claim
+ * this file makes — a warn button is not a different KIND of button.
+ *
+ * `brand` and `danger` are not repeated here; they share the primary and
+ * danger rules, because they are the same hue named by the other vocabulary.
+ *
+ * These three are what the LMS's case-header flags were hand-rolling in raw
+ * hex — RUSH on --info, REMAKE on --warn, AUTOMATE on --violet. A pressable
+ * chip is a button under this file's rule, so it belongs here rather than in
+ * a chip primitive that would own a second copy of the same recipe.
+ */
+.ui-btn[data-variant="warn"] {
+  background: rgba(var(--warn-rgb), 0.12);
+  border-color: rgba(var(--warn-rgb), 0.35);
+  color: var(--warn);
+}
+
+.ui-btn[data-variant="warn"]:hover:not(:disabled) {
+  background: rgba(var(--warn-rgb), 0.2);
+}
+
+.ui-btn[data-variant="info"] {
+  background: rgba(var(--info-rgb), 0.12);
+  border-color: rgba(var(--info-rgb), 0.35);
+  color: var(--info);
+}
+
+.ui-btn[data-variant="info"]:hover:not(:disabled) {
+  background: rgba(var(--info-rgb), 0.2);
+}
+
+.ui-btn[data-variant="violet"] {
+  background: rgba(var(--violet-rgb), 0.12);
+  border-color: rgba(var(--violet-rgb), 0.35);
+  color: var(--violet);
+}
+
+.ui-btn[data-variant="violet"]:hover:not(:disabled) {
+  background: rgba(var(--violet-rgb), 0.2);
 }
 
 /* ---- icon / spinner ----------------------------------------------------- */

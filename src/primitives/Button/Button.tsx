@@ -12,19 +12,50 @@ import "./Button.css";
 export type ButtonVariant = "primary" | "secondary" | "ghost" | "danger";
 export type ButtonSize = "sm" | "md";
 
-export interface ButtonProps
-  extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "className"> {
-  variant?: ButtonVariant;
-  size?: ButtonSize;
-  /** Leading icon. Replaced by the spinner while `loading`. */
-  icon?: ReactNode;
-  /** Non-interactive + spinner. Distinct from `disabled`: this one is temporary. */
-  loading?: boolean;
-  children?: ReactNode;
-}
+/**
+ * The full colour vocabulary, matching the Badge's. Josh, 2026-07-28, asked
+ * for it: "put the color button in the vocabulary."
+ *
+ * WHY THIS EXISTS WHEN `variant` ALREADY PICKS A HUE. It picks three: brand,
+ * neutral and red. The LMS's case header needs blue, amber, red, green and
+ * violet for its RUSH / HOLD / REMAKE / COUPON / AUTOMATE flags, and under this
+ * file's own rule — tint + border is a BUTTON, tint alone is a badge — those
+ * flags are buttons. They were hand-rolled in raw hex for exactly this reason,
+ * which is the shape a missing vocabulary always takes.
+ *
+ * `brand` and `danger` are the same hues `variant="primary"` and
+ * `variant="danger"` already draw; they are here so the vocabulary is whole
+ * rather than a set of leftovers. There is deliberately no `muted` tone —
+ * `variant="secondary"` IS the neutral button, and a second name for it would
+ * be the first step back towards four ways of saying one thing.
+ */
+export type ButtonTone = "brand" | "danger" | "warn" | "info" | "violet";
+
+/**
+ * Colour comes from EITHER the hierarchy names or the tone vocabulary, never
+ * both — written as a union so passing both is a compile error rather than a
+ * question this component has to answer at runtime. Same shape the Badge uses.
+ *
+ * `variant` stays because two of its members are not hues at all: `secondary`
+ * is the neutral and `ghost` is the one control with no ground to colour.
+ */
+type ButtonColour =
+  | { variant?: ButtonVariant; tone?: never }
+  | { tone: ButtonTone; variant?: never };
+
+export type ButtonProps = ButtonColour &
+  Omit<ButtonHTMLAttributes<HTMLButtonElement>, "className"> & {
+    size?: ButtonSize;
+    /** Leading icon. Replaced by the spinner while `loading`. */
+    icon?: ReactNode;
+    /** Non-interactive + spinner. Distinct from `disabled`: this one is temporary. */
+    loading?: boolean;
+    children?: ReactNode;
+  };
 
 export function Button({
-  variant = "secondary",
+  variant,
+  tone,
   size = "md",
   icon,
   loading = false,
@@ -37,12 +68,17 @@ export function Button({
   // that true for mouse, keyboard and screen reader alike.
   const inert = disabled || loading;
 
+  // One attribute carries the colour whichever vocabulary named it: the union
+  // above guarantees at most one of the two arrived, and the CSS has a rule per
+  // value. `secondary` is still the default for a button that says neither.
+  const look = tone ?? variant ?? "secondary";
+
   return (
     <button
       {...rest}
       type={type}
       className="ui-btn"
-      data-variant={variant}
+      data-variant={look}
       data-size={size}
       data-loading={loading || undefined}
       disabled={inert}
