@@ -1,0 +1,70 @@
+/* Input — the house text field.
+ *
+ * EVERY VALUE HERE IS COPIED FROM .ui-select-trigger, on purpose. The field
+ * and the dropdown are the same shape; the only difference is that one of them
+ * opens a list. Change one of these two blocks and change the other, or the
+ * next form someone builds will have a text box and a dropdown that do not
+ * line up.
+ *
+ * Those numbers came from the LMS's StyledSelect when Select was ported
+ * (see the mapping table at the top of Select.css), so this is the LMS's own
+ * field, not a new opinion: 36px tall, --s2/--s3 padding, 1px --border-default,
+ * --radius, --text-base.
+ *
+ * WHAT IS NOT SHARED WITH THE TRIGGER: the trigger is a button and gets
+ * cursor: pointer; a text field keeps the I-beam. And the trigger lays its
+ * label and chevron out with flex, which a real input cannot do.
+ */
+
+.ui-input {
+  display: block;
+  width: 100%;
+  height: 36px;
+  padding: var(--s2) var(--s3);
+  background: var(--bg);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius);
+  color: var(--text-primary);
+  font-family: var(--font);
+  font-size: var(--text-base);
+  transition:
+    background-color var(--transition),
+    border-color var(--transition),
+    color var(--transition);
+}
+
+/* The Select's search box focuses this way (Select.css). Same field, same
+   focus — an outline rather than a border swap, so nothing shifts by a pixel
+   when it lights up. */
+.ui-input:focus {
+  outline: 1px solid var(--brand);
+  outline-offset: 0;
+}
+
+.ui-input::placeholder {
+  color: var(--text-secondary);
+}
+
+.ui-input:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* Danger on the EDGE, not on the text: the value the user typed stays
+   readable, which is the thing they need to see to fix it. */
+.ui-input[data-invalid] {
+  border-color: var(--danger);
+}
+
+.ui-input[data-invalid]:focus {
+  outline-color: var(--danger);
+}
+
+/* The multi-line twin. Height comes from `rows` instead of the fixed 36px, and
+   it grows only downward — a field narrower than its form reads as a mistake. */
+.ui-textarea {
+  height: auto;
+  min-height: 72px;
+  resize: vertical;
+  line-height: 1.5;
+}

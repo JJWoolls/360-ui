@@ -63,5 +63,11 @@ export type { OptionPickerModalProps, OptionPickerOption } from "./OptionPicker/
 export { Select } from "./Select/Select";
 export type { SelectProps, SelectOption } from "./Select/Select";
 
+// Input / Textarea — the house text field, which is the Select's trigger
+// without the chevron. They live next to each other in the barrel because they
+// must stay identical in shape; see the note at the top of Input.css.
+export { Input, Textarea } from "./Input/Input";
+export type { InputProps, TextareaProps } from "./Input/Input";
+
 export { ContextMenu, useContextMenu } from "./ContextMenu/ContextMenu";
 export type { ContextMenuProps, ContextMenuItem } from "./ContextMenu/ContextMenu";
