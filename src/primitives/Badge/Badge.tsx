@@ -38,19 +38,28 @@ export type BadgeTone = "brand" | "danger" | "warn" | "info" | "violet" | "muted
  *              Open · Out for Try-In · Closed · Cancelled.
  *              -> square + dot. The dot is what reads as "live".
  *
- *   "stage"  — where a thing IS in the pipeline. A position on a journey.
- *              Intake · Design · Mfg · Final QC · Shipping.
- *              -> oval, no dot.
+ *   "facet"  — WHICH ONE of an axis a thing is filed under. Department,
+ *              location, pipeline stage: the answers to "where does this
+ *              live", the things you sort and filter by.
+ *              -> pill, no dot.
  *
- *   "label"  — what a thing is CALLED. A fixed category; nothing changes.
+ *   "label"  — what a thing is CALLED. A fixed tag; nothing changes.
  *              Bug · Feature · Future · Audit.
  *              -> square, no dot.
  *
- * Status and stage exist as separate kinds for a concrete reason: they appear
- * TOGETHER on a case row. Rendered the same, you can't tell at a glance which
- * one you're reading. The shape is the tell.
+ * "facet" REPLACED "stage" on 2026-07-28. Josh, looking at a case row where
+ * department and location were square and stage was a pill: "I think we should
+ * pick one — department, location and stages are kind of like our core sorting
+ * things to decide where something lives." They are one class of thing, so they
+ * must not render as three; and the name of the class is not "stage", which is
+ * only one of its members.
+ *
+ * The pill is the shape they share, because these are what you filter by and a
+ * pill reads as a chip. Status keeps its own shape for the original reason —
+ * status and stage sit on the same case row, and rendered alike you cannot tell
+ * which you are reading. The DOT is what carries that now.
  */
-export type BadgeKind = "label" | "status" | "stage";
+export type BadgeKind = "label" | "status" | "facet";
 
 /**
  * The two sizes the LMS actually draws, as named shortcuts. Any other size is

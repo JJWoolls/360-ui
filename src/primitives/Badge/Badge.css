@@ -117,14 +117,19 @@
 
 /* SHAPE IS DRIVEN BY MEANING, NOT BY TASTE — see BadgeKind in Badge.tsx.
  *
- * status + stage appear TOGETHER on a case row. Drawn identically you cannot
- * tell which one you're reading, which is exactly what Josh spotted in the
- * gallery. The shape is the tell:
  *   status -> square + dot  (what it IS right now, live)
- *   stage  -> oval, no dot  (where it IS in the pipeline)
- *   label  -> square, no dot (what it's CALLED, fixed)
+ *   facet  -> pill, no dot  (WHICH ONE of an axis — department, location, stage)
+ *   label  -> square, no dot (what it's CALLED, a fixed tag)
+ *
+ * Status and facet appear TOGETHER on a case row and drawn identically you
+ * cannot tell which you are reading — the DOT is what tells them apart.
+ *
+ * The pill used to belong to "stage" alone, which left department and location
+ * square beside it. Josh, 2026-07-28: "I think we should pick one — department,
+ * location and stages are kind of like our core sorting things to decide where
+ * something lives." One class, one shape.
  */
-.ui-badge[data-kind="stage"] {
+.ui-badge[data-kind="facet"] {
   border-radius: var(--radius-pill);
 }
 
