@@ -50,7 +50,13 @@
      label — it does nothing, so it has no edge. */
 }
 
-/* SIZE IS DENSITY, NOT IMPORTANCE — see BadgeSize in Badge.tsx.
+/* SIZE VARIES FREELY; THE LOOK DOES NOT — see BadgeSize in Badge.tsx.
+ *
+ * Josh, 2026-07-28: "I want them to look the same and have the same layout but
+ * different sizes are fine." Different sizes on one screen are correct, not a
+ * mistake — a flag in a dense case row should be smaller than a badge in a
+ * header. Every size below is the SAME badge: same tint recipe, same shape
+ * rules, same proportions. Nothing here may change the treatment.
  *
  * The block above is "md": the LMS's real status-badge numbers. "sm" is the
  * size the LMS drew its IN-TABLE flags at (RUSH, HOLD, the shipping method) —
@@ -59,7 +65,9 @@
  * already used, not invented: at md a flag sits heavier in a case row than the
  * case number next to it, which is backwards.
  *
- * Two steps only. A free-number size prop is how a scale stops being a scale.
+ * sm and md are the two named steps because they are the two the LMS actually
+ * drew. A call site that needs another size passes a number and gets md's
+ * proportions at that size — see the custom rule below.
  */
 .ui-badge[data-size="sm"] {
   gap: 4px;

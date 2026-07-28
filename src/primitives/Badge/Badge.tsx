@@ -75,18 +75,22 @@ export interface BadgeProps {
   /** What the badge is saying. Drives the shape — see BadgeKind. */
   kind?: BadgeKind;
   /**
-   * How dense its surroundings are. Defaults to "md".
+   * How big this badge is. "sm", "md" (default), or a number of px.
    *
-   * A NUMBER sets the badge's type size in px at the call site, and the rest
-   * of the badge follows it — padding, gap and dot are all in em, so one
-   * number produces a badge in proportion rather than four values that can
-   * disagree with each other.
+   * A NUMBER sets the type size at the call site and the rest of the badge
+   * follows it — padding, gap and dot are all in em. That is the whole point:
+   * one number, and the badge keeps its proportions.
    *
-   * Josh, 2026-07-28: "can we pick the size when we put them into place...
-   * wherever it's being used has the ability to set the dimensions." Asked for
-   * directly, after being told the cost: two badges on one screen CAN now be
-   * different sizes for no reason, which is the thing a named step prevents.
-   * Reach for "sm" or "md" first and pass a number only when neither fits.
+   * SIZE IS FREE; THE LOOK IS NOT. Josh, 2026-07-28: "I don't see any reason
+   * why they can't be [different sizes]. I want them to look the same and have
+   * the same layout but different sizes are fine." So two badges sitting side
+   * by side at different sizes is not a smell — a badge in a dense table row
+   * SHOULD be smaller than one in a header. What must never vary is the
+   * treatment: same tint recipe, same shape rules, same proportions.
+   *
+   * This is why the size knob is one number rather than a padding/gap/radius
+   * set. Anything that would let a call site change the LOOK belongs on tone
+   * or kind, where it means something, or nowhere at all.
    */
   size?: BadgeSize | number;
   /** The word. Required — the color is never the message on its own. */
