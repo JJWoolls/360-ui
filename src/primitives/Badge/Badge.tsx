@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import "./Badge.css";
 
 /**
@@ -74,15 +74,35 @@ export interface BadgeProps {
   tone?: BadgeTone;
   /** What the badge is saying. Drives the shape — see BadgeKind. */
   kind?: BadgeKind;
-  /** How dense its surroundings are — see BadgeSize. Defaults to "md". */
-  size?: BadgeSize;
+  /**
+   * How dense its surroundings are. Defaults to "md".
+   *
+   * A NUMBER sets the badge's type size in px at the call site, and the rest
+   * of the badge follows it — padding, gap and dot are all in em, so one
+   * number produces a badge in proportion rather than four values that can
+   * disagree with each other.
+   *
+   * Josh, 2026-07-28: "can we pick the size when we put them into place...
+   * wherever it's being used has the ability to set the dimensions." Asked for
+   * directly, after being told the cost: two badges on one screen CAN now be
+   * different sizes for no reason, which is the thing a named step prevents.
+   * Reach for "sm" or "md" first and pass a number only when neither fits.
+   */
+  size?: BadgeSize | number;
   /** The word. Required — the color is never the message on its own. */
   children: ReactNode;
 }
 
 export function Badge({ tone = "muted", kind = "label", size = "md", children }: BadgeProps) {
+  const custom = typeof size === "number";
   return (
-    <span className="ui-badge" data-tone={tone} data-kind={kind} data-size={size}>
+    <span
+      className="ui-badge"
+      data-tone={tone}
+      data-kind={kind}
+      data-size={custom ? "custom" : size}
+      style={custom ? ({ "--ui-badge-size": `${size}px` } as CSSProperties) : undefined}
+    >
       {/* Decorative: the word already carries the meaning, so the dot must not
           be announced to a screen reader as a separate thing. */}
       {kind === "status" && <span className="ui-badge__dot" aria-hidden="true" />}

@@ -74,6 +74,30 @@
   height: 5px;
 }
 
+/* A NUMBER at the call site. The caller gives ONE value — the type size — and
+ * everything else is expressed in em so the badge stays in proportion at any
+ * size. The ratios are md's own numbers converted: 3px/10px padding, 6px gap
+ * and a 6px dot against 11px type are 0.27em, 0.9em, 0.55em and 0.55em. So a
+ * custom badge is md, scaled, rather than a fourth look.
+ *
+ * The px value arrives as --ui-badge-size, set inline by the component. No
+ * fallback on purpose: this rule only ever applies when the component has
+ * written the variable, and a silent fallback would hide a mistake rather
+ * than show it.
+ */
+.ui-badge[data-size="custom"] {
+  font-size: var(--ui-badge-size);
+  font-weight: var(--weight-bold);
+  letter-spacing: normal;
+  gap: 0.55em;
+  padding: 0.27em 0.9em;
+}
+
+.ui-badge[data-size="custom"] .ui-badge__dot {
+  width: 0.55em;
+  height: 0.55em;
+}
+
 /* SHAPE IS DRIVEN BY MEANING, NOT BY TASTE — see BadgeKind in Badge.tsx.
  *
  * status + stage appear TOGETHER on a case row. Drawn identically you cannot
