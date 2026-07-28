@@ -15,9 +15,16 @@ import "./Badge.css";
  * never what it looks like. `tone="danger"` survives a map swap and a redesign;
  * `color="red"` survives neither.
  *
- * COLOR IS NEVER THE MESSAGE. `children` is required and the word always
- * carries the meaning — the tone is reinforcement for people who can see it.
- * Roughly 1 in 12 men can't separate the danger tone from the brand one.
+ * COLOUR CARRIES MEANING — Josh, 2026-07-28: "colour absolutely means
+ * something and we could use it." An earlier version of this comment claimed
+ * colour is never the message on its own and presented that as a house rule.
+ * It was not one; it was this file's own invention, and it was used to argue
+ * against a design Josh wanted. Colour-only signals are allowed in this house.
+ *
+ * What is still true and is why `children` is required: a BADGE is a word on a
+ * ground, so if you are drawing one, put the word in it. Something that has no
+ * word to say is not a badge — it is a dot, a stripe or a toned value, and
+ * those are fine, they are just not this component.
  *
  * NOT this component: jb-dash's filter pills. Those are clickable controls with
  * on/off states — they get their own FilterChip primitive and are supposed to
