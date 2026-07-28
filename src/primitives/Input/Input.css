@@ -60,6 +60,44 @@
   outline-color: var(--danger);
 }
 
+/* ---- prefix / suffix ------------------------------------------------------
+ * A mark INSIDE the field's edge: a currency sign, a search icon, a unit. The
+ * field keeps its own box and the mark is laid over it, so the border, height
+ * and focus outline are still the field's own — nothing here re-draws them,
+ * which is what stops an adorned field from drifting away from a plain one.
+ */
+.ui-input-wrap {
+  position: relative;
+  display: block;
+  width: 100%;
+}
+
+.ui-input-affix {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  color: var(--text-secondary);
+  font-family: var(--font);
+  font-size: var(--text-base);
+  pointer-events: none; /* clicking the sign must focus the field, not block it */
+}
+
+.ui-input-affix[data-side="start"] {
+  left: var(--s3);
+}
+
+.ui-input-affix[data-side="end"] {
+  right: var(--s3);
+}
+
+/* Only the padding moves, and only on the side that has a mark. --s5 is 24px:
+   the 12px the field already had, plus room for a one-character sign. */
+.ui-input-wrap[data-has-prefix] .ui-input {
+  padding-left: var(--s5);
+}
+
 /* The multi-line twin. Height comes from `rows` instead of the fixed 36px, and
    it grows only downward — a field narrower than its form reads as a mistake. */
 .ui-textarea {
