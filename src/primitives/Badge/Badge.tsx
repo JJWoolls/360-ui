@@ -53,25 +53,60 @@ export type BadgeTone = "brand" | "danger" | "warn" | "info" | "violet" | "muted
 export type BadgeKind = "label" | "status" | "stage";
 
 /**
- * How dense the surrounding text is — NOT how important the badge is.
+ * The two sizes the LMS actually draws, as named shortcuts. Any other size is
+ * a number of px — see the `size` prop.
  *
- *   "md" — the default and the LMS's real status-badge size. A badge sitting
- *          in prose, in a header, or on a card, where it is one of the larger
- *          things in view.
- *   "sm" — a badge inside a dense data row, where 11px text and 10px of side
- *          padding make a flag heavier than the case number beside it. The LMS
- *          drew its in-table flags at this size long before the kit existed.
+ *   "md" — the default, and the LMS's real status-badge size.
+ *   "sm" — the size the LMS drew its in-table flags at (RUSH, HOLD, shipping).
  *
- * Josh, 2026-07-28: "maybe the badge should be resizable and not always a
- * standard size." Two steps, not a free number — a size prop that takes any
- * value is how a design system loses a scale. Pick the one that matches the
- * row, not the one that makes this badge stand out; importance is `tone`.
+ * Josh, 2026-07-28: "I want them to look the same and have the same layout but
+ * different sizes are fine." Size is free; the treatment is not.
  */
 export type BadgeSize = "sm" | "md";
 
-export interface BadgeProps {
-  /** What the thing IS. Never a color name. */
-  tone?: BadgeTone;
+/**
+ * A palette IDENTITY — which member of which named colour family this badge is.
+ *
+ * Josh, 2026-07-28: "a badge needs to be able to accept identity from a
+ * palette, so that if it's being used for one thing it gets that palette of
+ * colors, if it's being used for another thing it gets that palette of colors."
+ *
+ * WHY THIS IS NOT A SIXTH TONE. `tone` is a STATUS vocabulary — five ways of
+ * saying how alarmed to be. A department, a location and a pipeline stage are
+ * not degrees of alarm; they are peer identities in a set, and the set is
+ * bigger than five. Collapsing seven departments onto five tones puts two of
+ * them in the same colour in a column whose entire job is telling them apart.
+ *
+ * The value is `family-member`, matching the token pair an app already
+ * publishes: `palette="dept-implant"` reads `var(--dept-implant)` for the text
+ * and `rgba(var(--dept-implant-rgb), 0.12)` for the ground — the same 12% tint
+ * recipe every tone uses, so a palette badge is the same badge wearing a
+ * different colour.
+ *
+ * THE KIT DOES NOT KNOW YOUR FAMILIES, and that is deliberate: an app owns its
+ * tokens and the kit only reads them (incident 1616). Publish `--x` and
+ * `--x-rgb` and the badge can wear it. If the pair does not exist the badge
+ * falls back to the muted treatment rather than rendering colourless — an
+ * invalid var() is dropped silently by the browser, and a badge that vanished
+ * would be indistinguishable from one nobody styled.
+ *
+ * Mutually exclusive with `tone` — a badge saying "this is the Implant
+ * department" is not also saying "this is a danger". Passing both will not
+ * compile.
+ */
+export type BadgePalette = `${string}-${string}`;
+
+/**
+ * Colour comes from EITHER the status vocabulary or a palette identity, never
+ * both. Written as a union so passing both is a compile error rather than a
+ * question the component has to answer at runtime — the same shape the Checkbox
+ * uses for label-or-ariaLabel.
+ */
+type BadgeColour =
+  | { tone?: BadgeTone; palette?: never }
+  | { palette: BadgePalette; tone?: never };
+
+export type BadgeProps = BadgeColour & {
   /** What the badge is saying. Drives the shape — see BadgeKind. */
   kind?: BadgeKind;
   /**
@@ -95,17 +130,32 @@ export interface BadgeProps {
   size?: BadgeSize | number;
   /** The word. Required — the color is never the message on its own. */
   children: ReactNode;
-}
+};
 
-export function Badge({ tone = "muted", kind = "label", size = "md", children }: BadgeProps) {
+export function Badge({ tone, palette, kind = "label", size = "md", children }: BadgeProps) {
   const custom = typeof size === "number";
+
+  // A palette badge is coloured inline because the family names belong to the
+  // consuming app, not to this file — there is no fixed set to write rules for.
+  // The fallbacks matter more than they look: an undefined token makes the
+  // whole declaration invalid and the browser drops it without a word, so a
+  // typo would otherwise render a colourless badge that looks deliberate.
+  const style: CSSProperties = {};
+  if (custom) (style as Record<string, string>)["--ui-badge-size"] = `${size}px`;
+  if (palette) {
+    style.color = `var(--${palette}, var(--text-tertiary))`;
+    style.background = `rgba(var(--${palette}-rgb, var(--muted-rgb)), 0.12)`;
+  }
+
   return (
     <span
       className="ui-badge"
-      data-tone={tone}
+      // Falling back to muted here keeps the CSS honest: with a palette there
+      // is no tone, and an element with neither would have no ground at all.
+      data-tone={palette ? undefined : tone ?? "muted"}
       data-kind={kind}
       data-size={custom ? "custom" : size}
-      style={custom ? ({ "--ui-badge-size": `${size}px` } as CSSProperties) : undefined}
+      style={custom || palette ? style : undefined}
     >
       {/* Decorative: the word already carries the meaning, so the dot must not
           be announced to a screen reader as a separate thing. */}

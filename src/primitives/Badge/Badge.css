@@ -22,10 +22,19 @@
  * clickable controls with on/off states, not labels — they belong in a separate
  * FilterChip primitive and are SUPPOSED to look heavier. Don't fold them in here.
  *
- * The --*-rgb tokens are SPACE-separated on purpose. `rgba(var(--brand-rgb), 0.12)`
- * with a comma-separated token expands to `rgb(62, 207, 142 / 12%)` — invalid CSS,
- * silently dropped, badge renders with NO background at all. That shipped for
- * hours and looked like "the tint is too dark" rather than "there is no tint".
+ * The --*-rgb tokens are COMMA-separated — `62, 207, 142` — so they drop
+ * straight into `rgba(var(--brand-rgb), 0.12)`. (This note used to say the
+ * opposite; the kit moved onto the comma convention on 2026-07-27 because the
+ * LMS had 422 call sites written that way against the kit's 45, and the LMS is
+ * the basis. The comment outlived the change.) Either way the failure is the
+ * same and it is silent: a mismatch makes the whole declaration invalid, the
+ * browser drops it without a word, and the badge renders with NO ground at
+ * all. That shipped once and read as "the tint is too dark" rather than
+ * "there is no tint".
+ *
+ * PALETTE badges are coloured inline instead of by a rule here — the family
+ * names (--dept-*, --stage-*) belong to the consuming app, so there is no
+ * fixed set to write selectors for. They use this same 12% recipe.
  */
 
 .ui-badge {
