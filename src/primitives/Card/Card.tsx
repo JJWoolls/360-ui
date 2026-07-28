@@ -89,6 +89,21 @@ export interface CardProps {
    * on hover (josh-dash's cards are clickable but only fade via transition-colors).
    */
   onClick?: () => void;
+  /**
+   * This card is a filter and it is currently ON. It wears a brand edge, and on
+   * the neutral kinds the raised ground too — which is what the LMS dashboard's
+   * week and pipeline cards have always used to mark the active one, and what
+   * stat's hover already looks like. Selected is hover, held.
+   *
+   * A STATE, NOT A TONE. The tone still says what the number MEANS; this says
+   * what the reader has picked. Recolouring a selected card "brand" instead
+   * would lose the first meaning to say the second.
+   *
+   * Only meaningful with onClick — a card nobody can toggle cannot be on. When
+   * both are present the card announces aria-pressed, so the state is not
+   * carried by a border colour alone.
+   */
+  selected?: boolean;
 }
 
 export function Card({
@@ -101,12 +116,17 @@ export function Card({
   extra,
   empty = false,
   onClick,
+  // Deliberately NOT defaulted to false: a card that never passed `selected` is
+  // not "a toggle that is off", it is not a toggle at all. Left undefined, the
+  // aria-pressed attribute is omitted entirely and a navigating card keeps
+  // announcing as a plain button.
+  selected,
 }: CardProps) {
   const clickable = typeof onClick === "function";
 
   // Plain is the untouched original: same DOM, same classes, data-tone on the
   // value element. Keeps every existing screen call site rendering byte-for-byte.
-  if (kind === "plain" && !clickable && !extra && !empty && !icon) {
+  if (kind === "plain" && !clickable && !extra && !empty && !icon && !selected) {
     return (
       <div className="ui-card">
         <div className="ui-card-label">{label}</div>
@@ -159,6 +179,8 @@ export function Card({
         data-kind={dataKind}
         data-tone={tone}
         data-empty={empty ? "" : undefined}
+        data-selected={selected ? "" : undefined}
+        aria-pressed={selected}
         onClick={onClick}
       >
         {body}
@@ -172,6 +194,7 @@ export function Card({
       data-kind={dataKind}
       data-tone={tone}
       data-empty={empty ? "" : undefined}
+      data-selected={selected ? "" : undefined}
     >
       {body}
     </div>

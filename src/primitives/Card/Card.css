@@ -165,6 +165,18 @@
   transition: background var(--transition), border-color var(--transition);
 }
 
+/* -------- selected — a filter card that is currently ON -------------------- */
+/* The brand edge is the mark, on every kind. The raised ground goes only where
+   the kind's ground is neutral: on accent the tint IS the card's identity, so
+   replacing it would say "selected" by deleting what the card is. Accent keeps
+   its wash and takes the edge alone. This is stat's hover treatment, held. */
+.ui-card[data-selected] {
+  border-color: var(--brand);
+}
+.ui-card[data-selected]:not([data-kind="accent"]) {
+  background: var(--surface-raised);
+}
+
 /* Shared header row for stat / tile / accent (plain keeps its standalone label). */
 .ui-card-head {
   display: flex;
