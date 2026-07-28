@@ -50,6 +50,30 @@
      label — it does nothing, so it has no edge. */
 }
 
+/* SIZE IS DENSITY, NOT IMPORTANCE — see BadgeSize in Badge.tsx.
+ *
+ * The block above is "md": the LMS's real status-badge numbers. "sm" is the
+ * size the LMS drew its IN-TABLE flags at (RUSH, HOLD, the shipping method) —
+ * 9px/700, padding 2px 6px, and the dot drops to 5px so it stays in proportion
+ * rather than dominating a smaller chip. Ported from the values those flags
+ * already used, not invented: at md a flag sits heavier in a case row than the
+ * case number next to it, which is backwards.
+ *
+ * Two steps only. A free-number size prop is how a scale stops being a scale.
+ */
+.ui-badge[data-size="sm"] {
+  gap: 4px;
+  padding: 2px 6px;
+  font-size: 9px;
+  font-weight: var(--weight-bold);
+  letter-spacing: normal;
+}
+
+.ui-badge[data-size="sm"] .ui-badge__dot {
+  width: 5px;
+  height: 5px;
+}
+
 /* SHAPE IS DRIVEN BY MEANING, NOT BY TASTE — see BadgeKind in Badge.tsx.
  *
  * status + stage appear TOGETHER on a case row. Drawn identically you cannot

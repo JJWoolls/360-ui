@@ -52,18 +52,37 @@ export type BadgeTone = "brand" | "danger" | "warn" | "info" | "violet" | "muted
  */
 export type BadgeKind = "label" | "status" | "stage";
 
+/**
+ * How dense the surrounding text is — NOT how important the badge is.
+ *
+ *   "md" — the default and the LMS's real status-badge size. A badge sitting
+ *          in prose, in a header, or on a card, where it is one of the larger
+ *          things in view.
+ *   "sm" — a badge inside a dense data row, where 11px text and 10px of side
+ *          padding make a flag heavier than the case number beside it. The LMS
+ *          drew its in-table flags at this size long before the kit existed.
+ *
+ * Josh, 2026-07-28: "maybe the badge should be resizable and not always a
+ * standard size." Two steps, not a free number — a size prop that takes any
+ * value is how a design system loses a scale. Pick the one that matches the
+ * row, not the one that makes this badge stand out; importance is `tone`.
+ */
+export type BadgeSize = "sm" | "md";
+
 export interface BadgeProps {
   /** What the thing IS. Never a color name. */
   tone?: BadgeTone;
   /** What the badge is saying. Drives the shape — see BadgeKind. */
   kind?: BadgeKind;
+  /** How dense its surroundings are — see BadgeSize. Defaults to "md". */
+  size?: BadgeSize;
   /** The word. Required — the color is never the message on its own. */
   children: ReactNode;
 }
 
-export function Badge({ tone = "muted", kind = "label", children }: BadgeProps) {
+export function Badge({ tone = "muted", kind = "label", size = "md", children }: BadgeProps) {
   return (
-    <span className="ui-badge" data-tone={tone} data-kind={kind}>
+    <span className="ui-badge" data-tone={tone} data-kind={kind} data-size={size}>
       {/* Decorative: the word already carries the meaning, so the dot must not
           be announced to a screen reader as a separate thing. */}
       {kind === "status" && <span className="ui-badge__dot" aria-hidden="true" />}
