@@ -13,7 +13,10 @@
    enforces it on that side.
    ========================================================================== */
 
-export { Button } from "./Button/Button";
+// buttonProps hands the button's look to an element the kit cannot render —
+// a Next.js Link, a Tauri navigation anchor. For controls that NAVIGATE, where
+// rendering a <button> would take away middle-click and open-in-new-tab.
+export { Button, buttonProps } from "./Button/Button";
 export type { ButtonProps, ButtonVariant, ButtonTone, ButtonSize } from "./Button/Button";
 
 export { Checkbox } from "./Checkbox/Checkbox";

@@ -95,3 +95,40 @@ export function Button({
     </button>
   );
 }
+
+/**
+ * buttonProps — the button's LOOK, handed to an element that is not a button.
+ *
+ * WHAT THIS IS FOR. Some controls that should look like buttons are really
+ * LINKS: they navigate, and a link is the only thing a browser will let you
+ * middle-click or open in a new tab. Rendering one as a <button> takes that
+ * away silently — the LMS's Print Work Ticket is the case that forced this,
+ * because the bench opens several tickets at once.
+ *
+ * WHY A HELPER RATHER THAN A ButtonLink COMPONENT. The kit cannot render the
+ * link: a Next.js app needs next/link for client-side navigation, a Tauri app
+ * needs something else, and neither belongs in a framework-agnostic kit. So the
+ * kit hands over the ATTRIBUTES and the app supplies the element:
+ *
+ *   <Link href={…} {...buttonProps({ variant: "secondary", size: "sm" })}>
+ *     <span className="ui-btn-icon"><Printer size={16} /></span>
+ *   </Link>
+ *
+ * THIS IS NOT A CLASSNAME ESCAPE HATCH. It returns the same className and data
+ * attributes the Button itself sets, from the same place — so a link cannot
+ * drift from the real control the way a hand-copied recipe does. If the button
+ * changes, this changes with it. What it does NOT give you is `loading` or
+ * `disabled`: a link cannot be busy or inert, and pretending otherwise is how
+ * you end up with a "disabled" link people can still click.
+ */
+export function buttonProps({
+  variant,
+  tone,
+  size = "md",
+}: ButtonColour & { size?: ButtonSize } = {}) {
+  return {
+    className: "ui-btn",
+    "data-variant": tone ?? variant ?? "secondary",
+    "data-size": size,
+  } as const;
+}
