@@ -46,6 +46,11 @@ export type { ListRowProps, ListRowTone } from "./ListRow/ListRow";
 export { Table } from "./Table/Table";
 export type { TableProps, TableColumn } from "./Table/Table";
 
+// Pagination — the house 100-per-page rule (Josh, 2026-09-29). The Table uses
+// it by default; a list that is not a Table uses the hook and the controls.
+export { Pagination, usePagination, DEFAULT_PAGE_SIZE } from "./Pagination/Pagination";
+export type { PaginationProps, PaginationState } from "./Pagination/Pagination";
+
 export { Tooltip } from "./Tooltip/Tooltip";
 export type { TooltipProps, TooltipPosition } from "./Tooltip/Tooltip";
 

@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { DEFAULT_PAGE_SIZE, Pagination, usePagination } from "../Pagination/Pagination";
 import "./Table.css";
 
 /**
@@ -19,6 +20,14 @@ import "./Table.css";
  *
  * The overflow-x wrapper is not optional either: fixed columns do not reflow,
  * so on a narrow window the table must scroll rather than crush its content.
+ *
+ * PAGES OF 100 BY DEFAULT (Josh, 2026-09-29: "we always paginate to 100...
+ * across the board"). The caller hands over the FULL, already filtered and
+ * sorted list; the Table slices it, shows Previous / Page X of Y / Next with
+ * "Showing X–Y of N", and goes back to page 1 when the rows or the sort change.
+ * A list that fits on one page renders exactly as before — no controls. Opt out
+ * with `pageSize={null}` only for a list that is genuinely short or fixed, or
+ * one the caller already pages itself (never page twice).
  */
 
 export interface TableColumn<T> {
@@ -50,6 +59,8 @@ export interface TableProps<T> {
   onSort?: (key: string) => void;
   /** Screen-reader name for the table. Say what these rows ARE. */
   caption?: string;
+  /** Rows per page. Defaults to the house 100; `null` turns paging off. */
+  pageSize?: number | null;
 }
 
 export function Table<T>({
@@ -60,65 +71,80 @@ export function Table<T>({
   sortDir = "asc",
   onSort,
   caption,
+  pageSize = DEFAULT_PAGE_SIZE,
 }: TableProps<T>) {
+  // "The data or the sort changed" = the displayed keys, in order, or the sort.
+  // Not array identity — see usePagination.
+  const resetKey = `${sortKey ?? ""}|${sortDir}|${rows.map(rowKey).join("\n")}`;
+  const pager = usePagination(rows, pageSize, resetKey);
+
   return (
-    <div className="ui-table-wrap">
-      <table className="ui-table">
-        {caption && <caption className="ui-table-caption">{caption}</caption>}
-        <colgroup>
-          {columns.map((c) => (
-            <col key={c.key} style={{ width: c.width }} />
-          ))}
-        </colgroup>
-        <thead>
-          <tr>
-            {columns.map((c) => {
-              const active = c.key === sortKey;
-              return (
-                <th
-                  key={c.key}
-                  data-active={active || undefined}
-                  data-align={c.align}
-                  aria-sort={
-                    active
-                      ? sortDir === "asc"
-                        ? "ascending"
-                        : "descending"
-                      : undefined
-                  }
-                >
-                  {onSort ? (
-                    <button
-                      type="button"
-                      className="ui-table-sort"
-                      onClick={() => onSort(c.key)}
-                    >
-                      {c.header}
-                    </button>
-                  ) : (
-                    c.header
-                  )}
-                </th>
-              );
-            })}
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map((row) => (
-            <tr key={rowKey(row)}>
-              {columns.map((c) => (
-                <td
-                  key={c.key}
-                  data-align={c.align}
-                  data-numeric={c.numeric || undefined}
-                >
-                  {c.render(row)}
-                </td>
-              ))}
+    <>
+      <div className="ui-table-wrap">
+        <table className="ui-table">
+          {caption && <caption className="ui-table-caption">{caption}</caption>}
+          <colgroup>
+            {columns.map((c) => (
+              <col key={c.key} style={{ width: c.width }} />
+            ))}
+          </colgroup>
+          <thead>
+            <tr>
+              {columns.map((c) => {
+                const active = c.key === sortKey;
+                return (
+                  <th
+                    key={c.key}
+                    data-active={active || undefined}
+                    data-align={c.align}
+                    aria-sort={
+                      active
+                        ? sortDir === "asc"
+                          ? "ascending"
+                          : "descending"
+                        : undefined
+                    }
+                  >
+                    {onSort ? (
+                      <button
+                        type="button"
+                        className="ui-table-sort"
+                        onClick={() => onSort(c.key)}
+                      >
+                        {c.header}
+                      </button>
+                    ) : (
+                      c.header
+                    )}
+                  </th>
+                );
+              })}
             </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+          </thead>
+          <tbody>
+            {pager.pageRows.map((row) => (
+              <tr key={rowKey(row)}>
+                {columns.map((c) => (
+                  <td
+                    key={c.key}
+                    data-align={c.align}
+                    data-numeric={c.numeric || undefined}
+                  >
+                    {c.render(row)}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <Pagination
+        page={pager.page}
+        pageCount={pager.pageCount}
+        total={pager.total}
+        pageSize={pager.pageSize}
+        onPage={pager.setPage}
+      />
+    </>
   );
 }
