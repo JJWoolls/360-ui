@@ -1,5 +1,5 @@
-/* Button — tokens only. Sizes are the two we actually use; a third is a
- * conversation, not a one-off.
+/* Button — tokens only. Sizes are the three we actually use (xs for a control
+ * inside a dense table row); a fourth is a conversation, not a one-off.
  *
  * THE RULE (Josh, 2026-07-16) — one tint recipe, and the BORDER is the
  * affordance:
@@ -53,6 +53,25 @@
     background-color var(--transition),
     border-color var(--transition),
     color var(--transition);
+}
+
+/* xs — the in-row control. Matches the in-table Badge's box (tight padding,
+   no min-height beyond its own line) so a pressable chip does not make its row
+   taller than the labels beside it. Border and hover still apply: it is a
+   button, just a small one. */
+.ui-btn[data-size="xs"] {
+  gap: var(--s1);
+  padding: 1px var(--s2);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-bold);
+  line-height: 1.3;
+  border-radius: var(--radius-xs);
+}
+
+.ui-btn[data-size="xs"] .ui-btn-icon,
+.ui-btn[data-size="xs"] .ui-btn-spinner {
+  width: var(--s3);
+  height: var(--s3);
 }
 
 .ui-btn[data-size="sm"] {

@@ -10,7 +10,15 @@ import "./Button.css";
  */
 
 export type ButtonVariant = "primary" | "secondary" | "ghost" | "danger";
-export type ButtonSize = "sm" | "md";
+/**
+ * "md" — the ordinary button. "sm" — toolbars and compact headers.
+ * "xs" — a control INSIDE a dense table row (a count you click to open, a
+ * row-level flag). A 24px "sm" button makes every row it sits in taller than
+ * its text, and on a board read at a distance that costs visible rows. "xs"
+ * is the height of the in-table Badge, so a pressable chip and a label chip in
+ * the same row line up.
+ */
+export type ButtonSize = "xs" | "sm" | "md";
 
 /**
  * The full colour vocabulary, matching the Badge's. Josh, 2026-07-28, asked

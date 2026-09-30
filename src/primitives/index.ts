@@ -25,6 +25,11 @@ export type { CheckboxProps } from "./Checkbox/Checkbox";
 export { Toggle } from "./Toggle/Toggle";
 export type { ToggleProps } from "./Toggle/Toggle";
 
+// FilterPills — the house multi-select: toggle pills, no "All", double-click or
+// shift-click isolates one. Each pill may carry its own identity colour.
+export { FilterPills } from "./FilterPills/FilterPills";
+export type { FilterPillsProps, FilterPillOption, FilterPillsSize } from "./FilterPills/FilterPills";
+
 export { PersonChip, initialsFrom } from "./PersonChip/PersonChip";
 export type { PersonChipProps, PersonChipSize } from "./PersonChip/PersonChip";
 
