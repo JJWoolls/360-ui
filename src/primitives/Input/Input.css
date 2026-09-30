@@ -88,6 +88,26 @@
   position: relative;
   display: block;
   width: 100%;
+  /* The mark widths. Input.tsx measures each mark and overwrites these on the
+     element; the values here are only first paint, before it has. 1ch is one
+     character — a "$" or a "%". */
+  --ui-affix-start: 1ch;
+  --ui-affix-end: 1ch;
+}
+
+/* An icon is the common mark (every search box), and its first-paint width is
+   known exactly because the icon size is set just below. */
+.ui-input-wrap:has(> .ui-input-affix[data-side="start"] > svg) {
+  --ui-affix-start: 14px;
+}
+.ui-input-wrap:has(> .ui-input-affix[data-side="end"] > svg) {
+  --ui-affix-end: 14px;
+}
+.ui-input-wrap[data-size="sm"]:has(> .ui-input-affix[data-side="start"] > svg) {
+  --ui-affix-start: 12px;
+}
+.ui-input-wrap[data-size="sm"]:has(> .ui-input-affix[data-side="end"] > svg) {
+  --ui-affix-end: 12px;
 }
 
 .ui-input-affix {
@@ -102,6 +122,25 @@
   pointer-events: none; /* clicking the sign must focus the field, not block it */
 }
 
+/* One icon size inside a field, whatever size the call site asked for. Search
+   boxes had drawn the same magnifier at 12, 13, 14 and 16px; the field owns
+   the mark's size the way the grid owns a card's. */
+.ui-input-affix > svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+.ui-input-wrap[data-size="sm"] .ui-input-affix {
+  font-size: var(--text-sm);
+}
+
+.ui-input-wrap[data-size="sm"] .ui-input-affix > svg {
+  width: 12px;
+  height: 12px;
+}
+
+/* The mark sits where the text would start: the field's own side padding. */
 .ui-input-affix[data-side="start"] {
   left: var(--s3);
 }
@@ -110,10 +149,32 @@
   right: var(--s3);
 }
 
-/* Only the padding moves, and only on the side that has a mark. --s5 is 24px:
-   the 12px the field already had, plus room for a one-character sign. */
+.ui-input-wrap[data-size="sm"] .ui-input-affix[data-side="start"] {
+  left: var(--s2);
+}
+
+.ui-input-wrap[data-size="sm"] .ui-input-affix[data-side="end"] {
+  right: var(--s2);
+}
+
+/* Only the padding moves, and only on the side that has a mark:
+   mark inset + mark width + gap. Written out rather than a single spacing
+   token, because the first version used --s5 and each app sets --s5 to its
+   own value, so the gap differed per app and an icon overlapped the text. */
 .ui-input-wrap[data-has-prefix] .ui-input {
-  padding-left: var(--s5);
+  padding-left: calc(var(--s3) + var(--ui-affix-start) + var(--s2));
+}
+
+.ui-input-wrap[data-has-suffix] .ui-input {
+  padding-right: calc(var(--s3) + var(--ui-affix-end) + var(--s2));
+}
+
+.ui-input-wrap[data-size="sm"][data-has-prefix] .ui-input {
+  padding-left: calc(var(--s2) + var(--ui-affix-start) + var(--s1));
+}
+
+.ui-input-wrap[data-size="sm"][data-has-suffix] .ui-input {
+  padding-right: calc(var(--s2) + var(--ui-affix-end) + var(--s1));
 }
 
 /* The multi-line twin. Height comes from `rows` instead of the fixed 36px, and

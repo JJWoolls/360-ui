@@ -1,5 +1,12 @@
+"use client";
+
+import { useEffect, useLayoutEffect, useRef } from "react";
 import type { InputHTMLAttributes, ReactNode, TextareaHTMLAttributes } from "react";
 import "./Input.css";
+
+// useLayoutEffect warns during server render; on the server there is nothing
+// to measure anyway, and the CSS fallback in Input.css covers first paint.
+const useIsoLayoutEffect = typeof window === "undefined" ? useEffect : useLayoutEffect;
 
 /**
  * Input — the house text field. And Textarea, its multi-line twin.
@@ -70,7 +77,43 @@ export type TextareaProps = Shared &
   Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, "className">;
 
 
+/**
+ * The field's padding is sized to the mark actually sitting in it. The first
+ * version padded a prefixed field by a fixed --s5, sized for a "$", and every
+ * search icon ran over the placeholder (Josh, 2026-09-30) — and a suffix got no
+ * room at all, so typed text slid under it. A fixed number can only be right
+ * for one mark, so the wrap measures each mark and hands its width to the CSS
+ * as --ui-affix-start / --ui-affix-end. Input.css holds the arithmetic and the
+ * first-paint fallback.
+ */
+function useAffixWidths(hasPrefix: boolean, hasSuffix: boolean) {
+  const wrapRef = useRef<HTMLSpanElement>(null);
+  const startRef = useRef<HTMLSpanElement>(null);
+  const endRef = useRef<HTMLSpanElement>(null);
+
+  useIsoLayoutEffect(() => {
+    const wrap = wrapRef.current;
+    if (!wrap) return;
+    const measure = () => {
+      if (startRef.current) wrap.style.setProperty("--ui-affix-start", `${startRef.current.offsetWidth}px`);
+      if (endRef.current) wrap.style.setProperty("--ui-affix-end", `${endRef.current.offsetWidth}px`);
+    };
+    measure();
+    if (typeof ResizeObserver === "undefined") return;
+    const ro = new ResizeObserver(measure);
+    if (startRef.current) ro.observe(startRef.current);
+    if (endRef.current) ro.observe(endRef.current);
+    return () => ro.disconnect();
+  }, [hasPrefix, hasSuffix]);
+
+  return { wrapRef, startRef, endRef };
+}
+
 export function Input({ invalid, size = "md", prefix, suffix, ...rest }: InputProps) {
+  const hasPrefix = prefix != null;
+  const hasSuffix = suffix != null;
+  const { wrapRef, startRef, endRef } = useAffixWidths(hasPrefix, hasSuffix);
+
   const field = (
     <input
       {...rest}
@@ -83,18 +126,24 @@ export function Input({ invalid, size = "md", prefix, suffix, ...rest }: InputPr
 
   // No wrapper unless one is needed — a plain field stays a plain element, so
   // it can still be a flex or grid child without an extra box in the way.
-  if (prefix == null && suffix == null) return field;
+  if (!hasPrefix && !hasSuffix) return field;
 
   return (
-    <span className="ui-input-wrap" data-has-prefix={prefix != null || undefined}>
-      {prefix != null && (
-        <span className="ui-input-affix" data-side="start" aria-hidden="true">
+    <span
+      ref={wrapRef}
+      className="ui-input-wrap"
+      data-size={size}
+      data-has-prefix={hasPrefix || undefined}
+      data-has-suffix={hasSuffix || undefined}
+    >
+      {hasPrefix && (
+        <span ref={startRef} className="ui-input-affix" data-side="start" aria-hidden="true">
           {prefix}
         </span>
       )}
       {field}
-      {suffix != null && (
-        <span className="ui-input-affix" data-side="end" aria-hidden="true">
+      {hasSuffix && (
+        <span ref={endRef} className="ui-input-affix" data-side="end" aria-hidden="true">
           {suffix}
         </span>
       )}
