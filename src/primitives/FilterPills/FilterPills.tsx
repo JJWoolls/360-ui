@@ -95,8 +95,11 @@ export function FilterPills<K extends string = string>({
   }
 
   function handleClick(e: MouseEvent<HTMLButtonElement>, value: K) {
+    // Single: always report, even a click on the tab already selected — a
+    // caller may hang a side effect on the click itself (re-running a pick),
+    // and swallowing it here would silently change that screen's behaviour.
     if (selection === "single") {
-      if (!(current.size === 1 && current.has(value))) onChange(new Set([value]));
+      onChange(new Set([value]));
       return;
     }
     if (e.shiftKey) isolate(value);
