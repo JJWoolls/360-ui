@@ -45,6 +45,14 @@
   color: var(--text-secondary);
 }
 
+/* A search box — a field with an icon at its start — gets the dimmer
+   placeholder, so the prompt recedes behind the icon instead of reading as a
+   value. Josh, 2026-09-30, first on Manage Files, then as the house default
+   for every search box. */
+.ui-input-wrap:has(> .ui-input-affix[data-side="start"] > svg) .ui-input::placeholder {
+  color: var(--text-tertiary);
+}
+
 .ui-input:disabled {
   cursor: not-allowed;
   opacity: 0.5;
