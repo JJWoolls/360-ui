@@ -101,7 +101,11 @@ export function Tooltip({
     if (timer.current) clearTimeout(timer.current);
   }, []);
 
-  const open = visible || always;
+  // An empty tip never opens. A conditional hint ("only while unpaid") can keep
+  // one stable wrapper and pass "" when it has nothing to say, instead of the
+  // caller mounting and unmounting the wrapper (which remounts the control).
+  const empty = !label && content == null;
+  const open = !empty && (visible || always);
 
   useEffect(() => {
     if (!open || !triggerRef.current) return;
