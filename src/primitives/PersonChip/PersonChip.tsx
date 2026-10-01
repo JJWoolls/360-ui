@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import "./PersonChip.css";
 
 /**
@@ -12,7 +13,11 @@ export type PersonChipSize = "sm" | "md";
 
 export interface PersonChipProps {
   name: string;
-  photoUrl?: string;
+  photoUrl?: string | null;
+  /** Curated initials (e.g. employees.initials). Default: first + last initial of name. */
+  initials?: string | null;
+  /** Colour the avatar is tinted from (role, location). Default: brand. */
+  tint?: string | null;
   size?: PersonChipSize;
   /** Renders an x. Omit for a display-only chip. */
   onRemove?: () => void;
@@ -32,16 +37,19 @@ export function initialsFrom(name: string): string {
 export function PersonChip({
   name,
   photoUrl,
+  initials,
+  tint,
   size = "md",
   onRemove,
 }: PersonChipProps) {
+  const style = tint ? ({ "--ui-avatar-tint": tint } as CSSProperties) : undefined;
   return (
     <span className="ui-person" data-size={size}>
-      <span className="ui-person-avatar" aria-hidden="true">
+      <span className="ui-person-avatar" aria-hidden="true" data-tinted={tint ? "" : undefined} style={style}>
         {photoUrl ? (
           <img className="ui-person-photo" src={photoUrl} alt="" />
         ) : (
-          <span className="ui-person-initials">{initialsFrom(name)}</span>
+          <span className="ui-person-initials">{(initials ?? "").trim() || initialsFrom(name)}</span>
         )}
       </span>
       <span className="ui-person-name">{name}</span>

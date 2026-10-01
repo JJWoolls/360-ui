@@ -37,6 +37,10 @@ export type { StatusTabsProps, StatusTabItem, StatusTabsSize } from "./StatusTab
 
 export { PersonChip, initialsFrom } from "./PersonChip/PersonChip";
 export type { PersonChipProps, PersonChipSize } from "./PersonChip/PersonChip";
+// Avatar — the bare round mark (photo, else initials on a tint) for lists,
+// headers and author badges; PersonChip when the name sits in a pill.
+export { Avatar } from "./Avatar/Avatar";
+export type { AvatarProps, AvatarSize } from "./Avatar/Avatar";
 
 export { EmptyState } from "./EmptyState/EmptyState";
 export type { EmptyStateProps } from "./EmptyState/EmptyState";

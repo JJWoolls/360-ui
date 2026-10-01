@@ -32,6 +32,11 @@
   color: var(--brand);
 }
 
+.ui-person-avatar[data-tinted] {
+  background: color-mix(in srgb, var(--ui-avatar-tint) 15%, transparent);
+  color: var(--ui-avatar-tint);
+}
+
 .ui-person[data-size="sm"] .ui-person-avatar {
   width: var(--s4);
   height: var(--s4);
