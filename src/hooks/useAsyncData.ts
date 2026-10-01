@@ -202,7 +202,11 @@ export function useAsyncData<T>(
 
   return {
     data,
-    loading: inFlight && !loaded,
+    // Not `inFlight && !loaded`: when `enabled` flips on, there is one render
+    // before the effect starts the fetch, and the screen must not paint an
+    // empty "loaded" state in that gap. Enabled, nothing loaded, no error
+    // means a fetch is running or about to.
+    loading: enabled && !loaded && !error,
     refreshing: inFlight && loaded,
     error,
     reload,
