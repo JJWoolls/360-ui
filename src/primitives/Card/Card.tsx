@@ -43,10 +43,10 @@ export type CardKind = "plain" | "stat" | "tile" | "accent";
 export interface CardProps {
   /** What is being counted. Uppercased by CSS (except tile) — pass normal prose. */
   label: string;
-  /** The number. A string so callers can format ("14", "$7.2M", "—"). */
-  value: string;
+  /** The number, already formatted ("14", "$7.2M", "—"). A node so StatCard can hold a Skeleton. */
+  value: ReactNode;
   /** The detail that makes the number actionable. */
-  foot?: string;
+  foot?: ReactNode;
   /**
    * Colours per kind: on plain/tile it colours the VALUE; on stat it colours the
    * icon + label (the number stays foreground, matching StatCard); on accent it

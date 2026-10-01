@@ -1,0 +1,29 @@
+/* StatCard — only what Card does not already draw. Tokens only. */
+
+/* The loading bar sits where the number will land, about a number wide, at the
+   number's line height so the card does not grow or shrink when data arrives. */
+.ui-stat-card-skeleton {
+  display: inline-flex;
+  align-items: center;
+  width: 4em;
+  height: 1.2em;
+  vertical-align: middle;
+}
+
+.ui-stat-card-foot {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--s2);
+}
+
+.ui-stat-card-trend {
+  font-weight: var(--weight-semibold);
+  color: var(--text-tertiary);
+}
+.ui-stat-card-trend[data-tone="good"] {
+  color: var(--brand);
+}
+.ui-stat-card-trend[data-tone="bad"] {
+  color: var(--danger);
+}

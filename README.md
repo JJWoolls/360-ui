@@ -174,6 +174,27 @@ uppercase span or an inline-styled `h3`.
 The reasoning is written at the top of
 `src/primitives/SectionLabel/SectionLabel.tsx`.
 
+## StatCard
+
+One big-number tile: `StatCard`, built on `Card`, so pages stop hand-rolling a
+bordered div with a large bold number.
+
+```tsx
+<StatCard label="Open Cases" value={open} icon={<Inbox size={14} />} />
+<StatCard label="Remakes" value={pct} trend={{ direction: "down", text: "2% vs last month", tone: "good" }} />
+<StatCard label="Overdue" value={money(overdue)} tone="danger" sublabel="Oldest 41 days" onClick={openOverdue} />
+<StatCard label="Week" value={n} loading={loading} empty={n === 0} selected={week === w} onClick={() => setWeek(w)} />
+```
+
+- `kind` picks the Card treatment (`stat` by default, or `plain`/`tile`/`accent`).
+- `loading` shows a Skeleton bar where the number goes; the card keeps its size.
+- `trend.tone` is good/bad news, not up/down; the arrow follows `direction`.
+- `onClick` makes it a real button; `selected` marks a filter card that is on.
+- `empty` dims the card — the caller decides; a card never hides itself.
+- No width: the grid owns the size. Colour on the value or the label, not both.
+
+The reasoning is written at the top of `src/primitives/StatCard/StatCard.tsx`.
+
 ## The rules that govern what goes in here
 
 - **One primitive, with variants.** Format, tone, size, theme and viewport are
