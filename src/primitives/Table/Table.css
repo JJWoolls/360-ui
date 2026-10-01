@@ -1,12 +1,11 @@
 /* Table — tokens only.
 
    The look hooks. Every colour the table paints is read through one of these,
-   declared on the root and defaulting to a semantic token, so an app that
+   declared on the <table> and defaulting to a semantic token, so an app that
    paints its tables differently overrides the VALUES (via the Table's `style`)
-   and never forks the component. The root renders no box. */
+   and never forks the component. */
 
-.ui-table-root {
-  display: contents;
+.ui-table {
   --ui-table-head-bg: var(--surface-raised);
   --ui-table-head-fg: var(--text-tertiary);
   --ui-table-head-hover: var(--text-primary);
@@ -45,7 +44,7 @@
 .ui-table thead[data-sticky] {
   position: sticky;
   top: 0;
-  z-index: 2;
+  z-index: 20;
 }
 
 .ui-table thead th {
@@ -142,12 +141,12 @@
    page colour would cut a notch out of the header. */
 .ui-table [data-stuck] {
   position: sticky;
-  z-index: 1;
+  z-index: 10;
   background: var(--ui-table-sticky-bg);
 }
 
 .ui-table thead [data-stuck] {
-  z-index: 3;
+  z-index: 30;
   background: var(--ui-table-head-bg);
 }
 

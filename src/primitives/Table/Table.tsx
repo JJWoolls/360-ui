@@ -33,7 +33,7 @@ import "./Table.css";
  * slicing — never page twice.
  *
  * LOOK HOOKS. The colours are read through a small set of `--ui-table-*`
- * custom properties declared on the root (see Table.css), each defaulting to a
+ * custom properties declared on the <table> (see Table.css), each defaulting to a
  * semantic token. An app that paints its tables differently overrides those
  * VALUES through `style` — it never forks the component.
  */
@@ -146,7 +146,7 @@ export interface TableProps<T> {
   /** Rows that cannot be selected. Default: every row. */
   canSelect?: (row: T) => boolean;
 
-  /** On the root, which renders no box. For `--ui-table-*` overrides. */
+  /** On the <table>. `style` is where an app sets `--ui-table-*` overrides. */
   className?: string;
   style?: CSSProperties;
 }
@@ -539,10 +539,10 @@ export function Table<T>({
 
   const table = (
     <table
-      className="ui-table"
+      className={className ? `ui-table ${className}` : "ui-table"}
       data-fixed={fixedLayout || undefined}
       aria-busy={loading || undefined}
-      style={{ minWidth }}
+      style={{ ...style, minWidth }}
     >
       {caption && <caption className="ui-visually-hidden">{caption}</caption>}
       {fixedLayout && (
@@ -561,13 +561,13 @@ export function Table<T>({
     </table>
   );
 
-  // The scroll box exists only when asked for, so a plain table keeps the DOM
-  // its container expects. The pagination sits OUTSIDE it so it never scrolls
-  // away. The root itself is display: contents — it carries the look hooks and
-  // renders no box.
+  // No wrapper element: the table (or its scroll box) and the pagination are
+  // siblings in the caller's container, so a parent's spacing utilities and
+  // flex gaps land on them exactly as on a bare <table>. The scroll box exists
+  // only when asked for; the pagination sits OUTSIDE it so it never scrolls away.
   const scrolls = !!minWidth || !!maxHeight || stickyHeader;
   return (
-    <div className={className ? `ui-table-root ${className}` : "ui-table-root"} style={style}>
+    <>
       {scrolls ? (
         <div className="ui-table-scroll" style={{ maxHeight }}>
           {table}
@@ -582,6 +582,6 @@ export function Table<T>({
         pageSize={paging.pageSize}
         onPage={paging.onPage}
       />
-    </div>
+    </>
   );
 }
