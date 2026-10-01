@@ -1,0 +1,110 @@
+/* AlertCard — tokens only. The tone arrives as two local properties set per
+   data-tone, so every part of the card (border, icon circle, glow) reads the
+   same hue from one place and a new tone is one rule, not five. Success is the
+   brand green: the kit has no separate success token, and the Toast already
+   draws success in brand. */
+
+.ui-alert-card {
+  --ui-alert-color: var(--danger);
+  --ui-alert-rgb: var(--danger-rgb);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--s2);
+  width: 100%;
+  padding: var(--s5);
+  background: var(--surface);
+  border: 1px solid rgba(var(--ui-alert-rgb), 0.35);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 var(--s2) var(--s5) var(--shadow);
+  text-align: center;
+}
+
+.ui-alert-card[data-tone="warn"] {
+  --ui-alert-color: var(--warn);
+  --ui-alert-rgb: var(--warn-rgb);
+}
+
+.ui-alert-card[data-tone="info"] {
+  --ui-alert-color: var(--info);
+  --ui-alert-rgb: var(--info-rgb);
+}
+
+.ui-alert-card[data-tone="success"] {
+  --ui-alert-color: var(--brand);
+  --ui-alert-rgb: var(--brand-rgb);
+}
+
+/* The soft tinted circle. Muted ground, coloured glyph — never a solid fill
+   (house rule for severity). */
+.ui-alert-card-icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: var(--s7);
+  height: var(--s7);
+  margin-block-end: var(--s1);
+  border-radius: var(--radius-pill);
+  background: rgba(var(--ui-alert-rgb), 0.12);
+  color: var(--ui-alert-color);
+}
+
+.ui-alert-card-icon svg {
+  width: var(--s5);
+  height: var(--s5);
+}
+
+.ui-alert-card-title {
+  font-size: var(--text-lg);
+  font-weight: var(--weight-semibold);
+  color: var(--text-primary);
+}
+
+.ui-alert-card-message {
+  max-width: 48ch;
+  font-size: var(--text-base);
+  color: var(--text-secondary);
+}
+
+.ui-alert-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--s2);
+  margin-block-start: var(--s3);
+}
+
+/* alarm — full-strength border and a slow breathing glow. Slow on purpose: a
+   fast flash reads as a fault in the screen, a slow pulse reads as "look". */
+.ui-alert-card[data-emphasis="alarm"] {
+  border: 2px solid var(--ui-alert-color);
+  box-shadow:
+    0 0 0 var(--s1) rgba(var(--ui-alert-rgb), 0.18),
+    0 var(--s2) var(--s5) var(--shadow);
+  animation: ui-alert-pulse 2.4s ease-in-out infinite;
+}
+
+@keyframes ui-alert-pulse {
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 var(--s1) rgba(var(--ui-alert-rgb), 0.18),
+      0 var(--s2) var(--s5) var(--shadow);
+  }
+
+  50% {
+    box-shadow:
+      0 0 var(--s6) var(--s2) rgba(var(--ui-alert-rgb), 0.4),
+      0 var(--s2) var(--s5) var(--shadow);
+  }
+}
+
+/* No pulse for anyone who asked for less motion; the strong border and the
+   still glow carry the alarm on their own. Stated here rather than left to an
+   app's base stylesheet, because the kit cannot assume one is loaded. */
+@media (prefers-reduced-motion: reduce) {
+  .ui-alert-card[data-emphasis="alarm"] {
+    animation: none;
+  }
+}

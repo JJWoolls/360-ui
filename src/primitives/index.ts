@@ -62,8 +62,32 @@ export type { TooltipProps, TooltipPosition } from "./Tooltip/Tooltip";
 export { Toast } from "./Toast/Toast";
 export type { ToastProps, ToastTone } from "./Toast/Toast";
 
+// Toaster — mount once at the app root; useToast() raises corner pop-outs
+// beneath it. Danger stays until dismissed, the rest time out; four at most.
+export { Toaster, useToast } from "./Toast/Toaster";
+export type { ToasterProps, ToastOptions, ToastApi } from "./Toast/Toaster";
+
 export { Modal } from "./Modal/Modal";
 export type { ModalProps, ModalTone } from "./Modal/Modal";
+
+// The alert family — one card, one colour per kind (danger, warn, info,
+// success), placed four ways: Toaster in the corner for things that need no
+// answer, ErrorPanel in the page when an area fails to load, AlertDialog in the
+// centre for a decision, and AlertDialog emphasis="alarm" for a stop-work
+// moment. PageLoader shares ErrorPanel's frame so one swaps for the other
+// without moving the page.
+export { AlertCard } from "./AlertCard/AlertCard";
+export type { AlertCardProps, AlertTone, AlertEmphasis } from "./AlertCard/AlertCard";
+
+export { AlertDialog } from "./AlertDialog/AlertDialog";
+export type { AlertDialogProps } from "./AlertDialog/AlertDialog";
+
+export { ErrorPanel } from "./ErrorPanel/ErrorPanel";
+export type { ErrorPanelProps } from "./ErrorPanel/ErrorPanel";
+
+export { PageLoader } from "./PageLoader/PageLoader";
+export type { PageLoaderProps } from "./PageLoader/PageLoader";
+export type { StateFrameSize } from "./StateFrame/StateFrame";
 
 export { DatePicker, DateField, type DatePickerProps, type DateFieldProps } from "./DatePicker/DatePicker";
 

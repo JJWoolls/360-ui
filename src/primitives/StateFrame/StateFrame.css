@@ -1,0 +1,30 @@
+/* StateFrame — tokens only. Shared by PageLoader and ErrorPanel so that
+   swapping one for the other moves nothing. */
+
+.ui-state-frame {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s3);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* page — take whatever height the parent offers, and never collapse below a
+   comfortable share of the window when the parent offers none. */
+.ui-state-frame[data-size="page"] {
+  flex: 1;
+  min-height: 60vh;
+  padding: var(--s8) var(--s4);
+}
+
+.ui-state-frame[data-size="section"] {
+  padding: var(--s5) var(--s4);
+}
+
+/* The card inside never stretches to a wide page; it reads as a message,
+   not a banner. */
+.ui-state-frame > .ui-alert-card {
+  max-width: 420px;
+}

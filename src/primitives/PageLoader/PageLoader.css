@@ -1,0 +1,7 @@
+/* PageLoader — tokens only. The frame does the placing; this only styles the
+   words under the spinner. */
+
+.ui-page-loader-label {
+  font-size: var(--text-base);
+  color: var(--text-tertiary);
+}

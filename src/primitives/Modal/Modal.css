@@ -11,6 +11,41 @@
   background: var(--overlay);
 }
 
+/* backdropTone — the alarm backdrop. The overlay is painted twice (darker
+   than any ordinary dialog's) under a wash of the tone, so the whole screen
+   says something is wrong before the card is read. */
+.ui-modal-overlay[data-tone] {
+  --ui-backdrop-rgb: var(--brand-rgb);
+  background:
+    radial-gradient(circle at center, rgba(var(--ui-backdrop-rgb), 0.22), rgba(var(--ui-backdrop-rgb), 0.08) 70%),
+    linear-gradient(var(--overlay), var(--overlay)),
+    var(--overlay);
+}
+
+.ui-modal-overlay[data-tone="danger"] {
+  --ui-backdrop-rgb: var(--danger-rgb);
+}
+.ui-modal-overlay[data-tone="warn"] {
+  --ui-backdrop-rgb: var(--warn-rgb);
+}
+.ui-modal-overlay[data-tone="info"] {
+  --ui-backdrop-rgb: var(--info-rgb);
+}
+.ui-modal-overlay[data-tone="violet"] {
+  --ui-backdrop-rgb: var(--violet-rgb);
+}
+
+/* bare — the children bring their own card, so the dialog keeps only its
+   width and height limits. Visible overflow lets the child's own shadow or
+   glow show past the edge instead of being clipped to a box nobody can see. */
+.ui-modal[data-bare] {
+  background: none;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  overflow: visible;
+}
+
 .ui-modal {
   display: flex;
   flex-direction: column;

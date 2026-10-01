@@ -71,6 +71,26 @@ interface ModalBase {
    * stray click outside should not throw the work away.
    */
   closeOnBackdrop?: boolean;
+  /**
+   * Whether Escape closes. Leave it on. Turn it OFF only where the answer must
+   * be an explicit choice — an alarm that has to be acknowledged, not escaped.
+   * Escape is still swallowed, so it never falls through to a modal below.
+   */
+  closeOnEscape?: boolean;
+  /**
+   * No chrome: no surface, border, head, padded body or footer — the children
+   * ARE the dialog. For content that brings its own card (an AlertCard), where
+   * the modal's frame around it would draw a box inside a box. The overlay,
+   * focus trap, stack and scroll lock are unchanged; that is the point of
+   * reusing this rather than building a second overlay.
+   */
+  bare?: boolean;
+  /**
+   * Tints the backdrop with a tone and darkens it. Reserved for the alarm — a
+   * moment that should stop the room — so the whole screen changes, not only
+   * the card. Omit for every ordinary dialog.
+   */
+  backdropTone?: ModalTone;
   children: ReactNode;
 }
 
@@ -107,6 +127,9 @@ export function Modal({
   width,
   padded = true,
   closeOnBackdrop = true,
+  closeOnEscape = true,
+  bare = false,
+  backdropTone,
   children,
 }: ModalProps) {
   const id = useId();
@@ -150,7 +173,7 @@ export function Modal({
 
       if (e.key === "Escape") {
         e.stopPropagation();
-        onClose();
+        if (closeOnEscape) onClose();
         return;
       }
 
@@ -178,7 +201,7 @@ export function Modal({
         first.focus();
       }
     },
-    [id, onClose],
+    [id, onClose, closeOnEscape],
   );
 
   useEffect(() => {
@@ -192,6 +215,7 @@ export function Modal({
   return createPortal(
     <div
       className="ui-modal-overlay"
+      data-tone={backdropTone}
       // mousedown, not click: a click that STARTS inside the dialog and ends on
       // the backdrop (a drag across a text selection) must not close it.
       onMouseDown={(e) => {
@@ -204,50 +228,59 @@ export function Modal({
         // width prop means no inline style at all, so the house 460 stands.
         style={width == null ? undefined : { maxWidth: width }}
         ref={dialogRef}
+        data-bare={bare || undefined}
         role="dialog"
         aria-modal="true"
         // Point at the visible title when there is one; fall back to the label
         // the type system insisted on when there isn't.
-        aria-labelledby={title == null ? undefined : titleId}
-        aria-label={title == null ? ariaLabel : undefined}
+        // A bare modal draws no head, so there is no title element to point
+        // at — it announces its title as a label instead.
+        aria-labelledby={title == null || bare ? undefined : titleId}
+        aria-label={title == null ? ariaLabel : bare ? title : undefined}
       >
-        {/* No title, no head. An untitled modal is one sentence and its
-            buttons; a bar carrying nothing but an X sits above it looking like
-            a mistake, and the footer already offers the way out. */}
-        {title != null && (
-          <div className="ui-modal-head">
-            {icon && (
-              <span className="ui-modal-tile" data-tone={iconTone} aria-hidden="true">
-                {icon}
-              </span>
+        {bare ? (
+          children
+        ) : (
+          <>
+            {/* No title, no head. An untitled modal is one sentence and its
+                buttons; a bar carrying nothing but an X sits above it looking
+                like a mistake, and the footer already offers the way out. */}
+            {title != null && (
+              <div className="ui-modal-head">
+                {icon && (
+                  <span className="ui-modal-tile" data-tone={iconTone} aria-hidden="true">
+                    {icon}
+                  </span>
+                )}
+                <span className="ui-modal-title" id={titleId}>
+                  {title}
+                </span>
+                <button
+                  type="button"
+                  className="ui-modal-x"
+                  aria-label="Close"
+                  onClick={onClose}
+                >
+                  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <path
+                      d="M18 6L6 18M6 6l12 12"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                </button>
+              </div>
             )}
-            <span className="ui-modal-title" id={titleId}>
-              {title}
-            </span>
-            <button
-              type="button"
-              className="ui-modal-x"
-              aria-label="Close"
-              onClick={onClose}
-            >
-              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                <path
-                  d="M18 6L6 18M6 6l12 12"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                />
-              </svg>
-            </button>
-          </div>
+
+            <div className="ui-modal-body" data-padded={padded ? undefined : "false"}>
+              {children}
+            </div>
+
+            {footer && <div className="ui-modal-foot">{footer}</div>}
+          </>
         )}
-
-        <div className="ui-modal-body" data-padded={padded ? undefined : "false"}>
-          {children}
-        </div>
-
-        {footer && <div className="ui-modal-foot">{footer}</div>}
       </div>
     </div>,
     document.body,

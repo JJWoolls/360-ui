@@ -19,6 +19,10 @@
   border-left-color: var(--brand);
 }
 
+.ui-toast[data-tone="info"] {
+  border-left-color: var(--info);
+}
+
 .ui-toast[data-tone="warn"] {
   border-left-color: var(--warn);
 }
@@ -46,6 +50,10 @@
 
 .ui-toast[data-tone="success"] .ui-toast-icon {
   color: var(--brand);
+}
+
+.ui-toast[data-tone="info"] .ui-toast-icon {
+  color: var(--info);
 }
 
 .ui-toast[data-tone="warn"] .ui-toast-icon {

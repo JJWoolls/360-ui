@@ -24,9 +24,17 @@ import "./Toast.css";
  * `muted` (added 2026-07-17 for the voice-command channel) is the quiet one:
  * something happened, nothing is wrong, nothing to do — "Didn't understand
  * that command". Neutral stripe, neutral icon, role="status".
+ *
+ * `info` (added 2026-10-01 with the alert family) is the blue one: something
+ * worth knowing that the person may act on — "A newer version is available".
+ * It differs from `muted` in that it asks to be read; muted only reports.
+ *
+ * In an app, toasts are raised through the Toaster (useToast), which places
+ * them in the corner, stacks them and times them out. Render this directly
+ * only inside a surface that positions it itself.
  */
 
-export type ToastTone = "success" | "warn" | "danger" | "muted";
+export type ToastTone = "success" | "info" | "warn" | "danger" | "muted";
 
 export interface ToastProps {
   tone?: ToastTone;
@@ -67,8 +75,9 @@ function ToastIcon({ tone }: { tone: ToastTone }) {
       </svg>
     );
   }
-  if (tone === "muted") {
-    // An "i" in a circle: information, no severity.
+  if (tone === "muted" || tone === "info") {
+    // An "i" in a circle: information. The colour, not the glyph, says
+    // whether it asks to be read (info) or only reports (muted).
     return (
       <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
         <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" strokeWidth="2" />

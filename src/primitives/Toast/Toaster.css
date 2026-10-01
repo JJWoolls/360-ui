@@ -1,0 +1,34 @@
+/* Toaster — tokens only. A fixed stack in the bottom-right corner, newest at
+   the bottom. The stack itself lets clicks through, so the empty space between
+   and beside toasts never blocks the page beneath; only the toasts catch them. */
+
+.ui-toaster {
+  position: fixed;
+  right: var(--s4);
+  bottom: var(--s4);
+  z-index: var(--z-toast);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--s2);
+  max-width: calc(100vw - var(--s6));
+  pointer-events: none;
+}
+
+.ui-toaster-item {
+  pointer-events: auto;
+  animation: ui-toaster-in var(--transition);
+}
+
+@keyframes ui-toaster-in {
+  from {
+    opacity: 0;
+    transform: translateY(var(--s2));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-toaster-item {
+    animation: none;
+  }
+}
