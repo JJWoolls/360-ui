@@ -203,6 +203,48 @@ Single-select; for any-of-these filtering use `FilterPills`.
 The reasoning is written at the top of
 `src/primitives/StatusTabs/StatusTabs.tsx`.
 
+## DateRangeFilter
+
+One from/to date bar: a preset Select and two `DateField`s. Never a native
+date input.
+
+```tsx
+const [range, setRange] = useState<DateRange>(getPresetRange("this_month"));
+<DateRangeFilter value={range} onChange={setRange} />
+```
+
+- Value is `{ from, to }`, each `"YYYY-MM-DD"` or null, local calendar.
+- `defaultPresets`: Today, Yesterday, This Week, Last Week, This Month, Last
+  Month, This Quarter, This Year, Last Year, Custom. Pass `presets` for a
+  subset, or presets with their own `range(now)`.
+- `getPresetRange(key, now?, { weekStartsOn? })` is the pure arithmetic, also
+  on `@360digilab/ui/format`. Weeks, months and quarters are whole periods;
+  This Year is year-to-date; weeks start Monday unless `weekStartsOn: 0`.
+- The Select follows the dates: editing a date by hand shows Custom.
+
+The reasoning is written at the top of
+`src/primitives/DateRangeFilter/presets.ts` and `DateRangeFilter.tsx`.
+
+## CSV export
+
+`toCsv(rows, columns)` returns the file as a string; `downloadCsv(filename,
+rows, columns)` saves it in the browser. `ExportButton` is the control.
+
+```tsx
+const columns: CsvColumn<Row>[] = [
+  { key: "name", header: "Name" },
+  { accessor: (r) => formatMoney(r.total), header: "Total" },
+];
+<ExportButton onExport={() => downloadCsv("orders", rows, columns)} />
+```
+
+- UTF-8 with a BOM, CRLF line endings; a cell is quoted only when it holds a
+  comma, quote or line break, and quotes are doubled.
+- Pure, and on `@360digilab/ui/format` for server code.
+- `ExportButton` shows its loading state while a returned promise settles.
+
+Tests: `npm test` (Node's built-in runner, no dependencies).
+
 ## StatCard
 
 One big-number tile: `StatCard`, built on `Card`, so pages stop hand-rolling a

@@ -1,0 +1,51 @@
+/* DateRangeFilter — tokens only.
+ *
+ * One row: the preset Select, then From "to" To. It wraps rather than
+ * scrolling sideways, and the two dates wrap TOGETHER (their own flex row) so
+ * a narrow screen never strands "to" at the end of a line.
+ *
+ * Widths are fixed rather than content-sized so the bar does not jump as the
+ * user moves between "Today" and "This Quarter" or between an empty and a set
+ * date: 150px fits the longest default label, 140px fits "Mmm 00, 0000".
+ *
+ * size="sm": DateField has one height (36px, the md field). In the sm bar it
+ * is brought down to the 28px sm field height so the Select and the dates
+ * line up; nothing else about the field changes.
+ */
+
+.ui-daterange {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s2);
+  max-width: 100%;
+}
+
+.ui-daterange-preset {
+  width: 150px;
+  flex: none;
+}
+
+.ui-daterange-dates {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s2);
+  min-width: 0;
+}
+
+.ui-daterange-field {
+  display: inline-flex;
+  width: 140px;
+  min-width: 0;
+}
+
+.ui-daterange-sep {
+  color: var(--text-tertiary);
+  font-family: var(--font);
+  font-size: var(--text-md);
+}
+
+.ui-daterange[data-size="sm"] .ui-datefield {
+  height: 28px;
+  font-size: var(--text-md);
+}

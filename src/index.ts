@@ -33,3 +33,8 @@ export { useDebouncedValue } from "./hooks/useDebouncedValue";
 // in components or CSS (server routes, exports, PDF builders).
 export { formatMoney, parseMoney } from "./format/money";
 export type { MoneyFormatOptions, MoneyValue } from "./format/money";
+
+// toCsv / downloadCsv — the one CSV writer: BOM, CRLF, quote only when needed.
+// Pure like formatMoney, and on "@360digilab/ui/format" for the same reason.
+export { toCsv, downloadCsv, csvCell, CSV_BOM } from "./format/csv";
+export type { CsvColumn, CsvRow } from "./format/csv";

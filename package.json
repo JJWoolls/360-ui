@@ -9,7 +9,7 @@
   ],
   "exports": {
     ".": "./src/index.ts",
-    "./format": "./src/format/money.ts",
+    "./format": "./src/format/index.ts",
     "./tokens.css": "./src/styles/tokens.css",
     "./package.json": "./package.json"
   },
@@ -17,7 +17,8 @@
     "src"
   ],
   "scripts": {
-    "check": "tsc --noEmit"
+    "check": "tsc --noEmit",
+    "test": "node --test \"test/**/*.test.ts\""
   },
   "peerDependencies": {
     "react": ">=18",

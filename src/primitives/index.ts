@@ -140,3 +140,15 @@ export type { ContextMenuProps, ContextMenuItem } from "./ContextMenu/ContextMen
 // in the danger tone with a minus sign (parentheses only with `accounting`).
 export { Money } from "./Money/Money";
 export type { MoneyProps, MoneyTone } from "./Money/Money";
+
+// DateRangeFilter — the house from/to date bar: a preset Select (Today ...
+// Last Year, Custom) and two DateFields. getPresetRange is the pure arithmetic
+// behind it, also on "@360digilab/ui/format".
+export { DateRangeFilter } from "./DateRangeFilter/DateRangeFilter";
+export type { DateRangeFilterProps } from "./DateRangeFilter/DateRangeFilter";
+export { getPresetRange, defaultPresets } from "./DateRangeFilter/presets";
+export type { DateRange, DateRangePreset, DateRangePresetKey, PresetRangeOptions } from "./DateRangeFilter/presets";
+
+// ExportButton — the one "Export CSV" control; pair it with downloadCsv.
+export { ExportButton } from "./ExportButton/ExportButton";
+export type { ExportButtonProps } from "./ExportButton/ExportButton";
