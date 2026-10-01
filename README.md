@@ -38,6 +38,32 @@ its own toolchain and its own React version.
   `next.config.js`. Components that hold state carry `"use client"` already.
 - **Vite (the Workspace app)** — nothing to configure.
 
+## Loading a screen's data
+
+One way, in both apps: `useAsyncData` for the state, `AsyncBoundary` for the
+picture.
+
+```tsx
+const rows = useAsyncData(() => fetchRows(filter), [filter], { initial: [] });
+
+<AsyncBoundary
+  state={rows}
+  isEmpty={(r) => r.length === 0}
+  empty={<EmptyState title="No rows match this filter" />}
+>
+  {(r) => <RowList rows={r} />}
+</AsyncBoundary>
+```
+
+- `loading` is true only while there is nothing to show yet; a reload keeps the
+  old data on screen and sets `refreshing` instead.
+- Only the newest call can write its result; anything after unmount is dropped.
+- A failed fetch becomes `error` (always an `Error`) and never throws to the
+  page. `AsyncBoundary` shows it as an `ErrorPanel` with Try Again on `reload()`.
+- After a mutation, `setData` edits in place; `await reload()` refetches.
+
+The reasoning is written at the top of `src/hooks/useAsyncData.ts`.
+
 ## The rules that govern what goes in here
 
 - **One primitive, with variants.** Format, tone, size, theme and viewport are

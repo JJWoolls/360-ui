@@ -15,3 +15,8 @@
    ========================================================================== */
 
 export * from "./primitives";
+
+// Hooks that are not parts but carry a house rule. useAsyncData is the one way
+// a screen loads its data: loading, error and race-safety written once.
+export { useAsyncData } from "./hooks/useAsyncData";
+export type { AsyncData, AsyncDataOptions } from "./hooks/useAsyncData";

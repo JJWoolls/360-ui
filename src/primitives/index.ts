@@ -89,6 +89,12 @@ export { PageLoader } from "./PageLoader/PageLoader";
 export type { PageLoaderProps } from "./PageLoader/PageLoader";
 export type { StateFrameSize } from "./StateFrame/StateFrame";
 
+// AsyncBoundary — the states of a useAsyncData load in their one right order:
+// PageLoader, then ErrorPanel with Try Again, then the caller's EmptyState,
+// then the content. Wrap only the area that loads; the header stays outside.
+export { AsyncBoundary } from "./AsyncBoundary/AsyncBoundary";
+export type { AsyncBoundaryProps } from "./AsyncBoundary/AsyncBoundary";
+
 export { DatePicker, DateField, type DatePickerProps, type DateFieldProps } from "./DatePicker/DatePicker";
 
 export { OptionField } from "./OptionPicker/OptionField";
