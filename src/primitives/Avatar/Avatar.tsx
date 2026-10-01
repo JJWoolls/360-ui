@@ -1,4 +1,4 @@
-import type { CSSProperties } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
 import { initialsFrom } from "../PersonChip/PersonChip";
 import "./Avatar.css";
 
@@ -41,6 +41,9 @@ export function Avatar({
 }: AvatarProps) {
   const text = (initials ?? "").trim() || initialsFrom(name);
   const style = tint ? ({ "--ui-avatar-tint": tint } as CSSProperties) : undefined;
+  // A photo that fails to load falls back to the initials.
+  const [failed, setFailed] = useState(false);
+  useEffect(() => setFailed(false), [photoUrl]);
   return (
     <span
       className={["ui-avatar", className].filter(Boolean).join(" ")}
@@ -49,8 +52,8 @@ export function Avatar({
       style={style}
       {...(decorative ? { "aria-hidden": true } : { role: "img", "aria-label": name })}
     >
-      {photoUrl ? (
-        <img className="ui-avatar-photo" src={photoUrl} alt="" />
+      {photoUrl && !failed ? (
+        <img className="ui-avatar-photo" src={photoUrl} alt="" onError={() => setFailed(true)} />
       ) : (
         <span className="ui-avatar-initials">{text}</span>
       )}
