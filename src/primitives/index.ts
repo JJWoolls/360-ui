@@ -131,3 +131,8 @@ export type { InputProps, TextareaProps, InputSize } from "./Input/Input";
 
 export { ContextMenu, useContextMenu } from "./ContextMenu/ContextMenu";
 export type { ContextMenuProps, ContextMenuItem } from "./ContextMenu/ContextMenu";
+
+// Money — an amount on screen: formatMoney's text, tabular figures, negatives
+// in the danger tone with a minus sign (parentheses only with `accounting`).
+export { Money } from "./Money/Money";
+export type { MoneyProps, MoneyTone } from "./Money/Money";

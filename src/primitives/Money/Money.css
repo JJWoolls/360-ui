@@ -1,0 +1,22 @@
+/* Money — an amount on screen. Tokens only.
+ *
+ * Tabular figures so amounts stacked in a column align digit for digit, and
+ * nowrap so "-$1,234.50" never breaks across lines. Size and weight are
+ * inherited: a total is bold because its cell is, not because of this.
+ */
+
+.ui-money {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.ui-money[data-negative] {
+  color: var(--danger);
+}
+
+/* The empty mark and muted amounts recede. Muted is listed last so it wins
+   over the negative colour. */
+.ui-money[data-empty],
+.ui-money[data-tone="muted"] {
+  color: var(--text-tertiary);
+}

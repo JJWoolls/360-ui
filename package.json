@@ -9,6 +9,7 @@
   ],
   "exports": {
     ".": "./src/index.ts",
+    "./format": "./src/format/money.ts",
     "./tokens.css": "./src/styles/tokens.css",
     "./package.json": "./package.json"
   },

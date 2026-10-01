@@ -27,3 +27,9 @@ export type { SaveState, SaveStateOptions } from "./hooks/useSaveState";
 // useDebouncedValue is the one debounce for search-as-you-type: one timer,
 // cleared on every change and on unmount.
 export { useDebouncedValue } from "./hooks/useDebouncedValue";
+
+// formatMoney is the one money formatter: USD, grouped, an em dash for nothing.
+// Pure — also reachable as "@360digilab/ui/format" for code that must not pull
+// in components or CSS (server routes, exports, PDF builders).
+export { formatMoney, parseMoney } from "./format/money";
+export type { MoneyFormatOptions, MoneyValue } from "./format/money";
