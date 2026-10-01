@@ -146,7 +146,7 @@ export type { MoneyProps, MoneyTone } from "./Money/Money";
 // behind it, also on "@360digilab/ui/format".
 export { DateRangeFilter } from "./DateRangeFilter/DateRangeFilter";
 export type { DateRangeFilterProps } from "./DateRangeFilter/DateRangeFilter";
-export { getPresetRange, defaultPresets } from "./DateRangeFilter/presets";
+export { getPresetRange, defaultPresets, allTimePreset, resolvePreset, shownPresetKey, presetChange } from "./DateRangeFilter/presets";
 export type { DateRange, DateRangePreset, DateRangePresetKey, PresetRangeOptions } from "./DateRangeFilter/presets";
 
 // ExportButton — the one "Export CSV" control; pair it with downloadCsv.

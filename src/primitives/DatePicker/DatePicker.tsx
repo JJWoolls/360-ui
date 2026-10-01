@@ -32,6 +32,12 @@ import "./DatePicker.css";
  * opt-in because the LMS's general-purpose date field does NOT color past
  * dates — only follow-up-style fields do.
  *
+ * BOUNDS. `min`/`max` ("YYYY-MM-DD", inclusive) are the general form of
+ * disablePast/disableFuture: a date outside them cannot be clicked, reached by
+ * arrow key, or set by a quick-set button, and month navigation stops at the
+ * bounding month. Both kinds of limit apply together; the tighter one wins.
+ * ISO strings compare correctly as plain strings, so no Date math is needed.
+ *
  * Value contract: ISO date string "YYYY-MM-DD" or null. No Date objects at
  * the boundary — same contract as the LMS pickers.
  */
@@ -144,6 +150,17 @@ export interface DatePickerProps {
   presets?: boolean;
   disablePast?: boolean;
   disableFuture?: boolean;
+  /** Earliest selectable date, "YYYY-MM-DD", inclusive. */
+  min?: string;
+  /** Latest selectable date, "YYYY-MM-DD", inclusive. */
+  max?: string;
+}
+
+/** Clamp an ISO date into [min, max]; either bound may be absent. */
+function clampIso(iso: string, min?: string, max?: string): string {
+  if (min && iso < min) return min;
+  if (max && iso > max) return max;
+  return iso;
 }
 
 export function DatePicker({
@@ -155,25 +172,31 @@ export function DatePicker({
   presets = true,
   disablePast = false,
   disableFuture = false,
+  min,
+  max,
 }: DatePickerProps) {
   const today = todayIso();
+  // Open on the value, else today — pulled inside the bounds so a picker
+  // limited to last year does not open on an all-disabled month.
+  const startIso = () => value ?? clampIso(todayIso(), min, max);
   const [view, setView] = useState(() => {
-    const b = fromIso(value ?? today);
+    const b = fromIso(startIso());
     return { y: b.y, m: b.m };
   });
   // Roving keyboard focus, as an ISO date. Arrows move it; Enter selects it.
-  const [focusIso, setFocusIso] = useState<string>(value ?? today);
+  const [focusIso, setFocusIso] = useState<string>(startIso);
   const gridRef = useRef<HTMLDivElement>(null);
   const focusPending = useRef(false);
 
   // Re-sync to the value (or today) every time the picker opens.
   useEffect(() => {
     if (!open) return;
-    const base = value ?? todayIso();
+    const base = startIso();
     const b = fromIso(base);
     setView({ y: b.y, m: b.m });
     setFocusIso(base);
-  }, [open, value]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- startIso reads only value/min/max
+  }, [open, value, min, max]);
 
   // After an arrow move, put real DOM focus on the newly focused day.
   useEffect(() => {
@@ -185,7 +208,10 @@ export function DatePicker({
   }, [open, focusIso, view]);
 
   const isDisabled = (iso: string) =>
-    (disablePast && iso < today) || (disableFuture && iso > today);
+    (disablePast && iso < today) ||
+    (disableFuture && iso > today) ||
+    (min != null && iso < min) ||
+    (max != null && iso > max);
 
   const pick = (iso: string) => {
     onChange(iso);
@@ -198,11 +224,19 @@ export function DatePicker({
     setView(v => (v.m === 11 ? { y: v.y + 1, m: 0 } : { y: v.y, m: v.m + 1 }));
 
   // Ported nav clamping from MiniCalendar.tsx:50-51.
-  const t = fromIso(today);
+  // A bound stops navigation at the month that contains it.
+  const atOrBefore = (iso: string) => {
+    const b = fromIso(iso);
+    return view.y < b.y || (view.y === b.y && view.m <= b.m);
+  };
+  const atOrAfter = (iso: string) => {
+    const b = fromIso(iso);
+    return view.y > b.y || (view.y === b.y && view.m >= b.m);
+  };
   const prevDisabled =
-    disablePast && (view.y < t.y || (view.y === t.y && view.m <= t.m));
+    (disablePast && atOrBefore(today)) || (min != null && atOrBefore(min));
   const nextDisabled =
-    disableFuture && (view.y > t.y || (view.y === t.y && view.m >= t.m));
+    (disableFuture && atOrAfter(today)) || (max != null && atOrAfter(max));
 
   const onGridKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
     const delta =
@@ -226,7 +260,8 @@ export function DatePicker({
     : toIso(view.y, view.m, 1);
 
   const visiblePresets = PRESETS.filter(
-    p => !(disableFuture && p.days > 0) && !(disablePast && p.days < 0),
+    p => !(disableFuture && p.days > 0) && !(disablePast && p.days < 0) &&
+      !isDisabled(shiftDays(today, p.days)),
   );
 
   return (
@@ -330,6 +365,10 @@ export interface DateFieldProps {
   presets?: boolean;
   disablePast?: boolean;
   disableFuture?: boolean;
+  /** Earliest selectable date, "YYYY-MM-DD", inclusive. Passed to the picker. */
+  min?: string;
+  /** Latest selectable date, "YYYY-MM-DD", inclusive. Passed to the picker. */
+  max?: string;
 }
 
 export function DateField({
@@ -342,6 +381,8 @@ export function DateField({
   presets,
   disablePast,
   disableFuture,
+  min,
+  max,
 }: DateFieldProps) {
   const [open, setOpen] = useState(false);
   const state: "empty" | "set" | "past" =
@@ -388,6 +429,8 @@ export function DateField({
         presets={presets}
         disablePast={disablePast}
         disableFuture={disableFuture}
+        min={min}
+        max={max}
       />
     </>
   );

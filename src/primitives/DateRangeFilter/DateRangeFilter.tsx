@@ -5,7 +5,8 @@ import { Select } from "../Select/Select";
 import { DateField } from "../DatePicker/DatePicker";
 import {
   defaultPresets,
-  resolvePreset,
+  presetChange,
+  shownPresetKey,
   type DateRange,
   type DateRangePreset,
   type PresetRangeOptions,
@@ -37,6 +38,14 @@ import "./DateRangeFilter.css";
  * Picking "custom" keeps the current dates — it only says "I will type them" —
  * and the Select stays on Custom until another preset is picked.
  *
+ * NO-LIMIT PRESETS. A preset whose range is open at both ends (allTimePreset,
+ * or a caller's own `range` returning {from: null, to: null}) is selectable:
+ * picking it clears both dates and the Select shows its label.
+ *
+ * BOUNDS. `min`/`max` go to both DateFields, so a page can block future dates
+ * (max = today) or dates before records began. Presets are not clipped — a
+ * preset is a named period, and clipping it would make it lie about its name.
+ *
  * ORDERING. If a hand edit puts From after To, the other end moves to meet
  * it, so the bar never holds an inverted (always-empty) range.
  */
@@ -53,14 +62,15 @@ export interface DateRangeFilterProps {
   /** "sm" for dense toolbars; "md" (default) matches DateField's height. */
   size?: "sm" | "md";
   disabled?: boolean;
+  /** Earliest pickable date, "YYYY-MM-DD", inclusive. Passed to both fields. */
+  min?: string;
+  /** Latest pickable date, "YYYY-MM-DD", inclusive. Passed to both fields. */
+  max?: string;
   /** Names the group for assistive tech. */
   "aria-label"?: string;
 }
 
 const CUSTOM = "custom";
-
-const same = (a: DateRange, b: DateRange | null) =>
-  !!b && a.from === b.from && a.to === b.to;
 
 export function DateRangeFilter({
   value,
@@ -70,32 +80,18 @@ export function DateRangeFilter({
   placeholder = "Date Range",
   size = "md",
   disabled = false,
+  min,
+  max,
   "aria-label": ariaLabel = "Date Range",
 }: DateRangeFilterProps) {
   const [picked, setPicked] = useState<string | null>(null);
   const opts = { weekStartsOn };
-  const now = new Date();
-
-  const hasCustom = presets.some((p) => p.key === CUSTOM);
-  const pickedPreset = presets.find((p) => p.key === picked);
-
-  let shown = "";
-  if (picked === CUSTOM && hasCustom) {
-    // An explicit "Custom" stays Custom even over dates a preset would match.
-    shown = CUSTOM;
-  } else if (pickedPreset && same(value, resolvePreset(pickedPreset, now, opts))) {
-    shown = pickedPreset.key;
-  } else {
-    const match = presets.find((p) => p.key !== CUSTOM && same(value, resolvePreset(p, now, opts)));
-    if (match) shown = match.key;
-    else if ((value.from != null || value.to != null) && hasCustom) shown = CUSTOM;
-  }
+  const shown = shownPresetKey(presets, value, picked, new Date(), opts);
 
   const choose = (key: string) => {
     setPicked(key);
-    const preset = presets.find((p) => p.key === key);
-    const range = preset ? resolvePreset(preset, new Date(), opts) : null;
-    if (range && !same(value, range)) onChange(range);
+    const range = presetChange(presets, key, value, new Date(), opts);
+    if (range) onChange(range);
   };
 
   const setFrom = (from: string | null) => {
@@ -131,6 +127,8 @@ export function DateRangeFilter({
             pickerTitle="From Date"
             presets={false}
             disabled={disabled}
+            min={min}
+            max={max}
           />
         </span>
         <span className="ui-daterange-sep" aria-hidden="true">
@@ -144,6 +142,8 @@ export function DateRangeFilter({
             pickerTitle="To Date"
             presets={false}
             disabled={disabled}
+            min={min}
+            max={max}
           />
         </span>
       </div>

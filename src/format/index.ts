@@ -12,7 +12,7 @@ export type { MoneyFormatOptions, MoneyValue } from "./money";
 export { toCsv, downloadCsv, csvCell, CSV_BOM } from "./csv";
 export type { CsvColumn, CsvRow } from "./csv";
 
-export { getPresetRange, defaultPresets } from "../primitives/DateRangeFilter/presets";
+export { getPresetRange, defaultPresets, allTimePreset } from "../primitives/DateRangeFilter/presets";
 export type {
   DateRange,
   DateRangePreset,

@@ -115,3 +115,12 @@
   font-weight: var(--weight-medium);
   line-height: 1.4;
 }
+
+/* The invisible-label variant (ariaLabel) — the name is shown elsewhere in the
+   row. No text means the gap reserves space for nothing, and the negative margin
+   that pulls a labelled control back onto the text grid would instead push the
+   bare track out of its slot. Same treatment as Checkbox's bare variant. */
+.ui-toggle[data-bare] {
+  gap: 0;
+  margin-inline-start: 0;
+}

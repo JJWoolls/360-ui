@@ -221,6 +221,13 @@ const [range, setRange] = useState<DateRange>(getPresetRange("this_month"));
   on `@360digilab/ui/format`. Weeks, months and quarters are whole periods;
   This Year is year-to-date; weeks start Monday unless `weekStartsOn: 0`.
 - The Select follows the dates: editing a date by hand shows Custom.
+- `allTimePreset` (All Time, both ends open) is opt-in, not in
+  `defaultPresets`: `presets={[...defaultPresets, allTimePreset]}`. Picking it
+  emits `{ from: null, to: null }`. Any preset whose own `range` returns both
+  ends null behaves the same way.
+- `min` / `max` (`"YYYY-MM-DD"`, inclusive) go to both fields, e.g.
+  `max={today}` to block future dates. `DateField` and `DatePicker` take the
+  same two props.
 
 The reasoning is written at the top of
 `src/primitives/DateRangeFilter/presets.ts` and `DateRangeFilter.tsx`.
