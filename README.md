@@ -87,6 +87,19 @@ const save = useSaveState({ onError: (e) => showToast(e.message) });
 
 The reasoning is written at the top of `src/hooks/useSaveState.ts`.
 
+## Windows
+
+`Modal` (and `AlertDialog` on top of it) is the only pop-up window.
+
+- A form or anything holding typed input passes `closeOnBackdrop={false}`;
+  where losing that input really hurts, `closeOnEscape={false}` too.
+- The field that should take the cursor carries `autoFocus` or
+  `data-autofocus`; otherwise the first focusable element gets it.
+- Escape goes to an open dropdown first (its trigger carries `aria-haspopup`
+  and `aria-expanded`), and to a field marked `data-handles-escape` (an inline
+  row edit cancelling itself). Only then does it close the window.
+- Actions go in `footer`: Cancel left, primary right.
+
 ## The rules that govern what goes in here
 
 - **One primitive, with variants.** Format, tone, size, theme and viewport are

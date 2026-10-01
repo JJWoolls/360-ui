@@ -200,6 +200,10 @@ export function Modal({
         // Listening in the capture phase means the modal hears it first, so
         // it has to step aside on purpose.
         if (openPopupInside(dialogRef.current, e.target)) return;
+        // A field that uses Escape itself (an inline row edit's "cancel") says
+        // so with data-handles-escape; its Escape cancels the edit and the
+        // window stays open.
+        if (e.target instanceof HTMLElement && e.target.closest("[data-handles-escape]")) return;
         e.stopPropagation();
         if (closeOnEscape) onClose();
         return;
