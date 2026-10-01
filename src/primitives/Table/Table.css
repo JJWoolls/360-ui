@@ -145,6 +145,16 @@
   background: var(--ui-table-sticky-bg);
 }
 
+/* …but an opaque sticky cell would hide the row's hover / selected tint, so it
+   lays the same tint over its own background (the tint may be translucent). */
+.ui-table tbody tr[data-clickable]:hover > [data-stuck] {
+  background: linear-gradient(var(--ui-table-row-hover), var(--ui-table-row-hover)), var(--ui-table-sticky-bg);
+}
+
+.ui-table tbody tr[data-selected] > [data-stuck] {
+  background: linear-gradient(var(--ui-table-selected-bg), var(--ui-table-selected-bg)), var(--ui-table-sticky-bg);
+}
+
 .ui-table thead [data-stuck] {
   z-index: 30;
   background: var(--ui-table-head-bg);
