@@ -1,0 +1,48 @@
+/* SectionLabel — the small heading above a block of content. Tokens only.
+ *
+ * Small, semibold, secondary text colour, a touch of tracking. NO
+ * text-transform: callers pass Title Case and it renders as written. See the
+ * note at the top of SectionLabel.tsx.
+ *
+ * margin/padding are reset explicitly because `as` may be h2/h3, and the
+ * heading's UA margins and font-size would otherwise leak in and make the
+ * same label look different depending on the element chosen.
+ */
+
+.ui-section-label {
+  margin: 0 0 var(--s2);
+  padding: 0;
+  font-family: var(--font);
+  font-size: var(--text-md); /* 12px */
+  font-weight: var(--weight-semibold);
+  line-height: 1.4;
+  letter-spacing: 0.02em;
+  color: var(--text-secondary);
+}
+
+.ui-section-label[data-size="sm"] {
+  font-size: var(--text-sm); /* 11px */
+}
+
+/* With an action, the ROW carries the bottom gap and the label drops its own,
+   so a label with an action sits exactly as far above the content as one
+   without. Centre-aligned so a small button lines up with the text. */
+.ui-section-label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s2);
+  margin-bottom: var(--s2);
+}
+
+.ui-section-label-row > .ui-section-label {
+  margin-bottom: 0;
+  min-width: 0;
+}
+
+.ui-section-label-action {
+  display: flex;
+  align-items: center;
+  gap: var(--s2);
+  flex: none;
+}

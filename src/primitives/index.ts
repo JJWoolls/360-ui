@@ -42,6 +42,11 @@ export type { SpinnerProps, SkeletonProps } from "./Loading/Loading";
 export { Badge } from "./Badge/Badge";
 export type { BadgeProps, BadgeTone, BadgeKind, BadgeSize, BadgePalette } from "./Badge/Badge";
 
+// SectionLabel — the small Title Case heading above a block of content, with
+// an optional right-aligned action. Never uppercased.
+export { SectionLabel } from "./SectionLabel/SectionLabel";
+export type { SectionLabelProps, SectionLabelElement, SectionLabelSize } from "./SectionLabel/SectionLabel";
+
 export { Card } from "./Card/Card";
 export type { CardProps, CardTone, CardKind } from "./Card/Card";
 

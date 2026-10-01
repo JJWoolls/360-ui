@@ -131,6 +131,25 @@ One dropdown: `Select`. Never a native `<select>`, and never a local copy.
 - The list is portaled, so a scrolling Modal never clips it, and inside a Modal
   the first Escape closes the list and the second the window.
 
+## SectionLabel
+
+One section heading: `SectionLabel`, so pages don't hand-roll a small
+uppercase span or an inline-styled `h3`.
+
+```tsx
+<SectionLabel>Recent Activity</SectionLabel>
+<SectionLabel as="h3" action={<Button size="sm">Add</Button>}>Notes</SectionLabel>
+```
+
+- Pass Title Case; it renders as written and is never uppercased.
+- `as` picks the element (`div` by default, or `h2`/`h3`/`span`); the look is
+  the same for every element.
+- `action` is a right-aligned slot on the same row: a count or a small control.
+- `size="sm"` for dense panels; `md` is the default.
+
+The reasoning is written at the top of
+`src/primitives/SectionLabel/SectionLabel.tsx`.
+
 ## The rules that govern what goes in here
 
 - **One primitive, with variants.** Format, tone, size, theme and viewport are
