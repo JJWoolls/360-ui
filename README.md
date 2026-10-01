@@ -104,6 +104,30 @@ const rows = useAsyncData(() => findRows(q), [q], { initial: [] });
 
 The reasoning is written at the top of `src/hooks/useDebouncedValue.ts`.
 
+### The search field
+
+One search field: `Input` with a search icon and `onClear`. No hand-made
+clear-X buttons beside the field.
+
+```tsx
+<Input
+  prefix={<Search />}
+  value={q}
+  onChange={(e) => setQ(e.target.value)}
+  onClear={() => setQ("")}
+  clearLabel="Clear search"
+/>
+```
+
+- `onClear?: () => void` — shows a small X inside the field's right edge while
+  `value` is a non-empty string. Clicking it calls `onClear` and puts the cursor
+  back in the field. The caller empties the value; the field is controlled.
+- `clearLabel?: string` — the button's accessible name. Default `"Clear"`;
+  name what it clears.
+- The clear button takes the `suffix` slot. Given both, the clear button shows
+  while there is a value and the suffix while the field is empty.
+- Not shown on a `disabled` or `readOnly` field.
+
 ## Windows
 
 `Modal` (and `AlertDialog` on top of it) is the only pop-up window.

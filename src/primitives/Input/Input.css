@@ -185,6 +185,73 @@
   padding-right: calc(var(--s2) + var(--ui-affix-end) + var(--s1));
 }
 
+/* ---- clear button ---------------------------------------------------------
+ * The X a search field shows while it holds text. It takes the suffix's slot,
+ * so it is measured the same way (Input.tsx writes its width to
+ * --ui-affix-end) and only the inset differs: the button is a 24px hit area
+ * around a 14px glyph, so it sits closer to the edge than a bare mark, keeping
+ * the glyph roughly where a suffix icon would be and the box clear of the text.
+ */
+.ui-input-wrap:has(> .ui-input-clear) {
+  --ui-affix-end: 24px; /* first paint, before the measurement lands */
+}
+
+.ui-input-clear {
+  position: absolute;
+  top: 50%;
+  right: var(--s1);
+  transform: translateY(-50%);
+  display: grid;
+  place-items: center;
+  min-width: 24px;
+  min-height: 24px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  color: var(--text-hint);
+  cursor: pointer;
+  transition:
+    background-color var(--transition),
+    color var(--transition);
+}
+
+.ui-input-clear:hover {
+  background: var(--surface-hover);
+  color: var(--text-primary);
+}
+
+/* The Select trigger's ring — the kit's focus mark for a control. */
+.ui-input-clear:focus-visible {
+  outline: 1px solid var(--brand);
+  outline-offset: 0;
+  color: var(--text-primary);
+}
+
+.ui-input-clear > svg {
+  width: 14px;
+  height: 14px;
+}
+
+.ui-input-wrap[data-size="sm"] .ui-input-clear > svg {
+  width: 12px;
+  height: 12px;
+}
+
+/* Inset + button + gap, the same arithmetic as a suffix with the tighter inset.
+   The button is never narrower than 24px, so the hit area holds on sm too. */
+.ui-input-wrap[data-has-clear] .ui-input {
+  padding-right: calc(var(--s1) + var(--ui-affix-end) + var(--s1));
+}
+
+.ui-input-wrap[data-size="sm"] .ui-input-clear {
+  right: 2px;
+}
+
+.ui-input-wrap[data-size="sm"][data-has-clear] .ui-input {
+  padding-right: calc(2px + var(--ui-affix-end) + var(--s1));
+}
+
 /* The multi-line twin. Height comes from `rows` instead of the fixed 36px, and
    it grows only downward — a field narrower than its form reads as a mistake. */
 .ui-textarea {

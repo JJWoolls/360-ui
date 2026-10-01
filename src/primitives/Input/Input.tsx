@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useLayoutEffect, useRef } from "react";
-import type { InputHTMLAttributes, ReactNode, TextareaHTMLAttributes } from "react";
+import type { InputHTMLAttributes, ReactNode, RefObject, TextareaHTMLAttributes } from "react";
 import "./Input.css";
 
 // useLayoutEffect warns during server render; on the server there is nothing
@@ -69,8 +69,24 @@ export type InputProps = Shared &
      * a className escape hatch, which is how a primitive stops being one.
      */
     prefix?: ReactNode;
-    /** The same on the right — a unit, a percent sign. */
+    /**
+     * The same on the right — a unit, a percent sign. Shares the right edge
+     * with the clear button: when `onClear` is set and the field has a value,
+     * the clear button shows in its place; when the field is empty, the suffix.
+     */
     suffix?: ReactNode;
+    /**
+     * Gives the field a built-in clear button: a small X inside the right edge,
+     * shown only while `value` is a non-empty string. Clicking it calls this
+     * and puts the cursor back in the field, so the person can type the next
+     * search straight away. The caller does the clearing (`() => setQ("")`) —
+     * the field is controlled, so only the caller can empty it.
+     *
+     * Hidden on a disabled or read-only field, where clearing is not allowed.
+     */
+    onClear?: () => void;
+    /** The clear button's accessible name. Default "Clear"; name what it clears ("Clear search"). */
+    clearLabel?: string;
   };
 
 export type TextareaProps = Shared &
@@ -86,10 +102,12 @@ export type TextareaProps = Shared &
  * as --ui-affix-start / --ui-affix-end. Input.css holds the arithmetic and the
  * first-paint fallback.
  */
-function useAffixWidths(hasPrefix: boolean, hasSuffix: boolean) {
+function useAffixWidths(hasPrefix: boolean, end: "suffix" | "clear" | null) {
   const wrapRef = useRef<HTMLSpanElement>(null);
   const startRef = useRef<HTMLSpanElement>(null);
-  const endRef = useRef<HTMLSpanElement>(null);
+  // The right edge holds either the suffix mark or the clear button; whichever
+  // is showing is the one measured, so the padding follows the swap.
+  const endRef = useRef<HTMLElement>(null);
 
   useIsoLayoutEffect(() => {
     const wrap = wrapRef.current;
@@ -104,19 +122,39 @@ function useAffixWidths(hasPrefix: boolean, hasSuffix: boolean) {
     if (startRef.current) ro.observe(startRef.current);
     if (endRef.current) ro.observe(endRef.current);
     return () => ro.disconnect();
-  }, [hasPrefix, hasSuffix]);
+  }, [hasPrefix, end]);
 
   return { wrapRef, startRef, endRef };
 }
 
-export function Input({ invalid, size = "md", prefix, suffix, ...rest }: InputProps) {
+export function Input({
+  invalid,
+  size = "md",
+  prefix,
+  suffix,
+  onClear,
+  clearLabel = "Clear",
+  ...rest
+}: InputProps) {
   const hasPrefix = prefix != null;
-  const hasSuffix = suffix != null;
-  const { wrapRef, startRef, endRef } = useAffixWidths(hasPrefix, hasSuffix);
+  // The clear button takes the suffix's slot rather than sitting beside it: a
+  // field with two marks on one edge leaves too little room for the text, and
+  // the suffix (a unit, an icon) says nothing the typed value does not.
+  const showClear =
+    onClear != null &&
+    typeof rest.value === "string" &&
+    rest.value !== "" &&
+    !rest.disabled &&
+    !rest.readOnly;
+  const hasSuffix = !showClear && suffix != null;
+  const end = showClear ? "clear" : hasSuffix ? "suffix" : null;
+  const { wrapRef, startRef, endRef } = useAffixWidths(hasPrefix, end);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const field = (
     <input
       {...rest}
+      ref={inputRef}
       className="ui-input"
       data-size={size}
       data-invalid={invalid || undefined}
@@ -126,7 +164,9 @@ export function Input({ invalid, size = "md", prefix, suffix, ...rest }: InputPr
 
   // No wrapper unless one is needed — a plain field stays a plain element, so
   // it can still be a flex or grid child without an extra box in the way.
-  if (!hasPrefix && !hasSuffix) return field;
+  // A field that can be cleared keeps its wrapper even while empty, so the
+  // input is not remounted (and does not lose focus) on the first keystroke.
+  if (!hasPrefix && suffix == null && onClear == null) return field;
 
   return (
     <span
@@ -135,6 +175,7 @@ export function Input({ invalid, size = "md", prefix, suffix, ...rest }: InputPr
       data-size={size}
       data-has-prefix={hasPrefix || undefined}
       data-has-suffix={hasSuffix || undefined}
+      data-has-clear={showClear || undefined}
     >
       {hasPrefix && (
         <span ref={startRef} className="ui-input-affix" data-side="start" aria-hidden="true">
@@ -143,9 +184,37 @@ export function Input({ invalid, size = "md", prefix, suffix, ...rest }: InputPr
       )}
       {field}
       {hasSuffix && (
-        <span ref={endRef} className="ui-input-affix" data-side="end" aria-hidden="true">
+        <span
+          ref={endRef as RefObject<HTMLSpanElement>}
+          className="ui-input-affix"
+          data-side="end"
+          aria-hidden="true"
+        >
           {suffix}
         </span>
+      )}
+      {showClear && (
+        <button
+          ref={endRef as RefObject<HTMLButtonElement>}
+          type="button"
+          className="ui-input-clear"
+          aria-label={clearLabel}
+          onClick={() => {
+            onClear?.();
+            inputRef.current?.focus();
+          }}
+        >
+          {/* The Modal's close X, so "dismiss" and "clear" are one glyph. */}
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path
+              d="M18 6L6 18M6 6l12 12"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+            />
+          </svg>
+        </button>
       )}
     </span>
   );
