@@ -224,6 +224,108 @@ bordered div with a large bold number.
 
 The reasoning is written at the top of `src/primitives/StatCard/StatCard.tsx`.
 
+## Tables
+
+One table: `Table`. Never a hand-rolled `<table>`, and never a local copy.
+
+The rules:
+
+- **No zebra stripes.** Rows are separated by one rule.
+- **No sort arrows.** The active sort column is marked by colour (`--brand`)
+  and nothing else; `aria-sort` carries the direction to screen readers.
+- **100 rows a page.** The default. `pageSize={null}` only for a list that is
+  genuinely short; a server-paged list passes `totalRows` instead.
+- **Row click opens the row's detail.** `onRowClick` is for that, not for
+  inline edits; controls inside a cell stop the click themselves.
+
+Basic:
+
+```tsx
+const columns: TableColumn<Case>[] = [
+  { key: "no", header: "Case", cell: (c) => c.no, width: 120 },
+  { key: "doctor", header: "Doctor", cell: (c) => c.doctor },
+  { key: "total", header: "Total", cell: (c) => money(c.total), align: "right", numeric: true },
+];
+
+<Table columns={columns} rows={cases} rowKey={(c) => c.id} onRowClick={openCase}
+       emptyText="No cases match this filter" />
+```
+
+Sort — controlled. Give a column a `sortAccessor` and the Table sorts; pass
+`manualSort` when the caller (or the server) already sorted:
+
+```tsx
+const [sortCol, setSortCol] = useState("no");
+const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
+const onSort = (key: string) => {
+  if (key === sortCol) setSortDir(sortDir === "asc" ? "desc" : "asc");
+  else { setSortCol(key); setSortDir("asc"); }
+};
+
+<Table columns={columns} rows={cases} rowKey={(c) => c.id}
+       sortCol={sortCol} sortDir={sortDir} onSort={onSort} />
+```
+
+Footer — per column. `footer` is a node or a function of every row the Table
+was given (all pages, not the visible one); a `<tfoot>` renders when any
+column has one, and hides while loading or empty:
+
+```tsx
+{ key: "total", header: "Total", cell: (c) => money(c.total), align: "right", numeric: true,
+  footer: (rows) => money(rows.reduce((s, c) => s + c.total, 0)) }
+```
+
+Expand — a full-width row under the row. A toggle column appears; with no
+`onRowClick`, clicking the row toggles too. Uncontrolled by default; pass
+`expandedKeys` / `onExpandedChange` to control it:
+
+```tsx
+<Table columns={columns} rows={cases} rowKey={(c) => c.id}
+       renderExpanded={(c) => <CaseNotes id={c.id} />}
+       canExpand={(c) => c.noteCount > 0} />
+```
+
+Group — a section row before each group. Groups keep the order their first
+row has in `rows`; sorting happens within each group:
+
+```tsx
+<Table columns={columns} rows={cases} rowKey={(c) => c.id}
+       groupBy={(c) => c.department}
+       renderGroupHeader={(dept, rows) => `${dept} · ${rows.length}`} />
+```
+
+Select — a checkbox column. The header box is checked, mixed or clear, and
+selects **every row the Table was given** (all pages), not just the visible
+page; for a server-paged list that is the loaded page:
+
+```tsx
+const [picked, setPicked] = useState<Set<TableRowKey>>(new Set());
+
+<Table columns={columns} rows={cases} rowKey={(c) => c.id}
+       selectedKeys={picked} onSelectionChange={setPicked}
+       canSelect={(c) => !c.invoiced} />
+```
+
+Server paging — `totalRows` switches the Table to server mode: `rows` is the
+current page, nothing is sliced, and the controls drive `page`. Pair it with
+`manualSort` for RPC-paged lists:
+
+```tsx
+<Table columns={columns} rows={data.rows} rowKey={(c) => c.id}
+       manualSort sortCol={sortCol} sortDir={sortDir} onSort={onSort}
+       totalRows={data.total} page={page} onPageChange={setPage}
+       loading={loading} />
+```
+
+Also: `header` takes any node; `loading` draws skeleton rows; `rowClassName`
+and `rowStyle` per row; `pinToTop` floats rows above the sort; `fixedLayout`
+(with column `width`s), `minWidth`, `maxHeight`, `stickyHeader` and
+`stickyFirstColumn` for wide grids; `caption` names the table for screen
+readers. The default `emptyText` is "Nothing to show" — say which empty it is.
+
+An app paints its tables through the `--ui-table-*` properties declared in
+`Table.css`, passed on `style`; it never forks the component.
+
 ## The rules that govern what goes in here
 
 - **One primitive, with variants.** Format, tone, size, theme and viewport are

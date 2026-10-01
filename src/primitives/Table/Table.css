@@ -1,87 +1,225 @@
-/* Table — tokens only. */
+/* Table — tokens only.
 
-.ui-table-wrap {
-  overflow-x: auto;
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius);
+   The look hooks. Every colour the table paints is read through one of these,
+   declared on the root and defaulting to a semantic token, so an app that
+   paints its tables differently overrides the VALUES (via the Table's `style`)
+   and never forks the component. The root renders no box. */
+
+.ui-table-root {
+  display: contents;
+  --ui-table-head-bg: var(--surface-raised);
+  --ui-table-head-fg: var(--text-tertiary);
+  --ui-table-head-hover: var(--text-primary);
+  --ui-table-head-size: var(--text-xs);
+  --ui-table-active: var(--brand);
+  --ui-table-rule: var(--border-subtle);
+  --ui-table-row-hover: var(--surface-hover);
+  --ui-table-selected-bg: rgba(var(--brand-rgb), 0.08);
+  --ui-table-sticky-bg: var(--bg);
+  --ui-table-group-bg: var(--ui-table-head-bg);
+  --ui-table-expanded-bg: var(--surface-inset);
+  /* Checkbox / toggle column. 48px in both apps' scales. */
+  --ui-table-util-w: calc(var(--s4) * 3);
+}
+
+.ui-table-scroll {
+  overflow: auto;
 }
 
 .ui-table {
   width: 100%;
   border-collapse: collapse;
+}
+
+.ui-table[data-fixed] {
   table-layout: fixed;
-  background: var(--surface);
 }
 
-.ui-table-caption {
-  padding: var(--s3) var(--s4);
-  font-size: var(--text-xs);
-  font-weight: var(--weight-bold);
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-  color: var(--text-hint);
-  text-align: left;
+/* ---- Header ------------------------------------------------------------- */
+
+.ui-table thead {
+  background: var(--ui-table-head-bg);
 }
 
-.ui-table th {
-  padding: var(--s3) var(--s4);
-  border-bottom: 1px solid var(--border-default);
-  font-size: var(--text-xs);
-  font-weight: var(--weight-bold);
-  letter-spacing: 0.07em;
+/* Sticky needs an opaque ground, which is why it is a prop and not a class. */
+.ui-table thead[data-sticky] {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+.ui-table thead th {
+  padding: var(--s2) var(--s4);
+  font-size: var(--ui-table-head-size);
+  font-weight: var(--weight-semibold);
+  letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: var(--text-hint);
   text-align: left;
-  white-space: nowrap;
+  color: var(--ui-table-head-fg);
+  user-select: none;
+  transition: color var(--transition);
 }
 
 /* THE active-sort mark. Color, and nothing else — no arrow, no caret, no
    pseudo-element. See the note in Table.tsx before changing this. */
-.ui-table th[data-active] {
-  color: var(--brand);
+.ui-table thead th[data-active] {
+  color: var(--ui-table-active);
 }
 
-/* The sort control is a real button so it is keyboard reachable, but it must
-   look exactly like the header text it replaces — hence the reset. */
-.ui-table-sort {
+/* A sortable header's padding moves onto its button, so the whole cell is the
+   click target, exactly as when the cell itself was clickable. */
+.ui-table thead th[data-sortable] {
   padding: 0;
+}
+
+/* A real button so it is keyboard reachable, but it must look exactly like the
+   header text it replaces — hence the reset. */
+.ui-table-sort {
+  display: block;
+  width: 100%;
+  padding: var(--s2) var(--s4);
   background: none;
   border: none;
   font: inherit;
   letter-spacing: inherit;
   text-transform: inherit;
+  text-align: inherit;
   color: inherit;
   cursor: pointer;
 }
 
-.ui-table-sort:hover {
-  color: var(--text-secondary);
+.ui-table thead th:not([data-active]) .ui-table-sort:hover {
+  color: var(--ui-table-head-hover);
 }
 
-.ui-table th[data-active] .ui-table-sort:hover {
-  color: var(--brand-hover);
+.ui-table-sort:focus-visible,
+.ui-table-toggle:focus-visible {
+  outline: 2px solid var(--ui-table-active);
+  outline-offset: -2px;
 }
 
-.ui-table td {
-  padding: var(--s3) var(--s4);
-  border-bottom: 1px solid var(--border-subtle);
-  font-size: var(--text-base);
-  color: var(--text-secondary);
+/* ---- Body --------------------------------------------------------------- */
+
+.ui-table tbody tr {
+  border-bottom: 1px solid var(--ui-table-rule);
 }
 
-.ui-table th[data-align="right"],
-.ui-table td[data-align="right"] {
-  text-align: right;
+.ui-table tbody td {
+  padding: var(--s2) var(--s4);
 }
 
 .ui-table td[data-numeric] {
   font-variant-numeric: tabular-nums;
 }
 
-.ui-table tbody tr:last-child td {
-  border-bottom: none;
+.ui-table [data-align="left"] {
+  text-align: left;
 }
 
-.ui-table tbody tr:hover td {
+.ui-table [data-align="right"] {
+  text-align: right;
+}
+
+.ui-table [data-align="center"] {
+  text-align: center;
+}
+
+/* Hover only where a click does something. */
+.ui-table tbody tr[data-clickable] {
+  cursor: pointer;
+}
+
+.ui-table tbody tr[data-clickable]:hover {
+  background: var(--ui-table-row-hover);
+}
+
+.ui-table tbody tr[data-selected] {
+  background: var(--ui-table-selected-bg);
+}
+
+/* Sticky cells have to be opaque or the rows scroll through them. The header's
+   park on the band and the body's on the page — a sticky column that kept the
+   page colour would cut a notch out of the header. */
+.ui-table [data-stuck] {
+  position: sticky;
+  z-index: 1;
+  background: var(--ui-table-sticky-bg);
+}
+
+.ui-table thead [data-stuck] {
+  z-index: 3;
+  background: var(--ui-table-head-bg);
+}
+
+.ui-table-empty {
+  padding: calc(var(--s2) * 5) var(--s4);
+}
+
+/* ---- Utility columns (checkbox, expand toggle) -------------------------- */
+
+.ui-table .ui-table-util {
+  width: var(--ui-table-util-w);
+  padding: 0;
+  text-align: center;
+  vertical-align: middle;
+}
+
+/* The checkbox's optical offset is for a form grid; in a cell it centres. */
+.ui-table .ui-table-util .ui-check {
+  margin-inline-start: 0;
+}
+
+.ui-table-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: calc(var(--s4) + var(--s2));
+  height: calc(var(--s4) + var(--s2));
+  padding: 0;
+  background: none;
+  border: none;
+  border-radius: var(--radius-xs);
+  color: var(--text-tertiary);
+  cursor: pointer;
+}
+
+.ui-table-toggle:hover {
+  color: var(--text-primary);
   background: var(--surface-hover);
+}
+
+.ui-table-toggle svg {
+  width: var(--s4);
+  height: var(--s4);
+  transition: transform var(--transition);
+}
+
+.ui-table-toggle[aria-expanded="true"] svg {
+  transform: rotate(90deg);
+}
+
+/* ---- Expanded, group and footer rows ------------------------------------ */
+
+.ui-table tbody tr.ui-table-expanded > td {
+  padding: var(--s3) var(--s4);
+  background: var(--ui-table-expanded-bg);
+}
+
+.ui-table tbody tr.ui-table-group > th {
+  padding: var(--s2) var(--s4);
+  background: var(--ui-table-group-bg);
+  font-weight: var(--weight-semibold);
+  text-align: left;
+}
+
+.ui-table-group-count {
+  margin-inline-start: var(--s2);
+  font-weight: var(--weight-normal);
+  color: var(--ui-table-head-fg);
+}
+
+.ui-table tfoot td {
+  padding: var(--s2) var(--s4);
+  border-top: 1px solid var(--border-default);
+  font-weight: var(--weight-semibold);
 }

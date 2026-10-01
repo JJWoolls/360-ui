@@ -63,8 +63,10 @@ export type { StatCardProps, StatCardTrend, StatCardTrendTone } from "./StatCard
 export { ListRow } from "./ListRow/ListRow";
 export type { ListRowProps, ListRowTone } from "./ListRow/ListRow";
 
+// Table — the one house table: controlled sort marked by colour, 100-row
+// pages, footer totals, expandable / grouped / selectable rows, server paging.
 export { Table } from "./Table/Table";
-export type { TableProps, TableColumn } from "./Table/Table";
+export type { TableProps, TableColumn, TableRowKey } from "./Table/Table";
 
 // Pagination — the house 100-per-page rule (Josh, 2026-09-29). The Table uses
 // it by default; a list that is not a Table uses the hook and the controls.
