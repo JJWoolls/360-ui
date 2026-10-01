@@ -201,6 +201,49 @@
   background: rgba(var(--violet-rgb), 0.2);
 }
 
+/* Identity hues — peers told apart by colour where every status hue above is
+   already taken (the LMS case Files tiles: one colour per file type). Same
+   recipe again; only the hue changes, carried in --tone / --tone-rgb so the
+   light-theme override below swaps one pair instead of restating the recipe. */
+.ui-btn[data-variant="pink"]   { --tone: var(--pink);   --tone-rgb: var(--pink-rgb); }
+.ui-btn[data-variant="cyan"]   { --tone: var(--cyan);   --tone-rgb: var(--cyan-rgb); }
+.ui-btn[data-variant="orange"] { --tone: var(--orange); --tone-rgb: var(--orange-rgb); }
+.ui-btn[data-variant="lime"]   { --tone: var(--lime);   --tone-rgb: var(--lime-rgb); }
+
+/* LIGHT THEMES: the shared accent tokens are the bright dark-theme values, and
+   as a label on their own 12% ground over white they read 1.4–3.0:1 (lime
+   worst). The button darkens the hue HERE, not in tokens.css, so every other
+   use of --pink/--cyan/--orange/--lime keeps its colour. Tailwind 800 shades:
+   text >= 5.1:1 on white and paper, at rest (12%) and on the hover ground (20%). */
+:root[data-map="atlas-light"] .ui-btn[data-variant="pink"],
+:root[data-map="paper"] .ui-btn[data-variant="pink"],
+[data-theme="light"] .ui-btn[data-variant="pink"]   { --tone: #9d174d; --tone-rgb: 157, 23, 77; }
+:root[data-map="atlas-light"] .ui-btn[data-variant="cyan"],
+:root[data-map="paper"] .ui-btn[data-variant="cyan"],
+[data-theme="light"] .ui-btn[data-variant="cyan"]   { --tone: #155e75; --tone-rgb: 21, 94, 117; }
+:root[data-map="atlas-light"] .ui-btn[data-variant="orange"],
+:root[data-map="paper"] .ui-btn[data-variant="orange"],
+[data-theme="light"] .ui-btn[data-variant="orange"] { --tone: #9a3412; --tone-rgb: 154, 52, 18; }
+:root[data-map="atlas-light"] .ui-btn[data-variant="lime"],
+:root[data-map="paper"] .ui-btn[data-variant="lime"],
+[data-theme="light"] .ui-btn[data-variant="lime"]   { --tone: #3f6212; --tone-rgb: 63, 98, 18; }
+
+.ui-btn[data-variant="pink"],
+.ui-btn[data-variant="cyan"],
+.ui-btn[data-variant="orange"],
+.ui-btn[data-variant="lime"] {
+  background: rgba(var(--tone-rgb), 0.12);
+  border-color: rgba(var(--tone-rgb), 0.35);
+  color: var(--tone);
+}
+
+.ui-btn[data-variant="pink"]:hover:not(:disabled),
+.ui-btn[data-variant="cyan"]:hover:not(:disabled),
+.ui-btn[data-variant="orange"]:hover:not(:disabled),
+.ui-btn[data-variant="lime"]:hover:not(:disabled) {
+  background: rgba(var(--tone-rgb), 0.2);
+}
+
 /* ---- icon / spinner ----------------------------------------------------- */
 .ui-btn-icon,
 .ui-btn-spinner {

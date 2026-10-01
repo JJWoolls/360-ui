@@ -36,8 +36,15 @@ export type ButtonSize = "xs" | "sm" | "md";
  * rather than a set of leftovers. There is deliberately no `muted` tone —
  * `variant="secondary"` IS the neutral button, and a second name for it would
  * be the first step back towards four ways of saying one thing.
+ *
+ * `pink`, `cyan`, `orange` and `lime` are IDENTITY hues, not status: they tell
+ * peers apart where the five above are already spoken for (Josh, 2026-10-01 —
+ * the LMS case Files tiles give every file type its own colour, only Other
+ * stays gray). Same recipe, only the hue changes.
  */
-export type ButtonTone = "brand" | "danger" | "warn" | "info" | "violet";
+export type ButtonTone =
+  | "brand" | "danger" | "warn" | "info" | "violet"
+  | "pink" | "cyan" | "orange" | "lime";
 
 /**
  * Colour comes from EITHER the hierarchy names or the tone vocabulary, never
