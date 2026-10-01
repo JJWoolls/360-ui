@@ -174,6 +174,35 @@ uppercase span or an inline-styled `h3`.
 The reasoning is written at the top of
 `src/primitives/SectionLabel/SectionLabel.tsx`.
 
+## StatusTabs
+
+One status-tab row: `StatusTabs`, for picking which slice of a list is shown.
+Single-select; for any-of-these filtering use `FilterPills`.
+
+```tsx
+<StatusTabs
+  aria-label="Status"
+  items={[
+    { value: "open", label: "Open", count: 12 },
+    { value: "waiting", label: "Waiting", count: 3 },
+    { value: "done", label: "Done" },
+  ]}
+  value={status}
+  onChange={setStatus}
+/>
+```
+
+- Generic over the value: `StatusTabs<"open" | "waiting" | "done">` types
+  `onChange` to the union.
+- A real tablist: Left/Right move and select (wrapping), Home/End jump; only
+  the selected tab is in the Tab order.
+- `count` is a small muted number after the label; omit it and none is drawn.
+- `size="sm"` for dense boards; `md` is the default. The track wraps on narrow
+  screens rather than scrolling.
+
+The reasoning is written at the top of
+`src/primitives/StatusTabs/StatusTabs.tsx`.
+
 ## StatCard
 
 One big-number tile: `StatCard`, built on `Card`, so pages stop hand-rolling a

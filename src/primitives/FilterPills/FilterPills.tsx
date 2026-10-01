@@ -35,6 +35,8 @@ import "./FilterPills.css";
  * `selection="single"` turns the same row into exclusive tabs: a click selects
  * that one pill and nothing else. It exists so a status-tab row beside a
  * filter row looks and sizes identically rather than being a second control.
+ * For a new status-tab row prefer StatusTabs, which is a real tablist (arrow
+ * keys, aria-selected); this mode remains for the rows already built on it.
  */
 
 export type FilterPillsSize = "sm" | "md";

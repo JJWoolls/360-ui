@@ -1,0 +1,99 @@
+/* StatusTabs — tokens only.
+ *
+ * THE TRACK is an inset surface with a subtle border: the tabs sit IN it, so
+ * the row reads as one control with one answer, not a cluster of buttons.
+ *
+ * THE SELECTED TAB uses the Button's brand recipe — 12% ground, 35% border,
+ * brand label. Hierarchy comes from hue, not a solid fill (see Button.css);
+ * a solid green block would out-shout the page's primary action.
+ *
+ * Unselected tabs carry no border of their own (a transparent one keeps the
+ * box the same size), secondary text, and lift to the hover surface. The track
+ * is the affordance; per-tab borders would turn it back into a pill row.
+ *
+ * flex-wrap: on a narrow screen the track grows a line rather than pushing
+ * tabs out of sight. The track is inline-flex so it hugs its tabs on a wide
+ * screen and max-width keeps it inside its container on a narrow one.
+ */
+
+.ui-status-tabs {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: calc(var(--s1) / 2);
+  max-width: 100%;
+  padding: calc(var(--s1) / 2);
+  background: var(--surface-inset);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius);
+  box-sizing: border-box;
+}
+
+.ui-status-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s1);
+  margin: 0;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-secondary);
+  font-family: var(--font);
+  font-weight: var(--weight-semibold);
+  line-height: 1.2;
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+  transition:
+    background-color var(--transition),
+    border-color var(--transition),
+    color var(--transition);
+}
+
+/* SIZES — the same boxes as FilterPills, so a tab row and a pill row beside
+ * each other line up. Only the box changes. */
+.ui-status-tabs[data-size="md"] .ui-status-tab {
+  padding: var(--s1) var(--s3);
+  font-size: var(--text-md);
+  min-height: calc(var(--s6) - var(--s1));
+}
+
+.ui-status-tabs[data-size="sm"] .ui-status-tab {
+  padding: calc(var(--s1) / 2) var(--s2);
+  font-size: var(--text-sm);
+  min-height: calc(var(--s5) - var(--s1));
+}
+
+.ui-status-tab:hover {
+  background: var(--surface-hover);
+  color: var(--text-primary);
+}
+
+.ui-status-tab:focus-visible {
+  outline: 2px solid rgba(var(--brand-rgb), 0.6);
+  outline-offset: 1px;
+}
+
+.ui-status-tab[aria-selected="true"] {
+  background: rgba(var(--brand-rgb), 0.12);
+  border-color: rgba(var(--brand-rgb), 0.35);
+  color: var(--brand);
+}
+
+.ui-status-tab[aria-selected="true"]:hover {
+  background: rgba(var(--brand-rgb), 0.2);
+  color: var(--brand);
+}
+
+/* The count is quieter than its label in both states; on the selected tab it
+ * inherits the brand colour, so label and number read as one unit. */
+.ui-status-tab__count {
+  font-weight: var(--weight-medium);
+  font-size: 0.92em;
+  opacity: 0.7;
+  font-variant-numeric: tabular-nums;
+}
+
+.ui-status-tab[aria-selected="true"] .ui-status-tab__count {
+  opacity: 0.85;
+}

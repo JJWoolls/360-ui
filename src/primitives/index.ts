@@ -30,6 +30,11 @@ export type { ToggleProps } from "./Toggle/Toggle";
 export { FilterPills } from "./FilterPills/FilterPills";
 export type { FilterPillsProps, FilterPillOption, FilterPillsSize } from "./FilterPills/FilterPills";
 
+// StatusTabs — the house single-select view picker: one segmented row of
+// tabs with counts, a real tablist (arrow keys move and select).
+export { StatusTabs } from "./StatusTabs/StatusTabs";
+export type { StatusTabsProps, StatusTabItem, StatusTabsSize } from "./StatusTabs/StatusTabs";
+
 export { PersonChip, initialsFrom } from "./PersonChip/PersonChip";
 export type { PersonChipProps, PersonChipSize } from "./PersonChip/PersonChip";
 
