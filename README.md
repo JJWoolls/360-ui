@@ -64,6 +64,29 @@ const rows = useAsyncData(() => fetchRows(filter), [filter], { initial: [] });
 
 The reasoning is written at the top of `src/hooks/useAsyncData.ts`.
 
+## Saving
+
+One way to run a write: `useSaveState`.
+
+```tsx
+const save = useSaveState({ onError: (e) => showToast(e.message) });
+
+<Button
+  loading={save.saving}
+  onClick={() => save.run(async () => { await writeRow(row); })}
+>
+  {save.saved ? "Saved" : "Save"}
+</Button>
+```
+
+- A second `run` while one is in flight is ignored, so a double click writes once.
+- `run` resolves `true` or `false` and never rejects. The write must THROW on
+  failure; a client that returns `{ error }` is unwrapped inside the function.
+- `saved` stays true for two seconds after a write that worked.
+- Each app passes `onError` to show the failure its own way; it is never silent.
+
+The reasoning is written at the top of `src/hooks/useSaveState.ts`.
+
 ## The rules that govern what goes in here
 
 - **One primitive, with variants.** Format, tone, size, theme and viewport are
