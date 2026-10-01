@@ -108,6 +108,22 @@ const FOCUSABLE = [
 /** Ids of every open modal, deepest last. Module-level: the stack is global. */
 const stack: string[] = [];
 
+/**
+ * Is a dropdown, menu or picker open within this modal? Looks for an expanded
+ * popup trigger (combobox, or anything with aria-haspopup) inside the dialog
+ * or at the key's target — the accessible way a control says its list is open.
+ * A list that is always on screen does not count.
+ * Plain disclosure sections (aria-expanded without a popup) do not count, or
+ * an expanded accordion would make Escape stop working.
+ */
+function openPopupInside(root: HTMLElement | null, target: EventTarget | null): boolean {
+  const OPEN = '[aria-expanded="true"][aria-haspopup]:not([aria-haspopup="false"]), [role="combobox"][aria-expanded="true"]';
+  const el = target instanceof HTMLElement ? target : null;
+  if (el?.closest(OPEN)) return true;
+  if (!root) return false;
+  return !!root.querySelector(OPEN);
+}
+
 function focusableIn(root: HTMLElement): HTMLElement[] {
   return Array.from(root.querySelectorAll<HTMLElement>(FOCUSABLE)).filter(
     // A focusable element inside a display:none branch is not actually
@@ -151,7 +167,14 @@ export function Modal({
     if (!open) return;
     const restoreTo = document.activeElement as HTMLElement | null;
     const node = dialogRef.current;
-    if (node) (focusableIn(node)[0] ?? node).focus();
+    // A field inside that asked for focus keeps it: React's autoFocus has
+    // already focused it by the time this runs, and a search box that loses
+    // focus to the close X makes the person click before they can type.
+    // `data-autofocus` asks for it without React's prop.
+    if (node && !node.contains(document.activeElement)) {
+      const wanted = node.querySelector<HTMLElement>("[data-autofocus]");
+      (wanted ?? focusableIn(node)[0] ?? node).focus();
+    }
     return () => restoreTo?.focus?.();
   }, [open]);
 
@@ -172,6 +195,11 @@ export function Modal({
       if (stack[stack.length - 1] !== id) return;
 
       if (e.key === "Escape") {
+        // An open dropdown inside the modal gets this Escape, not the modal:
+        // the first Escape closes the list, the next one closes the window.
+        // Listening in the capture phase means the modal hears it first, so
+        // it has to step aside on purpose.
+        if (openPopupInside(dialogRef.current, e.target)) return;
         e.stopPropagation();
         if (closeOnEscape) onClose();
         return;
