@@ -75,6 +75,10 @@ import {
      - A new fetch clears `error` as it starts, so a retry moves the screen
        from ErrorPanel back to the loader, not from error to error.
 
+     - A failed REFRESH keeps the data it had and sets `stale`. A board that
+       polls every few seconds must not blank on one dropped request; the
+       person sees the last answer, marked as possibly out of date.
+
      - `enabled: false` skips fetching (a required id not known yet) and
        leaves `loading` false. Turning it on fetches.
 
@@ -99,6 +103,12 @@ export interface AsyncData<D> {
   refreshing: boolean;
   /** The last fetch failed. Cleared when the next fetch starts. */
   error: Error | null;
+  /**
+   * The last fetch failed but an earlier one succeeded, and its data is still
+   * held (keepPreviousOnReload). AsyncBoundary then keeps that data on screen
+   * under a "couldn't refresh" notice instead of replacing it.
+   */
+  stale: boolean;
   /** Fetch again. Settles when the fetch does; never rejects. */
   reload: () => Promise<void>;
   /** Edit the loaded data locally, e.g. after a mutation. */
@@ -209,6 +219,9 @@ export function useAsyncData<T>(
     loading: enabled && !loaded && !error,
     refreshing: inFlight && loaded,
     error,
+    // `loaded` is only reset by a reload that drops previous data, so loaded
+    // plus error means the last good answer is still in `data`.
+    stale: error !== null && loaded,
     reload,
     setData,
   };

@@ -1,8 +1,10 @@
 import type { ReactNode } from "react";
 import type { AsyncData } from "../../hooks/useAsyncData";
+import { Button } from "../Button/Button";
 import { ErrorPanel } from "../ErrorPanel/ErrorPanel";
 import { PageLoader } from "../PageLoader/PageLoader";
 import type { StateFrameSize } from "../StateFrame/StateFrame";
+import "./AsyncBoundary.css";
 
 /**
  * AsyncBoundary — renders the right state for a useAsyncData result.
@@ -26,12 +28,16 @@ import type { StateFrameSize } from "../StateFrame/StateFrame";
  * while the content is loading or broken.
  *
  * A refresh that keeps previous data shows the data, not the loader — that is
- * the point of `refreshing`. A refresh that FAILS shows the ErrorPanel even
- * though old data exists: the screen no longer knows that data is current.
+ * the point of `refreshing`. A refresh that FAILS while earlier data is still
+ * held (`stale`) keeps that data on screen under a slim notice with Try Again.
+ * Replacing it with the ErrorPanel would blank a board that polls every few
+ * seconds on one dropped request; the notice still says plainly that what is
+ * shown may be out of date. With nothing held, a failure is the ErrorPanel.
  */
 
 export interface AsyncBoundaryProps<D> {
-  state: Pick<AsyncData<D>, "data" | "loading" | "error" | "reload">;
+  state: Pick<AsyncData<D>, "data" | "loading" | "error" | "reload"> &
+    Partial<Pick<AsyncData<D>, "stale">>;
   /** Rendered once data is in. Receives data with `undefined` ruled out. */
   children: (data: NonNullable<D>) => ReactNode;
   /** Said under the loader and announced. */
@@ -55,9 +61,10 @@ export function AsyncBoundary<D>({
   empty,
   size = "page",
 }: AsyncBoundaryProps<D>) {
-  const { data, loading, error, reload } = state;
+  const { data, loading, error, reload, stale } = state;
+  const held = data !== undefined && data !== null;
 
-  if (error) {
+  if (error && !(stale && held)) {
     return (
       <ErrorPanel
         title={errorTitle}
@@ -67,10 +74,24 @@ export function AsyncBoundary<D>({
       />
     );
   }
-  if (loading || data === undefined || data === null) {
+  if (loading || !held) {
     return <PageLoader label={loadingLabel} size={size} />;
   }
   const loaded = data as NonNullable<D>;
-  if (isEmpty && empty !== undefined && isEmpty(loaded)) return <>{empty}</>;
-  return <>{children(loaded)}</>;
+  const body =
+    isEmpty && empty !== undefined && isEmpty(loaded) ? empty : children(loaded);
+  if (!error) return <>{body}</>;
+  return (
+    <>
+      <div className="ui-async-stale" role="alert">
+        <span className="ui-async-stale__text">
+          Couldn't refresh. Showing the last data that loaded.
+        </span>
+        <Button size="xs" onClick={() => void reload()}>
+          Try Again
+        </Button>
+      </div>
+      {body}
+    </>
+  );
 }

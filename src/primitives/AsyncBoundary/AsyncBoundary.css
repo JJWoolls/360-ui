@@ -1,0 +1,20 @@
+/* AsyncBoundary — tokens only. The stale notice is a slim bar above content
+   that is still shown: muted danger tint, never a solid fill (house rule for
+   severity), so it reads as "this may be out of date", not "this broke". */
+
+.ui-async-stale {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s3);
+  margin-bottom: var(--s3);
+  padding: var(--s2) var(--s3);
+  background: rgba(var(--danger-rgb), 0.08);
+  border: 1px solid rgba(var(--danger-rgb), 0.35);
+  border-radius: var(--radius-sm);
+}
+
+.ui-async-stale__text {
+  font-size: var(--text-sm);
+  color: var(--text-primary);
+}
