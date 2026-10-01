@@ -1,13 +1,23 @@
 /* Modal — tokens only. */
 
+/* TOP-ANCHORED, NOT CENTERED (Josh 2026-10-01: "it jumps around").
+   A vertically centred dialog re-centres every time its content changes
+   height — switch a filter, load a list — so the top edge, where the title and
+   the controls are, bounces. Every dialog instead sits a fixed distance below
+   the top of the window and grows DOWNWARD; past the window it scrolls inside
+   its own body (see .ui-modal max-height). Small confirms sit high too — that
+   is intended; one rule for every pop-up beats a nicer-looking exception.
+   The offset is a fraction of the window, floored at the gutter so a short
+   landscape phone still keeps the dialog on screen. */
 .ui-modal-overlay {
+  --ui-modal-top: max(var(--s4), 8vh);
   position: fixed;
   inset: 0;
   z-index: var(--z-modal);
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
-  padding: var(--s4);
+  padding: var(--ui-modal-top) var(--s4) var(--s4);
   background: var(--overlay);
 }
 
@@ -55,7 +65,10 @@
   /* A modal never grows past the window — its body scrolls instead. Without
      this the footer walks off the bottom of the screen and the primary action
      becomes unreachable. */
-  max-height: calc(100vh - var(--s8));
+  max-height: calc(100vh - var(--ui-modal-top) - var(--s4));
+  /* dvh where supported: on a phone the browser chrome eats into 100vh and the
+     footer would sit under the toolbar. */
+  max-height: calc(100dvh - var(--ui-modal-top) - var(--s4));
   background: var(--surface);
   border: 1px solid var(--border-default);
   border-radius: var(--radius);
