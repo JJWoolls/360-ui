@@ -24,3 +24,6 @@ export type { AsyncData, AsyncDataOptions } from "./hooks/useAsyncData";
 // submit, a short "saved", and a failure that is always surfaced.
 export { useSaveState } from "./hooks/useSaveState";
 export type { SaveState, SaveStateOptions } from "./hooks/useSaveState";
+// useDebouncedValue is the one debounce for search-as-you-type: one timer,
+// cleared on every change and on unmount.
+export { useDebouncedValue } from "./hooks/useDebouncedValue";

@@ -87,6 +87,23 @@ const save = useSaveState({ onError: (e) => showToast(e.message) });
 
 The reasoning is written at the top of `src/hooks/useSaveState.ts`.
 
+## Search as you type
+
+One debounce: `useDebouncedValue`, so pages don't hand-roll
+`setTimeout`/`clearTimeout`.
+
+```tsx
+const q = useDebouncedValue(search, 300);
+const rows = useAsyncData(() => findRows(q), [q], { initial: [] });
+```
+
+- Run the query off `q`, not `search`; `q` settles once typing pauses for 300ms.
+- The timer is cleared on every change and on unmount.
+- Pass a primitive (the search string); an object rebuilt every render never
+  settles.
+
+The reasoning is written at the top of `src/hooks/useDebouncedValue.ts`.
+
 ## Windows
 
 `Modal` (and `AlertDialog` on top of it) is the only pop-up window.
