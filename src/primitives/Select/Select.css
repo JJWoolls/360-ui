@@ -1,8 +1,8 @@
 /* Select — tokens only.
  *
- * Ported from the LMS StyledSelect (styled-select.tsx). LMS values -> tokens,
- * with mappings where no exact twin exists (the workspace deliberately ported
- * only the LMS's semantic hex set, not the parallel shadcn HSL set):
+ * Ported from the LMS StyledSelect (styled-select.tsx), then widened to cover
+ * SearchableSelect too. LMS values -> tokens, with mappings where no exact
+ * twin exists:
  *
  *   trigger bg:   hsl(--background) #121212  -> --bg #121212 (exact)
  *   panel bg:     hsl(--card) #1a1a1a        -> --surface #1c1c1c
@@ -13,16 +13,19 @@
  *   row hover:    hsl(--accent) #262626      -> --surface-hover #252525
  *   text-sm 14px                             -> --text-base 13px
  *   row radius rounded-sm 2px                -> --radius-xs 4px
- *   row/search py-1.5 6px                    -> --s1 4px / --s2 8px
  *   z-index 99999                            -> --z-tooltip (above modals)
  *   shadow-lg                                -> 0 8px 24px var(--shadow)
+ *
+ * The trigger and Input are ONE field shape. Change a number in the trigger
+ * block and change Input.css with it.
  */
 
 .ui-select {
   position: relative;
 }
 
-/* LMS: h-9 w-full rounded-lg border px-3 py-2 text-sm. */
+/* ---- trigger ------------------------------------------------------------ */
+
 .ui-select-trigger {
   display: flex;
   align-items: center;
@@ -36,11 +39,20 @@
   color: var(--text-primary);
   font-family: var(--font);
   font-size: var(--text-base);
+  text-align: left;
   cursor: pointer;
   transition:
     background-color var(--transition),
     border-color var(--transition),
     color var(--transition);
+}
+
+/* Lit the way Input lights on focus — an outline, so nothing shifts — and
+   kept lit while its list is open, so the eye can find what opened it. */
+.ui-select-trigger:focus-visible,
+.ui-select-trigger[aria-expanded="true"] {
+  outline: 1px solid var(--brand);
+  outline-offset: 0;
 }
 
 .ui-select-trigger[data-placeholder] {
@@ -52,6 +64,13 @@
   opacity: 0.5;
 }
 
+/* The inline size — same as Input's sm. */
+.ui-select-trigger[data-size="sm"] {
+  height: 28px;
+  padding: var(--s1) var(--s2);
+  font-size: var(--text-sm);
+}
+
 .ui-select-trigger-label {
   min-width: 0;
   overflow: hidden;
@@ -59,7 +78,10 @@
   white-space: nowrap;
 }
 
-/* LMS: ChevronDown h-3.5 w-3.5 muted-foreground. */
+.ui-select-trigger-label[data-preserve] {
+  white-space: pre;
+}
+
 .ui-select-chevron {
   flex: none;
   width: 14px;
@@ -68,10 +90,20 @@
   color: var(--text-secondary);
 }
 
-/* Portaled popover. Position (fixed/left/top/bottom/min-width) is computed
-   inline by the component; everything visual lives here. */
+.ui-select-trigger[data-size="sm"] .ui-select-chevron {
+  width: 12px;
+  height: 12px;
+}
+
+/* ---- panel -------------------------------------------------------------- */
+
+/* Position, width bounds and max-height are computed inline by the component
+   (they depend on where the trigger sits); everything visual lives here. */
 .ui-select-panel {
   z-index: var(--z-tooltip);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
   background: var(--surface);
   border: 1px solid var(--border-default);
   border-radius: var(--radius);
@@ -79,11 +111,11 @@
 }
 
 .ui-select-searchwrap {
+  flex: none;
   padding: var(--s1);
   border-bottom: 1px solid var(--border-default);
 }
 
-/* LMS: rounded-md border px-2 py-1.5 text-sm, focus ring-1 primary. */
 .ui-select-search {
   width: 100%;
   padding: var(--s2);
@@ -95,37 +127,46 @@
   font-size: var(--text-base);
 }
 
+.ui-select-search::placeholder {
+  color: var(--text-secondary);
+}
+
 .ui-select-search:focus {
   outline: 1px solid var(--brand);
   outline-offset: 0;
 }
 
-/* LMS: max-h-[280px] overflow-auto p-1. */
+/* position: relative makes the list the rows' offsetParent, which is what the
+   component measures to keep the highlighted row in view. */
 .ui-select-list {
-  max-height: 280px;
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  max-height: 320px;
   overflow: auto;
   padding: var(--s1);
 }
 
-/* LMS: flex w-full rounded-sm py-1.5 px-2 text-sm; selected primary/10%,
-   hover accent. */
+/* ---- rows --------------------------------------------------------------- */
+
 .ui-select-row {
   display: flex;
   align-items: center;
   width: 100%;
   padding: var(--s1) var(--s2);
-  background: transparent;
-  border: none;
+  min-height: 28px;
   border-radius: var(--radius-xs);
   color: var(--text-primary);
   font-family: var(--font);
   font-size: var(--text-base);
-  text-align: left;
   cursor: pointer;
+  user-select: none;
   transition: background-color var(--transition);
 }
 
-.ui-select-row:hover:not([data-selected]) {
+/* Highlight follows the keyboard AND the mouse (the component moves it on
+   mousemove), so there is only ever one lit row. */
+.ui-select-row[data-active] {
   background: var(--surface-hover);
 }
 
@@ -133,7 +174,11 @@
   background: rgba(var(--brand-rgb), 0.1);
 }
 
-/* LMS: Check mr-2 h-3.5 w-3.5 primary, opacity swap keeps labels aligned. */
+.ui-select-row[data-selected][data-active] {
+  background: rgba(var(--brand-rgb), 0.18);
+}
+
+/* Opacity swap keeps every label on one left edge. */
 .ui-select-check {
   flex: none;
   width: 14px;
@@ -147,14 +192,65 @@
   opacity: 1;
 }
 
-.ui-select-row-label {
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+.ui-select-leading {
+  flex: none;
+  display: flex;
+  align-items: center;
+  margin-right: var(--s2);
+  color: var(--text-secondary);
 }
 
-/* LMS: px-2 py-1.5 text-[10px] font-semibold uppercase tracking-wider. */
+.ui-select-thumb {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  margin-right: var(--s2);
+  overflow: hidden;
+  background: var(--surface-raised);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-xs);
+}
+
+.ui-select-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.ui-select-thumb svg {
+  width: 14px;
+  height: 14px;
+  fill: none;
+  stroke: var(--text-secondary);
+  stroke-width: 1.5;
+}
+
+.ui-select-row-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+/* Rows wrap rather than truncate: the panel is capped in width, and a
+   dropdown whose choices are cut off cannot be chosen from. */
+.ui-select-row-label {
+  overflow-wrap: anywhere;
+}
+
+.ui-select-row-label[data-preserve] {
+  white-space: pre;
+  overflow-wrap: normal;
+}
+
+.ui-select-row-sublabel {
+  color: var(--text-secondary);
+  font-size: var(--text-xs);
+  overflow-wrap: anywhere;
+}
+
 .ui-select-group {
   padding: var(--s1) var(--s2);
   color: var(--text-secondary);
@@ -164,7 +260,6 @@
   text-transform: uppercase;
 }
 
-/* LMS: py-4 center text-sm muted-foreground. */
 .ui-select-empty {
   padding: var(--s4) 0;
   color: var(--text-secondary);

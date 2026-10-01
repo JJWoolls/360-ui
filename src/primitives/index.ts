@@ -104,7 +104,7 @@ export { OptionPickerModal } from "./OptionPicker/OptionPickerModal";
 export type { OptionPickerModalProps, OptionPickerOption } from "./OptionPicker/OptionPickerModal";
 
 export { Select } from "./Select/Select";
-export type { SelectProps, SelectOption } from "./Select/Select";
+export type { SelectProps, SelectOption, SelectSize } from "./Select/Select";
 
 // Input / Textarea — the house text field, which is the Select's trigger
 // without the chevron. They live next to each other in the barrel because they

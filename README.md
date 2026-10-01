@@ -100,6 +100,20 @@ The reasoning is written at the top of `src/hooks/useSaveState.ts`.
   row edit cancelling itself). Only then does it close the window.
 - Actions go in `footer`: Cancel left, primary right.
 
+## Dropdowns
+
+One dropdown: `Select`. Never a native `<select>`, and never a local copy.
+
+- Plain lists use it as is; groups come from each option's `group`.
+- Any list too long to scan gets `searchable`. Typing on the closed field opens
+  it with the search already started; search matches every word across
+  `label`, `sublabel` and `searchText`, best matches first.
+- Rows can carry a `sublabel`, an `imageUrl` thumbnail, or any `leading` mark.
+- `size="sm"` for inline use, matching `Input`. Give it an `id` for a
+  `<label htmlFor>`, or `ariaLabel` when there is no visible label.
+- The list is portaled, so a scrolling Modal never clips it, and inside a Modal
+  the first Escape closes the list and the second the window.
+
 ## The rules that govern what goes in here
 
 - **One primitive, with variants.** Format, tone, size, theme and viewport are
