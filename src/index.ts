@@ -20,3 +20,7 @@ export * from "./primitives";
 // a screen loads its data: loading, error and race-safety written once.
 export { useAsyncData } from "./hooks/useAsyncData";
 export type { AsyncData, AsyncDataOptions } from "./hooks/useAsyncData";
+// useSaveState is the one way a screen runs a write: in-flight flag, no double
+// submit, a short "saved", and a failure that is always surfaced.
+export { useSaveState } from "./hooks/useSaveState";
+export type { SaveState, SaveStateOptions } from "./hooks/useSaveState";
