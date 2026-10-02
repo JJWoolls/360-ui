@@ -120,12 +120,28 @@
   color: var(--violet);
 }
 
-.ui-modal-title {
+/* Title over subtitle, together taking the head's free width. */
+.ui-modal-titles {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
   flex: 1;
+  min-width: 0;
+}
+
+.ui-modal-title {
   min-width: 0;
   font-size: var(--text-lg);
   font-weight: var(--weight-semibold);
   color: var(--text-primary);
+}
+
+/* The quieter second line: muted and a step down, so the title still leads. */
+.ui-modal-subtitle {
+  min-width: 0;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-normal);
+  color: var(--text-secondary);
 }
 
 .ui-modal-x {
@@ -177,4 +193,19 @@
   padding: var(--s3) var(--s4);
   border-top: 1px solid var(--border-subtle);
   background: var(--surface-inset);
+}
+
+/* size="full" — the window, less a small inset on every side. The dialog
+   stretches to the overlay's full height (instead of sizing to its content
+   from the top anchor), so the head and footer pin to the edges and only the
+   body scrolls. */
+.ui-modal-overlay[data-size="full"] {
+  --ui-modal-top: var(--s4);
+  padding: var(--s4);
+}
+
+.ui-modal[data-size="full"] {
+  max-width: none;
+  align-self: stretch;
+  max-height: none;
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { AlertCard, type AlertCardProps, type AlertTone } from "../AlertCard/AlertCard";
+import { Button } from "../Button/Button";
 import { Modal, type ModalTone } from "../Modal/Modal";
 
 /**
@@ -23,11 +24,22 @@ import { Modal, type ModalTone } from "../Modal/Modal";
  *
  * `onClose` is what the backdrop and Escape call in quiet mode. Actions call
  * their own handlers and close the dialog themselves.
+ *
+ * ACKNOWLEDGE (OK-only): pass `okLabel` and no `actions` for a notice that has
+ * one answer — "this can't be done, here is why". It draws a single primary
+ * button that calls `onClose` and takes focus, so Enter dismisses it. There is
+ * no Cancel because there is nothing to cancel; Escape and the backdrop (quiet
+ * mode) mean the same thing as OK, since every way out is an acknowledgement.
  */
 
 export interface AlertDialogProps extends AlertCardProps {
   open: boolean;
   onClose: () => void;
+  /**
+   * OK-only mode: the label of the single acknowledge button ("OK", "Got it").
+   * Used only when `actions` is not given. The button calls `onClose`.
+   */
+  okLabel?: string;
 }
 
 /** The kit has no success token; success is drawn in brand everywhere. */
@@ -42,9 +54,18 @@ export function AlertDialog({
   open,
   onClose,
   emphasis = "quiet",
+  okLabel,
+  actions,
   ...card
 }: AlertDialogProps) {
   const alarm = emphasis === "alarm";
+  const shown =
+    actions ??
+    (okLabel != null ? (
+      <Button variant="primary" autoFocus onClick={onClose}>
+        {okLabel}
+      </Button>
+    ) : undefined);
 
   return (
     <Modal
@@ -57,7 +78,7 @@ export function AlertDialog({
       closeOnEscape={!alarm}
       backdropTone={alarm ? BACKDROP_TONE[card.tone] : undefined}
     >
-      <AlertCard {...card} emphasis={emphasis} />
+      <AlertCard {...card} actions={shown} emphasis={emphasis} />
     </Modal>
   );
 }

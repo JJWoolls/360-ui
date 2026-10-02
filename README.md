@@ -140,6 +140,12 @@ clear-X buttons beside the field.
   and `aria-expanded`), and to a field marked `data-handles-escape` (an inline
   row edit cancelling itself). Only then does it close the window.
 - Actions go in `footer`: Cancel left, primary right.
+- `subtitle` is the quieter line under the title (a count, the record, a
+  status) — muted and a step smaller.
+- `size="full"` fills the window less a small inset; head and footer stay put
+  and the body scrolls. For boards, long grids and viewers only.
+- A notice with one answer is `AlertDialog` with `okLabel` and no `actions`:
+  one primary button, no Cancel; Escape and the backdrop mean OK too.
 
 ## Dropdowns
 
@@ -325,6 +331,9 @@ The rules:
   genuinely short; a server-paged list passes `totalRows` instead.
 - **Row click opens the row's detail.** `onRowClick` is for that, not for
   inline edits; controls inside a cell stop the click themselves.
+- **Right-click a row for its menu.** `onRowContextMenu={(row, e) =>
+  menu.openAt(e, row)}` with `useContextMenu` + `ContextMenu`. Rows become
+  focusable, and Shift+F10 / the Menu key opens the same menu under the row.
 
 Basic:
 

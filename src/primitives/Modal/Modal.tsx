@@ -46,6 +46,14 @@ interface ModalBase {
   icon?: ReactNode;
   /** Tints the head tile. `danger` for destructive confirms. */
   iconTone?: ModalTone;
+  /**
+   * A second, quieter line under the title — a count, the record the window is
+   * about, a short status. Muted and a step smaller, so the title stays the
+   * thing the eye reads first. Only drawn when there is a title: an untitled
+   * dialog has no head to carry it. It also describes the dialog to assistive
+   * tech (aria-describedby), the way the title names it.
+   */
+  subtitle?: ReactNode;
   /** Buttons. Bottom-right, primary LAST — the eye lands there. */
   footer?: ReactNode;
   /**
@@ -59,6 +67,14 @@ interface ModalBase {
    * primary button off a narrow screen.
    */
   width?: number;
+  /**
+   * "full" fills the window, less a small inset on every side, for work that
+   * needs the whole screen — a dense board, a long grid, a viewer. The head and
+   * footer stay put and the body scrolls. `width` is ignored: the window is the
+   * width. Omit for every ordinary dialog, which keeps its content-sized height
+   * and top-anchored position.
+   */
+  size?: "default" | "full";
   /**
    * Body padding. Off when the content brings its own edge-to-edge layout — a
    * full-bleed table or a list that needs to touch the sides. The head and the
@@ -139,8 +155,10 @@ export function Modal({
   ariaLabel,
   icon,
   iconTone = "brand",
+  subtitle,
   footer,
   width,
+  size = "default",
   padded = true,
   closeOnBackdrop = true,
   closeOnEscape = true,
@@ -150,6 +168,9 @@ export function Modal({
 }: ModalProps) {
   const id = useId();
   const titleId = `${id}-title`;
+  const subtitleId = `${id}-subtitle`;
+  const full = size === "full";
+  const showSubtitle = subtitle != null && title != null && !bare;
   const dialogRef = useRef<HTMLDivElement>(null);
 
   // Register in the stack while open, so Escape can find the top.
@@ -248,6 +269,7 @@ export function Modal({
     <div
       className="ui-modal-overlay"
       data-tone={backdropTone}
+      data-size={full ? "full" : undefined}
       // mousedown, not click: a click that STARTS inside the dialog and ends on
       // the backdrop (a drag across a text selection) must not close it.
       onMouseDown={(e) => {
@@ -258,8 +280,11 @@ export function Modal({
         className="ui-modal"
         // Overrides the stylesheet's max-width only when a caller asked. No
         // width prop means no inline style at all, so the house 460 stands.
-        style={width == null ? undefined : { maxWidth: width }}
+        // A full-size dialog is as wide as the window allows, so a width
+        // passed alongside it is ignored rather than fighting the stylesheet.
+        style={width == null || full ? undefined : { maxWidth: width }}
         ref={dialogRef}
+        data-size={full ? "full" : undefined}
         data-bare={bare || undefined}
         role="dialog"
         aria-modal="true"
@@ -269,6 +294,7 @@ export function Modal({
         // at — it announces its title as a label instead.
         aria-labelledby={title == null || bare ? undefined : titleId}
         aria-label={title == null ? ariaLabel : bare ? title : undefined}
+        aria-describedby={showSubtitle ? subtitleId : undefined}
       >
         {bare ? (
           children
@@ -284,8 +310,15 @@ export function Modal({
                     {icon}
                   </span>
                 )}
-                <span className="ui-modal-title" id={titleId}>
-                  {title}
+                <span className="ui-modal-titles">
+                  <span className="ui-modal-title" id={titleId}>
+                    {title}
+                  </span>
+                  {showSubtitle && (
+                    <span className="ui-modal-subtitle" id={subtitleId}>
+                      {subtitle}
+                    </span>
+                  )}
                 </span>
                 <button
                   type="button"

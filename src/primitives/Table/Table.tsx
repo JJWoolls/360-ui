@@ -1,7 +1,12 @@
 "use client";
 
 import { Fragment, useId, useMemo, useState } from "react";
-import type { CSSProperties, ReactNode } from "react";
+import type {
+  CSSProperties,
+  KeyboardEvent as ReactKeyboardEvent,
+  MouseEvent as ReactMouseEvent,
+  ReactNode,
+} from "react";
 import { Checkbox } from "../Checkbox/Checkbox";
 import { EmptyState } from "../EmptyState/EmptyState";
 import { Skeleton } from "../Loading/Loading";
@@ -76,6 +81,18 @@ export interface TableProps<T> {
   rowKey: (row: T) => TableRowKey;
   /** Row click opens the row's detail. */
   onRowClick?: (row: T) => void;
+  /**
+   * RIGHT-CLICK: the row's context menu — operations on that row (see
+   * ContextMenu). Pair it with useContextMenu: `onRowContextMenu={(row, e) =>
+   * menu.openAt(e, row)}`; openAt cancels the browser's own menu. The event is
+   * a real contextmenu MouseEvent, so clientX / clientY place the menu.
+   *
+   * Keyboard: setting it makes each row focusable (Tab reaches it, with a
+   * visible ring), and Shift+F10 or the Menu key on a focused row — or on a
+   * link or button inside it — opens the same menu, anchored under the row's
+   * left edge. A text field inside a row keeps its own menu.
+   */
+  onRowContextMenu?: (row: T, event: ReactMouseEvent<HTMLTableRowElement>) => void;
   rowStyle?: (row: T) => CSSProperties;
   rowClassName?: (row: T) => string | undefined;
   /** Rows where this returns true float to the top whatever the sort. Ignored
@@ -166,6 +183,35 @@ function useKeySet(
   return [value, set] as const;
 }
 
+/**
+ * Shift+F10 / the Menu key on a focused row (or a control inside it). Browsers
+ * disagree on where — and whether — they fire `contextmenu` for the key, and
+ * some report the pointer's last position or 0,0. So the key is taken over:
+ * the native event is cancelled and a contextmenu event is dispatched on the
+ * row itself, positioned under its left edge, which runs the same
+ * onContextMenu handler a right-click does. One code path, one menu position
+ * rule. A text field keeps the key — its own menu (paste, spelling) matters
+ * more there.
+ */
+function openMenuFromKeyboard(e: ReactKeyboardEvent<HTMLTableRowElement>) {
+  const isMenuKey = e.key === "ContextMenu" || (e.key === "F10" && e.shiftKey);
+  if (!isMenuKey) return;
+  const t = e.target as HTMLElement;
+  if (t.closest("input, textarea, select, [contenteditable='true']")) return;
+  e.preventDefault();
+  const tr = e.currentTarget;
+  const r = tr.getBoundingClientRect();
+  tr.dispatchEvent(
+    new MouseEvent("contextmenu", {
+      bubbles: true,
+      cancelable: true,
+      clientX: Math.round(r.left + 16),
+      clientY: Math.round(r.bottom),
+      button: 2,
+    }),
+  );
+}
+
 function compare(
   av: string | number | null | undefined,
   bv: string | number | null | undefined,
@@ -184,6 +230,7 @@ export function Table<T>({
   rows,
   rowKey,
   onRowClick,
+  onRowContextMenu,
   rowStyle,
   rowClassName,
   pinToTop,
@@ -377,6 +424,9 @@ export function Table<T>({
     const toggle = () => setExpanded(flip(expanded, key));
     const click = onRowClick ? () => onRowClick(row) : expandable ? toggle : undefined;
     const extraClass = rowClassName?.(row);
+    const menu = onRowContextMenu
+      ? (e: ReactMouseEvent<HTMLTableRowElement>) => onRowContextMenu(row, e)
+      : undefined;
 
     return (
       <Fragment key={key}>
@@ -386,6 +436,9 @@ export function Table<T>({
           data-selected={isSelected || undefined}
           data-open={isOpen || undefined}
           onClick={click}
+          onContextMenu={menu}
+          onKeyDown={menu ? openMenuFromKeyboard : undefined}
+          tabIndex={menu ? 0 : undefined}
           style={rowStyle?.(row)}
         >
           {selecting && (

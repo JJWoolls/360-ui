@@ -132,6 +132,14 @@
   background: var(--ui-table-row-hover);
 }
 
+/* A row with a context menu is focusable (Tab, then Shift+F10 / Menu key), so
+   it needs a ring a keyboard user can see. Inset, so it is never clipped by a
+   scroll box or the next row. */
+.ui-table tbody tr[tabindex]:focus-visible {
+  outline: 2px solid var(--ui-table-active);
+  outline-offset: -2px;
+}
+
 .ui-table tbody tr[data-selected] {
   background: var(--ui-table-selected-bg);
 }
