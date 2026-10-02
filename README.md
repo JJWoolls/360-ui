@@ -390,6 +390,12 @@ An app paints its tables through the `--ui-table-*` properties declared in
 - **If the part you need isn't here, stop and ask Josh, then build it here** and
   make it the house default. Do not reach for a native control "for now" — that
   step is the one that costs.
+- **Touch is a behaviour of the primitive, never a separate component.** On a
+  touch screen (`@media (pointer: coarse)`) every `Button` offers a 44px finger
+  tap (`--touch-target`): `sm`/`md` grow to at least 44x44, `xs` keeps its row
+  height and gets an invisible 44x44 tap area. A mouse never matches, so desktop
+  is unchanged. An app that does not import `tokens.css` must define
+  `--touch-target` itself.
 - **React 18 surface only.** The LMS runs React 18 and the Workspace app runs
   19. Nothing in here may use an API that only exists in 19, until the LMS is
   upgraded.

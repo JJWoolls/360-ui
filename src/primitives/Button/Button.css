@@ -86,6 +86,53 @@
   min-height: var(--s6);
 }
 
+/* ---- touch — the 44px finger tap, automatic on a touch screen -------------
+ *
+ * Josh, 2026-10-02: the bench iPads could not hit the case Files buttons (an
+ * icon-only "sm" is ~40x26). The standard is the comfortable finger tap,
+ * --touch-target (44px), and it is a behaviour of THIS primitive, not a
+ * separate TouchButton — one button, one place to change it.
+ *
+ * WHY A MEDIA QUERY AND NOT A PROP. A prop has to be remembered at every call
+ * site, and nothing in the apps detects touch. `pointer: coarse` is the
+ * device's PRIMARY pointer being a finger, so a desktop with a mouse — touch-
+ * screen laptops included — never matches and looks exactly as it did.
+ *
+ * sm / md GROW for real: min 44 tall, and min 44 wide so an icon-only button
+ * comes out square instead of a 44-tall sliver.
+ *
+ * xs DOES NOT GROW. It exists to sit inside a dense table row at Badge height;
+ * a 44px box there would make every row on the iPad nearly twice as tall. It
+ * gets the same 44x44 TAP AREA from an invisible ::before centred on it, so the
+ * finger target meets the standard while the row keeps its height. The cost is
+ * that two xs buttons closer than 44px apart share overlapping tap areas —
+ * acceptable for row chips, which are not packed side by side.
+ *
+ * An app that does not import this kit's tokens.css (the LMS defines its own)
+ * MUST define --touch-target itself, or the floor is invalid CSS there and
+ * silently does nothing. */
+@media (pointer: coarse) {
+  .ui-btn[data-size="sm"],
+  .ui-btn[data-size="md"] {
+    min-height: var(--touch-target);
+    min-width: var(--touch-target);
+  }
+
+  .ui-btn[data-size="xs"] {
+    position: relative;
+  }
+
+  .ui-btn[data-size="xs"]::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: max(100%, var(--touch-target));
+    height: max(100%, var(--touch-target));
+    transform: translate(-50%, -50%);
+  }
+}
+
 .ui-btn:disabled {
   cursor: not-allowed;
   opacity: 0.55;

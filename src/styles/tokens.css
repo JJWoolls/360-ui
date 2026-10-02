@@ -296,6 +296,12 @@
   --s7: 48px;
   --s8: 64px;
 
+  /* The comfortable finger tap — the smallest box a control may offer a touch
+     screen (Josh, 2026-10-02, after the bench iPads could not hit the case
+     Files buttons). Not a spacing step: it is a floor controls are held to under
+     `@media (pointer: coarse)`, never a gap or a padding. */
+  --touch-target: 44px;
+
   /* 4px = Tailwind's `rounded`, which is what the LMS's StatusBadge uses. The
      scale had no 4px step and a badge reached for --radius-sm (6px) instead —
      the scale being wrong is exactly what that reach means. */
