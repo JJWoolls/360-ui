@@ -49,7 +49,7 @@
    placeholder, so the prompt recedes behind the icon instead of reading as a
    value. Josh, 2026-09-30, first on Manage Files, then as the house default
    for every search box. */
-.ui-input-wrap:has(> .ui-input-affix[data-side="start"] > svg) .ui-input::placeholder {
+.ui-input-wrap:has(> .ui-input-affix[data-side="start"] svg) .ui-input::placeholder {
   color: var(--text-tertiary);
 }
 
@@ -105,16 +105,16 @@
 
 /* An icon is the common mark (every search box), and its first-paint width is
    known exactly because the icon size is set just below. */
-.ui-input-wrap:has(> .ui-input-affix[data-side="start"] > svg) {
+.ui-input-wrap:has(> .ui-input-affix[data-side="start"] svg) {
   --ui-affix-start: 14px;
 }
-.ui-input-wrap:has(> .ui-input-affix[data-side="end"] > svg) {
+.ui-input-wrap:has(> .ui-input-affix[data-side="end"] svg) {
   --ui-affix-end: 14px;
 }
-.ui-input-wrap[data-size="sm"]:has(> .ui-input-affix[data-side="start"] > svg) {
+.ui-input-wrap[data-size="sm"]:has(> .ui-input-affix[data-side="start"] svg) {
   --ui-affix-start: 12px;
 }
-.ui-input-wrap[data-size="sm"]:has(> .ui-input-affix[data-side="end"] > svg) {
+.ui-input-wrap[data-size="sm"]:has(> .ui-input-affix[data-side="end"] svg) {
   --ui-affix-end: 12px;
 }
 
@@ -133,7 +133,7 @@
 /* One icon size inside a field, whatever size the call site asked for. Search
    boxes had drawn the same magnifier at 12, 13, 14 and 16px; the field owns
    the mark's size the way the grid owns a card's. */
-.ui-input-affix > svg {
+.ui-input-affix svg {
   width: 14px;
   height: 14px;
   flex-shrink: 0;
@@ -143,7 +143,7 @@
   font-size: var(--text-sm);
 }
 
-.ui-input-wrap[data-size="sm"] .ui-input-affix > svg {
+.ui-input-wrap[data-size="sm"] .ui-input-affix svg {
   width: 12px;
   height: 12px;
 }
@@ -278,10 +278,10 @@
   min-height: 88px;
 }
 
-.ui-input-wrap[data-size="touch"]:has(> .ui-input-affix[data-side="start"] > svg) {
+.ui-input-wrap[data-size="touch"]:has(> .ui-input-affix[data-side="start"] svg) {
   --ui-affix-start: 16px;
 }
-.ui-input-wrap[data-size="touch"]:has(> .ui-input-affix[data-side="end"] > svg) {
+.ui-input-wrap[data-size="touch"]:has(> .ui-input-affix[data-side="end"] svg) {
   --ui-affix-end: 16px;
 }
 
@@ -289,7 +289,7 @@
   font-size: 16px;
 }
 
-.ui-input-wrap[data-size="touch"] .ui-input-affix > svg {
+.ui-input-wrap[data-size="touch"] .ui-input-affix svg {
   width: 16px;
   height: 16px;
 }
