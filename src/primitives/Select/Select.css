@@ -71,6 +71,36 @@
   font-size: var(--text-sm);
 }
 
+/* Mark + label, side by side; the label is the part that truncates. */
+.ui-select-trigger-value {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  max-height: 100%;
+}
+
+/* The trigger repeats the chosen row's mark with the row's gap. The thumbnail
+   shrinks to the line so the field keeps its one height — a 28px thumb would
+   grow a 36px field. */
+.ui-select-trigger .ui-select-leading {
+  max-height: 100%;
+}
+
+.ui-select-trigger .ui-select-thumb {
+  width: 18px;
+  height: 18px;
+}
+
+.ui-select-trigger .ui-select-thumb svg {
+  width: 12px;
+  height: 12px;
+}
+
+.ui-select-trigger[data-size="sm"] .ui-select-thumb {
+  width: 16px;
+  height: 16px;
+}
+
 .ui-select-trigger-label {
   min-width: 0;
   overflow: hidden;

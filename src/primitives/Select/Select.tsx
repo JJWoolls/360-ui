@@ -16,6 +16,7 @@ import type {
 } from "react";
 import { createPortal } from "react-dom";
 import "./Select.css";
+import { triggerMarks } from "./trigger-mark";
 
 // useLayoutEffect warns during server render; there is nothing to place there.
 const useIsoLayoutEffect =
@@ -125,6 +126,32 @@ function isPrintable(e: ReactKeyboardEvent): boolean {
   return e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey;
 }
 
+// One drawing of each mark, shared by the list rows and the closed trigger,
+// so the field and the row it came from never drift apart.
+function renderLeading(option: SelectOption) {
+  return (
+    <span className="ui-select-leading" aria-hidden="true">
+      {option.leading}
+    </span>
+  );
+}
+
+function renderThumb(option: SelectOption) {
+  return (
+    <span className="ui-select-thumb" aria-hidden="true">
+      {option.imageUrl ? (
+        <img src={option.imageUrl} alt="" />
+      ) : (
+        <svg viewBox="0 0 24 24" focusable="false">
+          <rect x="3" y="3" width="18" height="18" rx="2" />
+          <circle cx="8.5" cy="8.5" r="1.5" />
+          <path d="m21 15-5-5L5 21" />
+        </svg>
+      )}
+    </span>
+  );
+}
+
 function rankOptions(options: SelectOption[], query: string): SelectOption[] {
   const q = query.toLowerCase().trim();
   const terms = q.split(/\s+/).filter(Boolean);
@@ -172,6 +199,7 @@ export function Select({
   const optionId = (i: number) => `${baseId}-opt-${i}`;
 
   const selected = options.find((o) => o.value === value);
+  const marks = triggerMarks({ selected, searchable, open });
 
   // Visible options in DISPLAY order (grouped), so the keyboard index and the
   // picture agree. Groups keep the order they first appear in `options`; a
@@ -431,24 +459,8 @@ export function Select({
             strokeLinejoin="round"
           />
         </svg>
-        {option.leading != null && (
-          <span className="ui-select-leading" aria-hidden="true">
-            {option.leading}
-          </span>
-        )}
-        {option.imageUrl !== undefined && (
-          <span className="ui-select-thumb" aria-hidden="true">
-            {option.imageUrl ? (
-              <img src={option.imageUrl} alt="" />
-            ) : (
-              <svg viewBox="0 0 24 24" focusable="false">
-                <rect x="3" y="3" width="18" height="18" rx="2" />
-                <circle cx="8.5" cy="8.5" r="1.5" />
-                <path d="m21 15-5-5L5 21" />
-              </svg>
-            )}
-          </span>
-        )}
+        {option.leading != null && renderLeading(option)}
+        {option.imageUrl !== undefined && renderThumb(option)}
         <span className="ui-select-row-text">
           <span
             className="ui-select-row-label"
@@ -544,11 +556,15 @@ export function Select({
         disabled={disabled}
         onClick={() => (open ? closeList(false) : openList())}
       >
-        <span
-          className="ui-select-trigger-label"
-          data-preserve={preserveWhitespace || undefined}
-        >
-          {selected ? selected.label : placeholder}
+        <span className="ui-select-trigger-value">
+          {marks.leading && selected && renderLeading(selected)}
+          {marks.thumb && selected && renderThumb(selected)}
+          <span
+            className="ui-select-trigger-label"
+            data-preserve={preserveWhitespace || undefined}
+          >
+            {selected ? selected.label : placeholder}
+          </span>
         </span>
         <svg
           className="ui-select-chevron"
