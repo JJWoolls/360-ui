@@ -68,8 +68,9 @@ export type { CardProps, CardTone, CardKind } from "./Card/Card";
 
 // StatCard — the big-number tile on Card: label, value, optional sublabel /
 // trend / icon, a Skeleton while loading, a real button when clickable.
-export { StatCard } from "./StatCard/StatCard";
-export type { StatCardProps, StatCardTrend, StatCardTrendTone } from "./StatCard/StatCard";
+// A zero hides the tile by default; zero="dim" keeps it (dashboards).
+export { StatCard, isZeroValue } from "./StatCard/StatCard";
+export type { StatCardProps, StatCardTrend, StatCardTrendTone, StatCardZero } from "./StatCard/StatCard";
 
 export { ListRow } from "./ListRow/ListRow";
 export type { ListRowProps, ListRowTone } from "./ListRow/ListRow";

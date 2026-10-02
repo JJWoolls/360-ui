@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useLayoutEffect, useRef } from "react";
+import { forwardRef, useEffect, useImperativeHandle, useLayoutEffect, useRef } from "react";
 import type { InputHTMLAttributes, ReactNode, RefObject, TextareaHTMLAttributes } from "react";
 import "./Input.css";
 
@@ -42,10 +42,17 @@ const useIsoLayoutEffect = typeof window === "undefined" ? useEffect : useLayout
  *   "sm" — an INLINE editor: a field that appears in place inside a row or a
  *          card, where a 36px box would push the row apart. The LMS edits a
  *          tracking number and a line quantity this way.
+ *   "touch" — a field a FINGER uses: a bench iPad or a station screen. 44px
+ *          tall (--touch-target, the Button's touch floor) and 16px type, the
+ *          size below which iOS zooms the page on focus. Unlike the Button,
+ *          this is a prop and not a `pointer: coarse` query: a touch screen
+ *          surface is a layout decision its page already makes (it lays out
+ *          bigger rows too), and a desktop field must not grow on a
+ *          touch-screen laptop.
  *
  * Size is free; the treatment is not — same border, same radius, same focus.
  */
-export type InputSize = "sm" | "md";
+export type InputSize = "sm" | "md" | "touch";
 
 type Shared = {
   /** Failed validation. Draws the danger edge and sets aria-invalid. */
@@ -69,6 +76,17 @@ export type InputProps = Shared &
      * a className escape hatch, which is how a primitive stops being one.
      */
     prefix?: ReactNode;
+    /**
+     * Makes the prefix a real button — the search box whose magnifier runs
+     * the search, or a mode glyph that switches what is searched. Without it
+     * the prefix is decoration (aria-hidden, click-through to the field).
+     * With it, the mark is a focusable button named by `prefixLabel`; after
+     * the handler runs the cursor goes back into the field, so a click on the
+     * icon of an empty search box simply focuses it.
+     */
+    onPrefixClick?: () => void;
+    /** The prefix button's accessible name. Default "Search". Name what it does. */
+    prefixLabel?: string;
     /**
      * The same on the right — a unit, a percent sign. Shares the right edge
      * with the clear button: when `onClear` is set and the field has a value,
@@ -104,7 +122,8 @@ export type TextareaProps = Shared &
  */
 function useAffixWidths(hasPrefix: boolean, end: "suffix" | "clear" | null) {
   const wrapRef = useRef<HTMLSpanElement>(null);
-  const startRef = useRef<HTMLSpanElement>(null);
+  // The start mark is a span, or a button when the prefix is clickable.
+  const startRef = useRef<HTMLElement>(null);
   // The right edge holds either the suffix mark or the clear button; whichever
   // is showing is the one measured, so the padding follows the swap.
   const endRef = useRef<HTMLElement>(null);
@@ -113,7 +132,15 @@ function useAffixWidths(hasPrefix: boolean, end: "suffix" | "clear" | null) {
     const wrap = wrapRef.current;
     if (!wrap) return;
     const measure = () => {
-      if (startRef.current) wrap.style.setProperty("--ui-affix-start", `${startRef.current.offsetWidth}px`);
+      const start = startRef.current;
+      if (start) {
+        // A clickable prefix is a button with a hit area wider than its mark;
+        // the padding follows the MARK, so the text sits where it would beside
+        // a decorative icon.
+        const mark = start.tagName === "BUTTON" ? start.firstElementChild : null;
+        const width = mark ? mark.getBoundingClientRect().width : start.offsetWidth;
+        wrap.style.setProperty("--ui-affix-start", `${width}px`);
+      }
       if (endRef.current) wrap.style.setProperty("--ui-affix-end", `${endRef.current.offsetWidth}px`);
     };
     measure();
@@ -127,15 +154,25 @@ function useAffixWidths(hasPrefix: boolean, end: "suffix" | "clear" | null) {
   return { wrapRef, startRef, endRef };
 }
 
-export function Input({
-  invalid,
-  size = "md",
-  prefix,
-  suffix,
-  onClear,
-  clearLabel = "Clear",
-  ...rest
-}: InputProps) {
+/**
+ * Forwards its ref to the <input>, so a caller can focus it or measure it
+ * (a results dropdown anchored under the field) without reaching around the
+ * primitive.
+ */
+export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
+  {
+    invalid,
+    size = "md",
+    prefix,
+    onPrefixClick,
+    prefixLabel = "Search",
+    suffix,
+    onClear,
+    clearLabel = "Clear",
+    ...rest
+  },
+  forwardedRef,
+) {
   const hasPrefix = prefix != null;
   // The clear button takes the suffix's slot rather than sitting beside it: a
   // field with two marks on one edge leaves too little room for the text, and
@@ -150,6 +187,7 @@ export function Input({
   const end = showClear ? "clear" : hasSuffix ? "suffix" : null;
   const { wrapRef, startRef, endRef } = useAffixWidths(hasPrefix, end);
   const inputRef = useRef<HTMLInputElement>(null);
+  useImperativeHandle(forwardedRef, () => inputRef.current as HTMLInputElement, []);
 
   const field = (
     <input
@@ -177,11 +215,32 @@ export function Input({
       data-has-suffix={hasSuffix || undefined}
       data-has-clear={showClear || undefined}
     >
-      {hasPrefix && (
-        <span ref={startRef} className="ui-input-affix" data-side="start" aria-hidden="true">
-          {prefix}
-        </span>
-      )}
+      {hasPrefix &&
+        (onPrefixClick ? (
+          <button
+            ref={startRef as RefObject<HTMLButtonElement>}
+            type="button"
+            className="ui-input-affix ui-input-affix-btn"
+            data-side="start"
+            aria-label={prefixLabel}
+            disabled={rest.disabled}
+            onClick={() => {
+              onPrefixClick();
+              inputRef.current?.focus();
+            }}
+          >
+            {prefix}
+          </button>
+        ) : (
+          <span
+            ref={startRef as RefObject<HTMLSpanElement>}
+            className="ui-input-affix"
+            data-side="start"
+            aria-hidden="true"
+          >
+            {prefix}
+          </span>
+        ))}
       {field}
       {hasSuffix && (
         <span
@@ -218,7 +277,7 @@ export function Input({
       )}
     </span>
   );
-}
+});
 
 /**
  * The same field, grown vertically. `rows` still works and is the way to say

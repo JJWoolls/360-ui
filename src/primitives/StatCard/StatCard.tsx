@@ -2,7 +2,12 @@ import type { ReactNode } from "react";
 import { Card } from "../Card/Card";
 import type { CardKind, CardTone } from "../Card/Card";
 import { Skeleton } from "../Loading/Loading";
+import { zeroState } from "./zero";
+import type { StatCardZero } from "./zero";
 import "./StatCard.css";
+
+export type { StatCardZero } from "./zero";
+export { isZeroValue } from "./zero";
 
 /**
  * StatCard — the big-number tile: what is counted, the number, and the line
@@ -22,7 +27,11 @@ import "./StatCard.css";
  *   - `value` may be a number; it is shown as given (format before passing).
  *
  * The card takes no width. The grid owns the size. Colour goes on the value
- * OR the label (Card's tone rules), never both. Empty dims, never hides.
+ * OR the label (Card's tone rules), never both.
+ *
+ * ZERO HIDES BY DEFAULT (ruling 2026-10-02). A tile whose value is zero is
+ * not rendered at all; `zero="dim"` keeps it, dimmed, for dashboards whose
+ * fixed tile set is the layout; `zero="show"` keeps it as-is. See zero.ts.
  * A clickable StatCard is a real <button> (Card renders one for onClick).
  */
 
@@ -54,7 +63,16 @@ export interface StatCardProps {
   kind?: CardKind;
   /** Counts that qualify the number (rush / at-risk pills), on its baseline. */
   extra?: ReactNode;
-  /** Nothing here — the card dims. The caller decides; zero is not always empty. */
+  /**
+   * What a zero does: "hide" (default) removes the tile, "dim" keeps it
+   * dimmed (dashboards), "show" leaves it alone. Never hides while loading or
+   * while `selected`.
+   */
+  zero?: StatCardZero;
+  /**
+   * Older explicit "nothing here" flag. Overrides the zero detection (a number
+   * 0 or an all-zero formatted string) either way, then `zero` decides.
+   */
   empty?: boolean;
   /** Still fetching: the number becomes a Skeleton bar and extra/trend hide. */
   loading?: boolean;
@@ -75,11 +93,15 @@ export function StatCard({
   tone,
   kind = "stat",
   extra,
+  zero,
   empty,
   loading = false,
   onClick,
   selected,
 }: StatCardProps) {
+  const state = zeroState({ value, zero, empty, loading, selected });
+  if (state === "hidden") return null;
+
   const shownValue = loading ? (
     <span className="ui-stat-card-skeleton" role="status" aria-label={`Loading ${label}`}>
       <Skeleton lines={1} variant="text" />
@@ -110,7 +132,7 @@ export function StatCard({
       kind={kind}
       icon={icon}
       extra={loading ? undefined : extra}
-      empty={!loading && empty}
+      empty={state === "dim"}
       onClick={onClick}
       selected={selected}
     />

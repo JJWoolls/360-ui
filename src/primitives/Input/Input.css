@@ -260,3 +260,95 @@
   resize: vertical;
   line-height: 1.5;
 }
+
+/* ---- touch — the finger-sized field --------------------------------------
+ * 44px tall (--touch-target, the Button's touch floor, so a touch field and
+ * the touch buttons beside it line up) and 16px type: below 16px iOS Safari
+ * zooms the whole page when the field takes focus. That 16 is the platform's
+ * threshold, not a type-scale choice, which is why it is not a token.
+ * Same border, radius and focus as every other size. */
+.ui-input[data-size="touch"] {
+  height: var(--touch-target);
+  padding: var(--s2) var(--s3);
+  font-size: 16px;
+}
+
+.ui-textarea[data-size="touch"] {
+  height: auto;
+  min-height: 88px;
+}
+
+.ui-input-wrap[data-size="touch"]:has(> .ui-input-affix[data-side="start"] > svg) {
+  --ui-affix-start: 16px;
+}
+.ui-input-wrap[data-size="touch"]:has(> .ui-input-affix[data-side="end"] > svg) {
+  --ui-affix-end: 16px;
+}
+
+.ui-input-wrap[data-size="touch"] .ui-input-affix {
+  font-size: 16px;
+}
+
+.ui-input-wrap[data-size="touch"] .ui-input-affix > svg {
+  width: 16px;
+  height: 16px;
+}
+
+.ui-input-wrap[data-size="touch"] .ui-input-clear {
+  min-width: var(--touch-target);
+  min-height: var(--touch-target);
+  right: 0;
+}
+
+.ui-input-wrap[data-size="touch"] .ui-input-clear > svg {
+  width: 16px;
+  height: 16px;
+}
+
+.ui-input-wrap[data-size="touch"][data-has-clear] .ui-input {
+  padding-right: calc(var(--ui-affix-end) + var(--s1));
+}
+
+/* ---- clickable prefix -----------------------------------------------------
+ * The search box whose magnifier runs the search. Same place and size as the
+ * plain mark, so a field does not move when its icon becomes a button; it
+ * only takes clicks, a hover wash and the kit's focus ring. Its hit area
+ * reaches past the glyph (a 24px square, 44px on touch) by negative margin,
+ * so the glyph stays exactly where a decorative one sits. */
+.ui-input-affix-btn {
+  pointer-events: auto;
+  justify-content: center;
+  min-width: 24px;
+  min-height: 24px;
+  margin-left: calc((24px - var(--ui-affix-start)) / -2);
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition:
+    background-color var(--transition),
+    color var(--transition);
+}
+
+.ui-input-affix-btn:hover:not(:disabled) {
+  background: var(--surface-hover);
+  color: var(--text-primary);
+}
+
+.ui-input-affix-btn:focus-visible {
+  outline: 1px solid var(--brand);
+  outline-offset: 0;
+  color: var(--text-primary);
+}
+
+.ui-input-affix-btn:disabled {
+  cursor: not-allowed;
+}
+
+.ui-input-wrap[data-size="touch"] .ui-input-affix-btn {
+  min-width: var(--touch-target);
+  min-height: var(--touch-target);
+  margin-left: calc((var(--touch-target) - var(--ui-affix-start)) / -2);
+}

@@ -127,6 +127,14 @@ clear-X buttons beside the field.
 - The clear button takes the `suffix` slot. Given both, the clear button shows
   while there is a value and the suffix while the field is empty.
 - Not shown on a `disabled` or `readOnly` field.
+- `onPrefixClick?: () => void` makes the prefix a real button (named by
+  `prefixLabel`, default `"Search"`): the magnifier that runs the search, or a
+  mode glyph that switches what is searched. After it runs, the cursor goes
+  back into the field. Without it the prefix is decoration.
+- `size="touch"` is the finger-sized field for touch surfaces: 44px tall
+  (`--touch-target`), 16px type so iOS does not zoom on focus, larger icon and
+  clear/prefix hit areas. `sm` and `md` are unchanged.
+- `Input` forwards its ref to the `<input>` (focus, or anchor a dropdown).
 
 ## Windows
 
@@ -306,14 +314,18 @@ bordered div with a large bold number.
 <StatCard label="Open Cases" value={open} icon={<Inbox size={14} />} />
 <StatCard label="Remakes" value={pct} trend={{ direction: "down", text: "2% vs last month", tone: "good" }} />
 <StatCard label="Overdue" value={money(overdue)} tone="danger" sublabel="Oldest 41 days" onClick={openOverdue} />
-<StatCard label="Week" value={n} loading={loading} empty={n === 0} selected={week === w} onClick={() => setWeek(w)} />
+<StatCard label="Week" value={n} loading={loading} zero="dim" selected={week === w} onClick={() => setWeek(w)} />
 ```
 
 - `kind` picks the Card treatment (`stat` by default, or `plain`/`tile`/`accent`).
 - `loading` shows a Skeleton bar where the number goes; the card keeps its size.
 - `trend.tone` is good/bad news, not up/down; the arrow follows `direction`.
 - `onClick` makes it a real button; `selected` marks a filter card that is on.
-- `empty` dims the card — the caller decides; a card never hides itself.
+- **A zero hides the tile by default.** `zero="dim"` keeps it, dimmed — for
+  dashboards whose fixed tile set is the layout; `zero="show"` leaves it as-is.
+  Zero = a number 0 or a string whose digits are all zeros ("$0.00", "0%").
+  Never hidden while `loading` or `selected`. The older `empty` flag still
+  works and overrides the detection.
 - No width: the grid owns the size. Colour on the value or the label, not both.
 
 The reasoning is written at the top of `src/primitives/StatCard/StatCard.tsx`.
