@@ -24,6 +24,10 @@ export type { AsyncData, AsyncDataOptions } from "./hooks/useAsyncData";
 // submit, a short "saved", and a failure that is always surfaced.
 export { useSaveState } from "./hooks/useSaveState";
 export type { SaveState, SaveStateOptions } from "./hooks/useSaveState";
+// useKeyedSaveState is the same contract per key (row id): writes on different
+// rows run together; a second write on the same row is ignored.
+export { useKeyedSaveState } from "./hooks/useKeyedSaveState";
+export type { KeyedSaveState, KeyedSaveStateOptions } from "./hooks/useKeyedSaveState";
 // useDebouncedValue is the one debounce for search-as-you-type: one timer,
 // cleared on every change and on unmount.
 export { useDebouncedValue } from "./hooks/useDebouncedValue";

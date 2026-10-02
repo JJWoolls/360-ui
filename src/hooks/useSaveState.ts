@@ -66,7 +66,7 @@ export interface SaveState {
   reset: () => void;
 }
 
-function toError(thrown: unknown): Error {
+export function toError(thrown: unknown): Error {
   if (thrown instanceof Error) return thrown;
   if (thrown && typeof thrown === "object" && "message" in thrown) {
     const message = (thrown as { message: unknown }).message;
