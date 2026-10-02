@@ -207,6 +207,41 @@ Single-select; for any-of-these filtering use `FilterPills`.
 The reasoning is written at the top of
 `src/primitives/StatusTabs/StatusTabs.tsx`.
 
+## SectionTabs
+
+One underline strip of links across a multi-page section: `SectionTabs`. For
+moving between pages; to filter a list on one page use `StatusTabs`.
+
+```tsx
+<SectionTabs
+  aria-label="Reports sections"
+  items={[
+    { href: "/reports", label: "Overview", match: "exact" },
+    { href: "/reports/sales", label: "Sales" },
+    { href: "/reports/queue", label: "Queue", count: 4 },
+  ]}
+  pathname={pathname}
+  linkComponent={Link}
+/>
+```
+
+- A `<nav>` landmark of real links; the current page's link has
+  `aria-current="page"` and a brand underline.
+- `match`: `"prefix"` (default) keeps the tab lit on pages beneath its href;
+  `"exact"` for a landing page whose href is the parent of its siblings. The
+  longest match wins; a path no tab claims lights none.
+- Pass `pathname` and let the strip decide, or `activeHref` to decide yourself.
+- The kit imports no router: pass your router's link as `linkComponent`
+  (defaults to `<a>`). It receives `href`, `className`, `aria-current`,
+  `children`. Wrap it once in an app adapter.
+- `count` is a small muted number after the label. The strip wraps on narrow
+  screens.
+- `activeSectionHref(items, pathname)` / `sectionTabMatches(href, pathname,
+  match)` are the same rules as plain functions.
+
+The reasoning is written at the top of
+`src/primitives/SectionTabs/SectionTabs.tsx` and `match.ts`.
+
 ## DateRangeFilter
 
 One from/to date bar: a preset Select and two `DateField`s. Never a native

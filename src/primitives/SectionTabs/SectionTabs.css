@@ -1,0 +1,81 @@
+/* SectionTabs — tokens only.
+ *
+ * AN UNDERLINE STRIP, NOT A TRACK. StatusTabs sits in an inset track because
+ * it is one control with one answer about a list. Section tabs are page
+ * navigation: the strip is a rule across the top of the content, and the
+ * current page is marked by a brand underline sitting on that rule. The two
+ * looks are deliberately different so a reader never mistakes "which page am
+ * I on" for "which slice of this list am I seeing".
+ *
+ * THE RULE is the list's own bottom border. Each tab carries a 2px bottom
+ * border (transparent until active) and is pulled down 1px so the active
+ * underline covers the rule rather than sitting above it.
+ *
+ * flex-wrap: on a narrow screen the strip grows a line rather than pushing
+ * tabs out of sight or scrolling sideways.
+ */
+
+.ui-section-tabs {
+  display: block;
+}
+
+.ui-section-tabs__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.ui-section-tabs__item {
+  display: flex;
+  margin: 0 0 -1px;
+}
+
+.ui-section-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s1);
+  padding: var(--s2) var(--s4);
+  border-bottom: 2px solid transparent;
+  color: var(--text-tertiary);
+  font-family: var(--font);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  line-height: 1.4;
+  text-decoration: none;
+  white-space: nowrap;
+  transition:
+    border-color var(--transition),
+    color var(--transition);
+}
+
+.ui-section-tab:hover {
+  color: var(--text-primary);
+}
+
+.ui-section-tab:focus-visible {
+  outline: 2px solid rgba(var(--brand-rgb), 0.6);
+  outline-offset: -2px;
+  border-radius: var(--radius-xs);
+}
+
+.ui-section-tab[aria-current="page"],
+.ui-section-tab[aria-current="page"]:hover {
+  border-bottom-color: var(--brand);
+  color: var(--brand);
+}
+
+/* The count is quieter than its label; on the active tab it takes the brand
+ * colour with the label, so the pair reads as one unit (as in StatusTabs). */
+.ui-section-tab__count {
+  font-size: 0.92em;
+  opacity: 0.7;
+  font-variant-numeric: tabular-nums;
+}
+
+.ui-section-tab[aria-current="page"] .ui-section-tab__count {
+  opacity: 0.85;
+}

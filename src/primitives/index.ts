@@ -35,6 +35,13 @@ export type { FilterPillsProps, FilterPillOption, FilterPillsSize } from "./Filt
 export { StatusTabs } from "./StatusTabs/StatusTabs";
 export type { StatusTabsProps, StatusTabItem, StatusTabsSize } from "./StatusTabs/StatusTabs";
 
+// SectionTabs — the underline strip of LINKS across a multi-page section.
+// Router-agnostic: the caller passes the pathname and its link component.
+export { SectionTabs } from "./SectionTabs/SectionTabs";
+export type { SectionTabsProps, SectionTabItem, SectionTabLinkProps } from "./SectionTabs/SectionTabs";
+export { sectionTabMatches, activeSectionHref } from "./SectionTabs/match";
+export type { SectionTabMatch, SectionTabTarget } from "./SectionTabs/match";
+
 export { PersonChip, initialsFrom } from "./PersonChip/PersonChip";
 export type { PersonChipProps, PersonChipSize } from "./PersonChip/PersonChip";
 // Avatar — the bare round mark (photo, else initials on a tint) for lists,
