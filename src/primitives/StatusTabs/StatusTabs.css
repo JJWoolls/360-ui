@@ -85,6 +85,29 @@
   color: var(--brand);
 }
 
+/* COLOURED TABS — the same 12% / 35% recipe in the item's own hue, which
+ * arrives as --ui-status-tab-color set inline by the component. color-mix
+ * takes any CSS colour (hex or var(--token)), where the -rgb recipe above
+ * needs a companion token. The label is pulled toward the text colour (as in
+ * FilterPills) so an identity hue picked for recognition stays readable on
+ * either theme. The brand fallback covers a colour that resolves to nothing
+ * (an undefined token), so the tab is never left colourless. Only selected
+ * tabs change; the uncoloured rules above are untouched. */
+.ui-status-tab[data-coloured][aria-selected="true"] {
+  background: color-mix(in srgb, var(--ui-status-tab-color, var(--brand)) 12%, transparent);
+  border-color: color-mix(in srgb, var(--ui-status-tab-color, var(--brand)) 35%, transparent);
+  color: color-mix(in srgb, var(--ui-status-tab-color, var(--brand)) 70%, var(--text-primary));
+}
+
+.ui-status-tab[data-coloured][aria-selected="true"]:hover {
+  background: color-mix(in srgb, var(--ui-status-tab-color, var(--brand)) 20%, transparent);
+  color: color-mix(in srgb, var(--ui-status-tab-color, var(--brand)) 70%, var(--text-primary));
+}
+
+.ui-status-tab[data-coloured]:focus-visible {
+  outline-color: color-mix(in srgb, var(--ui-status-tab-color, var(--brand)) 60%, transparent);
+}
+
 /* The count is quieter than its label in both states; on the selected tab it
  * inherits the brand colour, so label and number read as one unit. */
 .ui-status-tab__count {

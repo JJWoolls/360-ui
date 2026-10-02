@@ -199,6 +199,10 @@ Single-select; for any-of-these filtering use `FilterPills`.
 - `count` is a small muted number after the label; omit it and none is drawn.
 - `size="sm"` for dense boards; `md` is the default. The track wraps on narrow
   screens rather than scrolling.
+- `color` on an item (any CSS colour, hex or `var(--token)`) makes that tab
+  wear its own hue when selected instead of brand green — for rows whose tabs
+  are identities. Items without one keep the brand look, so "All" plus
+  coloured entries mixes freely.
 
 The reasoning is written at the top of
 `src/primitives/StatusTabs/StatusTabs.tsx`.

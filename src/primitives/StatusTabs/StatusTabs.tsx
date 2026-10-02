@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import type { KeyboardEvent, ReactNode } from "react";
+import type { CSSProperties, KeyboardEvent, ReactNode } from "react";
 import "./StatusTabs.css";
 
 /**
@@ -31,6 +31,15 @@ import "./StatusTabs.css";
  *
  * WRAPS, never scrolls sideways: on a narrow screen the track grows a second
  * line rather than hiding tabs off the edge.
+ *
+ * COLOUR IS OPTIONAL IDENTITY. An item may carry its own `color` — any CSS
+ * colour, a hex or a var(--token). When that tab is selected it wears that
+ * hue (ground, border, label and count) instead of the brand green, so a row
+ * whose tabs ARE identities (one per site, team, category) reads by colour the
+ * way their badges do elsewhere. Items without a colour keep the brand recipe,
+ * so a mixed row ("All" plus coloured entries) works without extra props. The
+ * colour only shows on the selected tab; unselected tabs stay neutral so the
+ * track still reads as one control with one answer.
  */
 
 export type StatusTabsSize = "sm" | "md";
@@ -40,6 +49,9 @@ export interface StatusTabItem<T extends string = string> {
   label: ReactNode;
   /** Drawn after the label as a small muted number. Omitted = no count. */
   count?: number;
+  /** Any CSS colour (hex or var(--token)) worn by this tab when selected.
+   *  Omitted = the brand green. */
+  color?: string;
 }
 
 export interface StatusTabsProps<T extends string = string> {
@@ -92,6 +104,11 @@ export function StatusTabs<T extends string = string>({
     <div className="ui-status-tabs" role="tablist" aria-label={ariaLabel} data-size={size}>
       {items.map((item, index) => {
         const selected = index === selectedIndex && item.value === value;
+        // The colour arrives as a custom property so the CSS owns the recipe
+        // and a call site can only choose the hue.
+        const style = item.color
+          ? ({ "--ui-status-tab-color": item.color } as CSSProperties)
+          : undefined;
         return (
           <button
             key={item.value}
@@ -102,6 +119,8 @@ export function StatusTabs<T extends string = string>({
             role="tab"
             className="ui-status-tab"
             aria-selected={selected}
+            data-coloured={item.color ? "" : undefined}
+            style={style}
             tabIndex={index === selectedIndex ? 0 : -1}
             onClick={() => select(index)}
             onKeyDown={(e) => handleKeyDown(e, index)}
