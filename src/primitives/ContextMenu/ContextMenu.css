@@ -17,9 +17,9 @@
 .ui-cmenu {
   position: fixed;
   z-index: var(--z-tooltip);
-  min-width: 190px;
-  max-width: 320px;
-  padding: var(--s1);
+  min-width: calc(190px * var(--ui-space-scale, 1));
+  max-width: calc(320px * var(--ui-space-scale, 1));
+  padding: calc(var(--s1) * var(--ui-space-scale, 1));
   background: var(--surface);
   border: 1px solid var(--border-default);
   border-radius: var(--radius);
@@ -33,36 +33,36 @@
 
 /* What the menu acts on — "Line", "3 Lines". Quiet: it is a label, not a row. */
 .ui-cmenu-title {
-  padding: var(--s1) var(--s2);
-  font-size: var(--text-xs);
+  padding: calc(var(--s1) * var(--ui-space-scale, 1)) calc(var(--s2) * var(--ui-space-scale, 1));
+  font-size: calc(var(--text-xs) * var(--ui-type-scale, 1));
   font-weight: var(--weight-semibold);
   color: var(--text-hint);
 }
 
 .ui-cmenu-heading {
-  padding: var(--s1) var(--s2);
-  font-size: var(--text-xs);
+  padding: calc(var(--s1) * var(--ui-space-scale, 1)) calc(var(--s2) * var(--ui-space-scale, 1));
+  font-size: calc(var(--text-xs) * var(--ui-type-scale, 1));
   color: var(--text-tertiary);
 }
 
 .ui-cmenu-sep {
   height: 1px;
-  margin: var(--s1) 0;
+  margin: calc(var(--s1) * var(--ui-space-scale, 1)) 0;
   background: var(--border-subtle);
 }
 
 .ui-cmenu-item {
   display: flex;
   align-items: center;
-  gap: var(--s2);
+  gap: calc(var(--s2) * var(--ui-space-scale, 1));
   width: 100%;
-  padding: var(--s1) var(--s2);
+  padding: calc(var(--s1) * var(--ui-space-scale, 1)) calc(var(--s2) * var(--ui-space-scale, 1));
   background: transparent;
   border: none;
   border-radius: var(--radius-xs);
   color: var(--text-primary);
   font-family: var(--font);
-  font-size: var(--text-base);
+  font-size: calc(var(--text-base) * var(--ui-type-scale, 1));
   text-align: left;
   white-space: nowrap;
   cursor: pointer;
@@ -96,13 +96,13 @@
   flex: none;
   align-items: center;
   justify-content: center;
-  width: 14px;
-  height: 14px;
+  width: calc(14px * var(--ui-icon-scale, 1));
+  height: calc(14px * var(--ui-icon-scale, 1));
 }
 
 .ui-cmenu-tick svg {
-  width: 14px;
-  height: 14px;
+  width: calc(14px * var(--ui-icon-scale, 1));
+  height: calc(14px * var(--ui-icon-scale, 1));
 }
 
 /* The gallery specimen: the same panel, sitting in the layout instead of at a

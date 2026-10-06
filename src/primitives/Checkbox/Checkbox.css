@@ -3,15 +3,15 @@
 .ui-check {
   display: inline-flex;
   align-items: center;
-  gap: var(--s2);
-  padding: var(--s1) var(--s2);
-  margin-inline-start: calc(var(--s2) * -1); /* optical: box aligns to the grid */
+  gap: calc(var(--s2) * var(--ui-space-scale, 1));
+  padding: calc(var(--s1) * var(--ui-space-scale, 1)) calc(var(--s2) * var(--ui-space-scale, 1));
+  margin-inline-start: calc(var(--s2) * -1 * var(--ui-space-scale, 1)); /* optical: box aligns to the grid */
   background: transparent;
   border: 1px solid transparent;
   border-radius: var(--radius-sm);
   color: var(--text-primary);
   font-family: var(--font);
-  font-size: var(--text-md);
+  font-size: calc(var(--text-md) * var(--ui-type-scale, 1));
   cursor: pointer;
   text-align: start;
   transition: background-color var(--transition);
@@ -31,8 +31,8 @@
   align-items: center;
   justify-content: center;
   flex: none;
-  width: var(--s4);
-  height: var(--s4);
+  width: calc(var(--s4) * var(--ui-icon-scale, 1));
+  height: calc(var(--s4) * var(--ui-icon-scale, 1));
   border: 1px solid var(--border-strong);
   border-radius: var(--radius-sm);
   background: var(--surface-inset);
@@ -59,13 +59,13 @@
 }
 
 .ui-check-tick {
-  width: var(--s3);
-  height: var(--s3);
+  width: calc(var(--s3) * var(--ui-icon-scale, 1));
+  height: calc(var(--s3) * var(--ui-icon-scale, 1));
 }
 
 .ui-check-dash {
-  width: var(--s2);
-  height: 2px;
+  width: calc(var(--s2) * var(--ui-icon-scale, 1));
+  height: calc(2px * var(--ui-icon-scale, 1));
   border-radius: var(--radius-pill);
   background: currentcolor;
 }

@@ -17,14 +17,14 @@
 .ui-optionfield {
   display: inline-flex;
   align-items: center;
-  gap: var(--s2);
-  padding: var(--s2) var(--s4);
+  gap: calc(var(--s2) * var(--ui-space-scale, 1));
+  padding: calc(var(--s2) * var(--ui-space-scale, 1)) calc(var(--s4) * var(--ui-space-scale, 1));
   background: var(--surface-raised);
   border: 1px solid var(--border-default);
   border-radius: var(--radius);
   color: var(--text-secondary);
   font-family: var(--font);
-  font-size: var(--text-base);
+  font-size: calc(var(--text-base) * var(--ui-type-scale, 1));
   font-weight: var(--weight-medium);
   cursor: pointer;
   transition: opacity var(--transition);
@@ -52,6 +52,6 @@
 }
 
 .ui-optionfield-icon svg {
-  width: var(--s4);
-  height: var(--s4);
+  width: calc(var(--s4) * var(--ui-icon-scale, 1));
+  height: calc(var(--s4) * var(--ui-icon-scale, 1));
 }

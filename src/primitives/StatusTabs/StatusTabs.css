@@ -20,9 +20,9 @@
   display: inline-flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: calc(var(--s1) / 2);
+  gap: calc(var(--s1) / 2 * var(--ui-space-scale, 1));
   max-width: 100%;
-  padding: calc(var(--s1) / 2);
+  padding: calc(var(--s1) / 2 * var(--ui-space-scale, 1));
   background: var(--surface-inset);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius);
@@ -32,7 +32,7 @@
 .ui-status-tab {
   display: inline-flex;
   align-items: center;
-  gap: var(--s1);
+  gap: calc(var(--s1) * var(--ui-space-scale, 1));
   margin: 0;
   border: 1px solid transparent;
   border-radius: var(--radius-sm);
@@ -53,15 +53,15 @@
 /* SIZES — the same boxes as FilterPills, so a tab row and a pill row beside
  * each other line up. Only the box changes. */
 .ui-status-tabs[data-size="md"] .ui-status-tab {
-  padding: var(--s1) var(--s3);
-  font-size: var(--text-md);
-  min-height: calc(var(--s6) - var(--s1));
+  padding: calc(var(--s1) * var(--ui-space-scale, 1)) calc(var(--s3) * var(--ui-space-scale, 1));
+  font-size: calc(var(--text-md) * var(--ui-type-scale, 1));
+  min-height: calc((var(--s6) - var(--s1)) * var(--ui-space-scale, 1));
 }
 
 .ui-status-tabs[data-size="sm"] .ui-status-tab {
-  padding: calc(var(--s1) / 2) var(--s2);
-  font-size: var(--text-sm);
-  min-height: calc(var(--s5) - var(--s1));
+  padding: calc(var(--s1) / 2 * var(--ui-space-scale, 1)) calc(var(--s2) * var(--ui-space-scale, 1));
+  font-size: calc(var(--text-sm) * var(--ui-type-scale, 1));
+  min-height: calc((var(--s5) - var(--s1)) * var(--ui-space-scale, 1));
 }
 
 .ui-status-tab:hover {

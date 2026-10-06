@@ -3,9 +3,9 @@
 .ui-row {
   display: flex;
   align-items: center;
-  gap: var(--s3);
+  gap: calc(var(--s3) * var(--ui-space-scale, 1));
   width: 100%;
-  padding: var(--s3) var(--s4);
+  padding: calc(var(--s3) * var(--ui-space-scale, 1)) calc(var(--s4) * var(--ui-space-scale, 1));
   background: var(--surface);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius);
@@ -27,8 +27,8 @@
    flex: none or the id column collapses as soon as a title gets long. */
 .ui-row-id {
   flex: none;
-  width: var(--s7);
-  font-size: var(--text-lg);
+  width: calc(var(--s7) * var(--ui-space-scale, 1));
+  font-size: calc(var(--text-lg) * var(--ui-type-scale, 1));
   font-weight: var(--weight-bold);
   color: var(--text-primary);
   font-variant-numeric: tabular-nums;
@@ -38,16 +38,16 @@
   display: grid;
   place-items: center;
   flex: none;
-  width: var(--s5);
-  height: var(--s5);
+  width: calc(var(--s5) * var(--ui-icon-scale, 1));
+  height: calc(var(--s5) * var(--ui-icon-scale, 1));
   border-radius: var(--radius-sm);
 }
 
 /* The tile sets `color`; the icon inside draws with currentColor. That is what
    keeps the glyph and its ground from ever drifting apart. */
 .ui-row-tile svg {
-  width: var(--s3);
-  height: var(--s3);
+  width: calc(var(--s3) * var(--ui-icon-scale, 1));
+  height: calc(var(--s3) * var(--ui-icon-scale, 1));
 }
 
 .ui-row-tile[data-tone="brand"] {
@@ -80,7 +80,7 @@
 .ui-row-title {
   flex: 1;
   min-width: 0;
-  font-size: var(--text-base);
+  font-size: calc(var(--text-base) * var(--ui-type-scale, 1));
   font-weight: var(--weight-medium);
   overflow: hidden;
   text-overflow: ellipsis;
@@ -89,7 +89,7 @@
 
 .ui-row-meta {
   flex: none;
-  font-size: var(--text-xs);
+  font-size: calc(var(--text-xs) * var(--ui-type-scale, 1));
   color: var(--text-hint);
   white-space: nowrap;
 }

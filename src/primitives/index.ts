@@ -13,6 +13,13 @@
    enforces it on that side.
    ========================================================================== */
 
+// Scale — wrap a screen once and every primitive inside it (and every pop-up
+// it opens) resizes: type, space and icons each have their own multiplier.
+export { Scale, useScale, scaleRootProps } from "./Scale/Scale";
+export type { ScaleProps, ScaleSize, ScaleValue } from "./Scale/Scale";
+export { SCALE_PRESETS, resolveScale } from "./Scale/presets";
+export type { ScaleFactors, ScaleOverrides } from "./Scale/presets";
+
 // buttonProps hands the button's look to an element the kit cannot render —
 // a Next.js Link, a Tauri navigation anchor. For controls that NAVIGATE, where
 // rendering a <button> would take away middle-click and open-in-new-tab.

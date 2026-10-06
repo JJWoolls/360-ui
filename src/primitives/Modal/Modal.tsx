@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useId, useRef } from "react";
 import type { ReactNode } from "react";
 import { createPortal } from "react-dom";
+import { scaleRootProps, useScale } from "../Scale/Scale";
 import "./Modal.css";
 
 /**
@@ -172,6 +173,8 @@ export function Modal({
   const full = size === "full";
   const showSubtitle = subtitle != null && title != null && !bare;
   const dialogRef = useRef<HTMLDivElement>(null);
+  // The overlay is portalled out of any <Scale>, so it carries the scale itself.
+  const scale = useScale();
 
   // Register in the stack while open, so Escape can find the top.
   useEffect(() => {
@@ -268,6 +271,7 @@ export function Modal({
   return createPortal(
     <div
       className="ui-modal-overlay"
+      {...scaleRootProps(scale)}
       data-tone={backdropTone}
       data-size={full ? "full" : undefined}
       // mousedown, not click: a click that STARTS inside the dialog and ends on
@@ -282,7 +286,12 @@ export function Modal({
         // width prop means no inline style at all, so the house 460 stands.
         // A full-size dialog is as wide as the window allows, so a width
         // passed alongside it is ignored rather than fighting the stylesheet.
-        style={width == null || full ? undefined : { maxWidth: width }}
+        // Under a Scale the caller's width scales with the house 460.
+        style={
+          width == null || full
+            ? undefined
+            : { maxWidth: scale ? `calc(${width}px * var(--ui-space-scale, 1))` : width }
+        }
         ref={dialogRef}
         data-size={full ? "full" : undefined}
         data-bare={bare || undefined}

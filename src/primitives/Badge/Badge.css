@@ -41,16 +41,16 @@
   display: inline-flex;
   align-items: center;
   /* 6px gap between dot and label, per status-badge.tsx (gap-1.5). */
-  gap: 6px;
+  gap: calc(6px * var(--ui-space-scale, 1));
   /* The LMS's real numbers. --s1 is 4px, so the scale has no 3px/10px step:
      matching the house standard beats snapping to the scale here. */
-  padding: 3px 10px;
+  padding: calc(3px * var(--ui-space-scale, 1)) calc(10px * var(--ui-space-scale, 1));
   /* 4px — Tailwind `rounded`, exactly what status-badge.tsx uses. NOT
      --radius-sm (6px); that was a near-miss caught by reading the computed
      style off the real bundle rather than trusting the source. */
   border-radius: var(--radius-xs);
   font-family: var(--font);
-  font-size: var(--text-sm); /* 11px */
+  font-size: calc(var(--text-sm) * var(--ui-type-scale, 1)); /* 11px */
   font-weight: var(--weight-semibold);
   letter-spacing: 0.3px;
   white-space: nowrap;
@@ -79,16 +79,16 @@
  * proportions at that size — see the custom rule below.
  */
 .ui-badge[data-size="sm"] {
-  gap: 4px;
-  padding: 2px 6px;
-  font-size: 9px;
+  gap: calc(4px * var(--ui-space-scale, 1));
+  padding: calc(2px * var(--ui-space-scale, 1)) calc(6px * var(--ui-space-scale, 1));
+  font-size: calc(9px * var(--ui-type-scale, 1));
   font-weight: var(--weight-bold);
   letter-spacing: normal;
 }
 
 .ui-badge[data-size="sm"] .ui-badge__dot {
-  width: 5px;
-  height: 5px;
+  width: calc(5px * var(--ui-icon-scale, 1));
+  height: calc(5px * var(--ui-icon-scale, 1));
 }
 
 /* A NUMBER at the call site. The caller gives ONE value — the type size — and
@@ -103,7 +103,7 @@
  * than show it.
  */
 .ui-badge[data-size="custom"] {
-  font-size: var(--ui-badge-size);
+  font-size: calc(var(--ui-badge-size) * var(--ui-type-scale, 1));
   font-weight: var(--weight-bold);
   letter-spacing: normal;
   gap: 0.55em;
@@ -135,8 +135,8 @@
 
 .ui-badge__dot {
   flex: none;
-  width: 6px;
-  height: 6px;
+  width: calc(6px * var(--ui-icon-scale, 1));
+  height: calc(6px * var(--ui-icon-scale, 1));
   border-radius: var(--radius-pill);
   background: currentcolor;
 }

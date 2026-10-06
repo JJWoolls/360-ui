@@ -24,16 +24,16 @@
 .ui-datefield {
   display: inline-flex;
   align-items: center;
-  gap: var(--s2); /* LMS gap-2 = 8px, exact */
+  gap: calc(var(--s2) * var(--ui-space-scale, 1)); /* LMS gap-2 = 8px, exact */
   width: 100%;
-  height: 36px; /* LMS h-9 = 36px — off scale, kept literal */
-  padding: 0 var(--s3); /* LMS px-3 = 12px, exact */
+  height: calc(36px * max(var(--ui-space-scale, 1), var(--ui-type-scale, 1))); /* LMS h-9 = 36px — off scale, kept literal */
+  padding: 0 calc(var(--s3) * var(--ui-space-scale, 1)); /* LMS px-3 = 12px, exact */
   background: transparent; /* LMS bg-transparent */
   border: 1px solid var(--border-default); /* LMS --border #2b2b2b -> #333333 nearest */
   border-radius: var(--radius); /* LMS rounded-lg = 8px, exact */
   color: var(--text-secondary); /* LMS placeholder muted-foreground #999999 -> #a0a0a0 nearest */
   font-family: var(--font);
-  font-size: var(--text-base); /* LMS text-sm 14px -> 13px nearest */
+  font-size: calc(var(--text-base) * var(--ui-type-scale, 1)); /* LMS text-sm 14px -> 13px nearest */
   font-weight: var(--weight-medium);
   text-align: left;
   cursor: pointer;
@@ -69,8 +69,8 @@
 }
 
 .ui-datefield-icon svg {
-  width: 14px; /* LMS Calendar size 14 */
-  height: 14px;
+  width: calc(14px * var(--ui-icon-scale, 1)); /* LMS Calendar size 14 */
+  height: calc(14px * var(--ui-icon-scale, 1));
 }
 
 .ui-datefield-text {
@@ -93,8 +93,8 @@
 }
 
 .ui-datefield-x svg {
-  width: 12px; /* LMS X size 12 */
-  height: 12px;
+  width: calc(12px * var(--ui-icon-scale, 1)); /* LMS X size 12 */
+  height: calc(12px * var(--ui-icon-scale, 1));
 }
 
 /* ---- Preset row (cs-dash "Set follow-up" popover) ------------------------
@@ -104,21 +104,21 @@
 .ui-datepicker-presets {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--s1); /* cs-dash gap: 4, exact */
-  margin-bottom: var(--s3);
+  gap: calc(var(--s1) * var(--ui-space-scale, 1)); /* cs-dash gap: 4, exact */
+  margin-bottom: calc(var(--s3) * var(--ui-space-scale, 1));
 }
 
 .ui-datepicker-presets > .ui-btn {
   flex: 1;
-  min-width: 60px; /* cs-dash minWidth: 60 */
+  min-width: calc(60px * var(--ui-space-scale, 1)); /* cs-dash minWidth: 60 */
 }
 
 /* ---- Calendar panel (MiniCalendar.tsx:53) -------------------------------- */
 
 .ui-datepicker-cal {
-  width: 240px; /* MiniCalendar width: 240, exact */
+  width: calc(240px * var(--ui-space-scale, 1)); /* MiniCalendar width: 240, exact */
   margin: 0 auto;
-  padding: 10px; /* MiniCalendar padding: 10 — off scale, kept literal */
+  padding: calc(10px * var(--ui-space-scale, 1)); /* MiniCalendar padding: 10 — off scale, kept literal */
   background: var(--bg); /* LMS hsl(--background) #121212 = --bg, exact */
   border: 1px solid var(--border-default); /* LMS --border #2b2b2b -> #333333 nearest */
   border-radius: var(--radius); /* MiniCalendar borderRadius: 8, exact */
@@ -128,12 +128,12 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: var(--s2); /* MiniCalendar mb-2 = 8px, exact */
+  margin-bottom: calc(var(--s2) * var(--ui-space-scale, 1)); /* MiniCalendar mb-2 = 8px, exact */
 }
 
 .ui-datepicker-month {
   color: var(--text-primary); /* LMS foreground #c7c7c7 -> #ffffff nearest */
-  font-size: var(--text-md); /* MiniCalendar text-xs = 12px, exact */
+  font-size: calc(var(--text-md) * var(--ui-type-scale, 1)); /* MiniCalendar text-xs = 12px, exact */
   font-weight: var(--weight-semibold); /* font-semibold, exact */
 }
 
@@ -142,7 +142,7 @@
 .ui-datepicker-nav {
   display: grid;
   place-items: center;
-  padding: var(--s1); /* p-1 = 4px, exact */
+  padding: calc(var(--s1) * var(--ui-space-scale, 1)); /* p-1 = 4px, exact */
   background: transparent;
   border: none;
   border-radius: var(--radius-xs); /* "rounded" = 4px, exact */
@@ -161,32 +161,32 @@
 }
 
 .ui-datepicker-nav svg {
-  width: 14px; /* ChevronLeft/Right size 14, exact */
-  height: 14px;
+  width: calc(14px * var(--ui-icon-scale, 1)); /* ChevronLeft/Right size 14, exact */
+  height: calc(14px * var(--ui-icon-scale, 1));
 }
 
 .ui-datepicker-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 2px; /* MiniCalendar gap-0.5 = 2px — off scale, kept literal */
+  gap: calc(2px * var(--ui-space-scale, 1)); /* MiniCalendar gap-0.5 = 2px — off scale, kept literal */
 }
 
 .ui-datepicker-dow {
-  padding: var(--s1) 0; /* py-1 = 4px, exact */
+  padding: calc(var(--s1) * var(--ui-space-scale, 1)) 0; /* py-1 = 4px, exact */
   color: var(--text-secondary); /* muted-foreground -> nearest */
-  font-size: 9px; /* MiniCalendar text-[9px] — off scale, kept literal */
+  font-size: calc(9px * var(--ui-type-scale, 1)); /* MiniCalendar text-[9px] — off scale, kept literal */
   font-weight: var(--weight-semibold); /* font-semibold, exact */
   text-align: center;
 }
 
 .ui-datepicker-day {
-  padding: 6px 0; /* MiniCalendar padding: '6px 0' — off scale, kept literal */
+  padding: calc(6px * var(--ui-space-scale, 1)) 0; /* MiniCalendar padding: '6px 0' — off scale, kept literal */
   background: transparent;
   border: none;
   border-radius: var(--radius-xs); /* "rounded" = 4px, exact */
   color: var(--text-primary); /* LMS foreground #c7c7c7 -> #ffffff nearest */
   font-family: var(--font);
-  font-size: var(--text-sm); /* text-[11px] = 11px, exact */
+  font-size: calc(var(--text-sm) * var(--ui-type-scale, 1)); /* text-[11px] = 11px, exact */
   font-weight: var(--weight-normal); /* fontWeight 400, exact */
   cursor: pointer;
   transition:

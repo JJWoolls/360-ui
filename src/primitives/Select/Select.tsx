@@ -15,6 +15,7 @@ import type {
   ReactNode,
 } from "react";
 import { createPortal } from "react-dom";
+import { scaleRootProps, useScale } from "../Scale/Scale";
 import "./Select.css";
 import { triggerMarks } from "./trigger-mark";
 
@@ -188,6 +189,9 @@ export function Select({
   const [search, setSearch] = useState("");
   const [active, setActive] = useState(0);
   const [panelStyle, setPanelStyle] = useState<CSSProperties>(HIDDEN);
+  // The list is portalled out of any <Scale>, so it carries the scale itself.
+  const scale = useScale();
+  const spaceScale = scale ? scale.space : 1;
   const rootRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
@@ -258,8 +262,11 @@ export function Select({
     const below = vh - r.bottom - GAP - EDGE;
     const above = r.top - GAP - EDGE;
     const up = below < FLIP_BELOW && above > below;
+    // The list's width bounds are a screen size like any other: under a Scale
+    // they grow with the space multiplier (1 outside one).
+    const k = spaceScale;
     const minWidth = Math.min(
-      Math.max(r.width, dropdownMinWidth ?? DEFAULT_MIN_WIDTH),
+      Math.max(r.width, (dropdownMinWidth ?? DEFAULT_MIN_WIDTH) * k),
       vw - 2 * EDGE,
     );
     const left = Math.max(EDGE, Math.min(r.left, vw - EDGE - minWidth));
@@ -267,11 +274,11 @@ export function Select({
       position: "fixed",
       left,
       minWidth,
-      maxWidth: Math.max(minWidth, Math.min(MAX_WIDTH, vw - left - EDGE)),
+      maxWidth: Math.max(minWidth, Math.min(MAX_WIDTH * k, vw - left - EDGE)),
       maxHeight: Math.max(up ? above : below, 120),
       ...(up ? { bottom: vh - r.top + GAP } : { top: r.bottom + GAP }),
     });
-  }, [dropdownMinWidth]);
+  }, [dropdownMinWidth, spaceScale]);
 
   // Place before paint, then chase the trigger on any ancestor scroll (capture
   // catches a scrolling Modal body) and on resize. The list's own scroll is
@@ -480,7 +487,7 @@ export function Select({
     open && flat.length > 0 ? optionId(Math.min(active, flat.length - 1)) : undefined;
 
   const panel = open ? (
-    <div ref={panelRef} className="ui-select-panel" style={panelStyle}>
+    <div ref={panelRef} className="ui-select-panel" {...scaleRootProps(scale, panelStyle)}>
       {searchable && (
         <div className="ui-select-searchwrap">
           <input

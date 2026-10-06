@@ -34,7 +34,7 @@
   display: inline-flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: var(--s1);
+  gap: calc(var(--s1) * var(--ui-space-scale, 1));
 }
 
 .ui-pill {
@@ -42,7 +42,7 @@
 
   display: inline-flex;
   align-items: center;
-  gap: var(--s1);
+  gap: calc(var(--s1) * var(--ui-space-scale, 1));
   border: 1px solid var(--border-default);
   border-radius: var(--radius-sm);
   background: transparent;
@@ -65,15 +65,15 @@
  * same reason the Badge has an in-table size. Only the box changes; the
  * recipe is identical. */
 .ui-pills[data-size="md"] .ui-pill {
-  padding: var(--s1) var(--s3);
-  font-size: var(--text-md);
-  min-height: var(--s6);
+  padding: calc(var(--s1) * var(--ui-space-scale, 1)) calc(var(--s3) * var(--ui-space-scale, 1));
+  font-size: calc(var(--text-md) * var(--ui-type-scale, 1));
+  min-height: calc(var(--s6) * var(--ui-space-scale, 1));
 }
 
 .ui-pills[data-size="sm"] .ui-pill {
-  padding: calc(var(--s1) / 2) var(--s2);
-  font-size: var(--text-sm);
-  min-height: var(--s5);
+  padding: calc(var(--s1) / 2 * var(--ui-space-scale, 1)) calc(var(--s2) * var(--ui-space-scale, 1));
+  font-size: calc(var(--text-sm) * var(--ui-type-scale, 1));
+  min-height: calc(var(--s5) * var(--ui-space-scale, 1));
 }
 
 .ui-pill:hover:not(:disabled) {
@@ -109,16 +109,16 @@
    ring stops a very light or very dark colour vanishing into the ground. */
 .ui-pill__dot {
   flex: none;
-  width: 8px;
-  height: 8px;
+  width: calc(8px * var(--ui-icon-scale, 1));
+  height: calc(8px * var(--ui-icon-scale, 1));
   border-radius: var(--radius-pill);
   background: var(--ui-pill-color);
   box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--text-primary) 25%, transparent);
 }
 
 .ui-pills[data-size="sm"] .ui-pill__dot {
-  width: 7px;
-  height: 7px;
+  width: calc(7px * var(--ui-icon-scale, 1));
+  height: calc(7px * var(--ui-icon-scale, 1));
 }
 
 .ui-pill__count {

@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import { createPortal } from "react-dom";
+import { scaleRootProps, useScale } from "../Scale/Scale";
 import "./Tooltip.css";
 
 /**
@@ -74,6 +75,8 @@ export function Tooltip({
   children,
 }: TooltipProps) {
   const id = useId();
+  // The tip is portalled out of any <Scale>, so it carries the scale itself.
+  const scale = useScale();
   const [visible, setVisible] = useState(false);
   const [coords, setCoords] = useState<{ top: number; left: number } | null>(null);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -182,11 +185,11 @@ export function Tooltip({
             // Excluded from in-app screenshots: a tip caught mid-hover in a
             // snapshot looks like part of the page.
             data-snapshot-exclude=""
-            style={{
+            {...scaleRootProps(scale, {
               top: coords?.top ?? -9999,
               left: coords?.left ?? -9999,
               opacity: coords ? 1 : 0,
-            }}
+            })}
           >
             {content ?? label}
           </span>,

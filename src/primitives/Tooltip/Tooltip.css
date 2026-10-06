@@ -23,12 +23,12 @@
 .ui-tip {
   position: fixed;
   z-index: var(--z-tooltip);
-  padding: var(--s1) var(--s2);
+  padding: calc(var(--s1) * var(--ui-space-scale, 1)) calc(var(--s2) * var(--ui-space-scale, 1));
   background: var(--surface-raised);
   border: 1px solid var(--border-default);
   border-radius: var(--radius-sm);
   color: var(--text-primary);
-  font-size: var(--text-md);
+  font-size: calc(var(--text-md) * var(--ui-type-scale, 1));
   font-weight: var(--weight-medium);
   white-space: nowrap;
   transition: opacity var(--transition);
@@ -42,7 +42,7 @@
    tip does not become a paragraph stretched across the window. */
 .ui-tip[data-multiline] {
   white-space: pre-line;
-  max-width: 320px;
+  max-width: calc(320px * var(--ui-space-scale, 1));
   line-height: 1.5;
 }
 

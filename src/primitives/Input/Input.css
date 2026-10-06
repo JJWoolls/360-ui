@@ -19,14 +19,14 @@
 .ui-input {
   display: block;
   width: 100%;
-  height: 36px;
-  padding: var(--s2) var(--s3);
+  height: calc(36px * max(var(--ui-space-scale, 1), var(--ui-type-scale, 1)));
+  padding: calc(var(--s2) * var(--ui-space-scale, 1)) calc(var(--s3) * var(--ui-space-scale, 1));
   background: var(--bg);
   border: 1px solid var(--border-default);
   border-radius: var(--radius);
   color: var(--text-primary);
   font-family: var(--font);
-  font-size: var(--text-base);
+  font-size: calc(var(--text-base) * var(--ui-type-scale, 1));
   transition:
     background-color var(--transition),
     border-color var(--transition),
@@ -76,14 +76,14 @@
  * --s5 is 24px and too tight for typed text with a 1px border, so the height
  * is 28px — the same relationship the Button's sm has to its own md. */
 .ui-input[data-size="sm"] {
-  height: 28px;
-  padding: var(--s1) var(--s2);
-  font-size: var(--text-sm);
+  height: calc(28px * max(var(--ui-space-scale, 1), var(--ui-type-scale, 1)));
+  padding: calc(var(--s1) * var(--ui-space-scale, 1)) calc(var(--s2) * var(--ui-space-scale, 1));
+  font-size: calc(var(--text-sm) * var(--ui-type-scale, 1));
 }
 
 .ui-textarea[data-size="sm"] {
   height: auto;
-  min-height: 56px;
+  min-height: calc(56px * var(--ui-space-scale, 1));
 }
 
 /* ---- prefix / suffix ------------------------------------------------------
@@ -106,16 +106,16 @@
 /* An icon is the common mark (every search box), and its first-paint width is
    known exactly because the icon size is set just below. */
 .ui-input-wrap:has(> .ui-input-affix[data-side="start"] svg) {
-  --ui-affix-start: 14px;
+  --ui-affix-start: calc(14px * var(--ui-icon-scale, 1));
 }
 .ui-input-wrap:has(> .ui-input-affix[data-side="end"] svg) {
-  --ui-affix-end: 14px;
+  --ui-affix-end: calc(14px * var(--ui-icon-scale, 1));
 }
 .ui-input-wrap[data-size="sm"]:has(> .ui-input-affix[data-side="start"] svg) {
-  --ui-affix-start: 12px;
+  --ui-affix-start: calc(12px * var(--ui-icon-scale, 1));
 }
 .ui-input-wrap[data-size="sm"]:has(> .ui-input-affix[data-side="end"] svg) {
-  --ui-affix-end: 12px;
+  --ui-affix-end: calc(12px * var(--ui-icon-scale, 1));
 }
 
 .ui-input-affix {
@@ -126,7 +126,7 @@
   align-items: center;
   color: var(--text-secondary);
   font-family: var(--font);
-  font-size: var(--text-base);
+  font-size: calc(var(--text-base) * var(--ui-type-scale, 1));
   pointer-events: none; /* clicking the sign must focus the field, not block it */
 }
 
@@ -134,35 +134,35 @@
    boxes had drawn the same magnifier at 12, 13, 14 and 16px; the field owns
    the mark's size the way the grid owns a card's. */
 .ui-input-affix svg {
-  width: 14px;
-  height: 14px;
+  width: calc(14px * var(--ui-icon-scale, 1));
+  height: calc(14px * var(--ui-icon-scale, 1));
   flex-shrink: 0;
 }
 
 .ui-input-wrap[data-size="sm"] .ui-input-affix {
-  font-size: var(--text-sm);
+  font-size: calc(var(--text-sm) * var(--ui-type-scale, 1));
 }
 
 .ui-input-wrap[data-size="sm"] .ui-input-affix svg {
-  width: 12px;
-  height: 12px;
+  width: calc(12px * var(--ui-icon-scale, 1));
+  height: calc(12px * var(--ui-icon-scale, 1));
 }
 
 /* The mark sits where the text would start: the field's own side padding. */
 .ui-input-affix[data-side="start"] {
-  left: var(--s3);
+  left: calc(var(--s3) * var(--ui-space-scale, 1));
 }
 
 .ui-input-affix[data-side="end"] {
-  right: var(--s3);
+  right: calc(var(--s3) * var(--ui-space-scale, 1));
 }
 
 .ui-input-wrap[data-size="sm"] .ui-input-affix[data-side="start"] {
-  left: var(--s2);
+  left: calc(var(--s2) * var(--ui-space-scale, 1));
 }
 
 .ui-input-wrap[data-size="sm"] .ui-input-affix[data-side="end"] {
-  right: var(--s2);
+  right: calc(var(--s2) * var(--ui-space-scale, 1));
 }
 
 /* Only the padding moves, and only on the side that has a mark:
@@ -170,19 +170,19 @@
    token, because the first version used --s5 and each app sets --s5 to its
    own value, so the gap differed per app and an icon overlapped the text. */
 .ui-input-wrap[data-has-prefix] .ui-input {
-  padding-left: calc(var(--s3) + var(--ui-affix-start) + var(--s2));
+  padding-left: calc(var(--s3) * var(--ui-space-scale, 1) + var(--ui-affix-start) + var(--s2) * var(--ui-space-scale, 1));
 }
 
 .ui-input-wrap[data-has-suffix] .ui-input {
-  padding-right: calc(var(--s3) + var(--ui-affix-end) + var(--s2));
+  padding-right: calc(var(--s3) * var(--ui-space-scale, 1) + var(--ui-affix-end) + var(--s2) * var(--ui-space-scale, 1));
 }
 
 .ui-input-wrap[data-size="sm"][data-has-prefix] .ui-input {
-  padding-left: calc(var(--s2) + var(--ui-affix-start) + var(--s1));
+  padding-left: calc(var(--s2) * var(--ui-space-scale, 1) + var(--ui-affix-start) + var(--s1) * var(--ui-space-scale, 1));
 }
 
 .ui-input-wrap[data-size="sm"][data-has-suffix] .ui-input {
-  padding-right: calc(var(--s2) + var(--ui-affix-end) + var(--s1));
+  padding-right: calc(var(--s2) * var(--ui-space-scale, 1) + var(--ui-affix-end) + var(--s1) * var(--ui-space-scale, 1));
 }
 
 /* ---- clear button ---------------------------------------------------------
@@ -193,18 +193,18 @@
  * the glyph roughly where a suffix icon would be and the box clear of the text.
  */
 .ui-input-wrap:has(> .ui-input-clear) {
-  --ui-affix-end: 24px; /* first paint, before the measurement lands */
+  --ui-affix-end: calc(24px * var(--ui-icon-scale, 1)); /* first paint, before the measurement lands */
 }
 
 .ui-input-clear {
   position: absolute;
   top: 50%;
-  right: var(--s1);
+  right: calc(var(--s1) * var(--ui-space-scale, 1));
   transform: translateY(-50%);
   display: grid;
   place-items: center;
-  min-width: 24px;
-  min-height: 24px;
+  min-width: calc(24px * var(--ui-icon-scale, 1));
+  min-height: calc(24px * var(--ui-icon-scale, 1));
   padding: 0;
   background: transparent;
   border: none;
@@ -229,34 +229,34 @@
 }
 
 .ui-input-clear > svg {
-  width: 14px;
-  height: 14px;
+  width: calc(14px * var(--ui-icon-scale, 1));
+  height: calc(14px * var(--ui-icon-scale, 1));
 }
 
 .ui-input-wrap[data-size="sm"] .ui-input-clear > svg {
-  width: 12px;
-  height: 12px;
+  width: calc(12px * var(--ui-icon-scale, 1));
+  height: calc(12px * var(--ui-icon-scale, 1));
 }
 
 /* Inset + button + gap, the same arithmetic as a suffix with the tighter inset.
    The button is never narrower than 24px, so the hit area holds on sm too. */
 .ui-input-wrap[data-has-clear] .ui-input {
-  padding-right: calc(var(--s1) + var(--ui-affix-end) + var(--s1));
+  padding-right: calc(var(--s1) * var(--ui-space-scale, 1) + var(--ui-affix-end) + var(--s1) * var(--ui-space-scale, 1));
 }
 
 .ui-input-wrap[data-size="sm"] .ui-input-clear {
-  right: 2px;
+  right: calc(2px * var(--ui-space-scale, 1));
 }
 
 .ui-input-wrap[data-size="sm"][data-has-clear] .ui-input {
-  padding-right: calc(2px + var(--ui-affix-end) + var(--s1));
+  padding-right: calc(2px * var(--ui-space-scale, 1) + var(--ui-affix-end) + var(--s1) * var(--ui-space-scale, 1));
 }
 
 /* The multi-line twin. Height comes from `rows` instead of the fixed 36px, and
    it grows only downward — a field narrower than its form reads as a mistake. */
 .ui-textarea {
   height: auto;
-  min-height: 72px;
+  min-height: calc(72px * var(--ui-space-scale, 1));
   resize: vertical;
   line-height: 1.5;
 }
@@ -268,30 +268,30 @@
  * threshold, not a type-scale choice, which is why it is not a token.
  * Same border, radius and focus as every other size. */
 .ui-input[data-size="touch"] {
-  height: var(--touch-target);
-  padding: var(--s2) var(--s3);
-  font-size: 16px;
+  height: calc(var(--touch-target) * max(1, var(--ui-space-scale, 1), var(--ui-type-scale, 1)));
+  padding: calc(var(--s2) * var(--ui-space-scale, 1)) calc(var(--s3) * var(--ui-space-scale, 1));
+  font-size: max(16px, calc(16px * var(--ui-type-scale, 1)));
 }
 
 .ui-textarea[data-size="touch"] {
   height: auto;
-  min-height: 88px;
+  min-height: calc(88px * var(--ui-space-scale, 1));
 }
 
 .ui-input-wrap[data-size="touch"]:has(> .ui-input-affix[data-side="start"] svg) {
-  --ui-affix-start: 16px;
+  --ui-affix-start: calc(16px * var(--ui-icon-scale, 1));
 }
 .ui-input-wrap[data-size="touch"]:has(> .ui-input-affix[data-side="end"] svg) {
-  --ui-affix-end: 16px;
+  --ui-affix-end: calc(16px * var(--ui-icon-scale, 1));
 }
 
 .ui-input-wrap[data-size="touch"] .ui-input-affix {
-  font-size: 16px;
+  font-size: max(16px, calc(16px * var(--ui-type-scale, 1)));
 }
 
 .ui-input-wrap[data-size="touch"] .ui-input-affix svg {
-  width: 16px;
-  height: 16px;
+  width: calc(16px * var(--ui-icon-scale, 1));
+  height: calc(16px * var(--ui-icon-scale, 1));
 }
 
 .ui-input-wrap[data-size="touch"] .ui-input-clear {
@@ -301,12 +301,12 @@
 }
 
 .ui-input-wrap[data-size="touch"] .ui-input-clear > svg {
-  width: 16px;
-  height: 16px;
+  width: calc(16px * var(--ui-icon-scale, 1));
+  height: calc(16px * var(--ui-icon-scale, 1));
 }
 
 .ui-input-wrap[data-size="touch"][data-has-clear] .ui-input {
-  padding-right: calc(var(--ui-affix-end) + var(--s1));
+  padding-right: calc(var(--ui-affix-end) + var(--s1) * var(--ui-space-scale, 1));
 }
 
 /* ---- clickable prefix -----------------------------------------------------
@@ -318,9 +318,9 @@
 .ui-input-affix-btn {
   pointer-events: auto;
   justify-content: center;
-  min-width: 24px;
-  min-height: 24px;
-  margin-left: calc((24px - var(--ui-affix-start)) / -2);
+  min-width: calc(24px * var(--ui-icon-scale, 1));
+  min-height: calc(24px * var(--ui-icon-scale, 1));
+  margin-left: calc((24px * var(--ui-icon-scale, 1) - var(--ui-affix-start)) / -2);
   padding: 0;
   background: transparent;
   border: none;

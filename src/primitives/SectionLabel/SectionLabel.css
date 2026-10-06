@@ -10,10 +10,10 @@
  */
 
 .ui-section-label {
-  margin: 0 0 var(--s2);
+  margin: 0 0 calc(var(--s2) * var(--ui-space-scale, 1));
   padding: 0;
   font-family: var(--font);
-  font-size: var(--text-md); /* 12px */
+  font-size: calc(var(--text-md) * var(--ui-type-scale, 1)); /* 12px */
   font-weight: var(--weight-semibold);
   line-height: 1.4;
   letter-spacing: 0.02em;
@@ -21,7 +21,7 @@
 }
 
 .ui-section-label[data-size="sm"] {
-  font-size: var(--text-sm); /* 11px */
+  font-size: calc(var(--text-sm) * var(--ui-type-scale, 1)); /* 11px */
 }
 
 /* With an action, the ROW carries the bottom gap and the label drops its own,
@@ -31,8 +31,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--s2);
-  margin-bottom: var(--s2);
+  gap: calc(var(--s2) * var(--ui-space-scale, 1));
+  margin-bottom: calc(var(--s2) * var(--ui-space-scale, 1));
 }
 
 .ui-section-label-row > .ui-section-label {
@@ -43,6 +43,6 @@
 .ui-section-label-action {
   display: flex;
   align-items: center;
-  gap: var(--s2);
+  gap: calc(var(--s2) * var(--ui-space-scale, 1));
   flex: none;
 }

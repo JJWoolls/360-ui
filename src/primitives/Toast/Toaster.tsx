@@ -12,6 +12,7 @@ import {
 import type { ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { Toast, type ToastTone } from "./Toast";
+import { scaleRootProps, useScale, type ScaleValue } from "../Scale/Scale";
 import "./Toaster.css";
 
 /**
@@ -61,12 +62,21 @@ export interface ToasterProps {
 
 interface ToastItem extends ToastOptions {
   id: string;
+  /** The <Scale> in force where the toast was raised; the stack is portalled
+      out of it, so each toast carries its own. */
+  scale?: ScaleValue | null;
+}
+
+/** The context's shape: the public api, plus the raiser's scale on toast(). */
+interface ToastContextValue {
+  toast: (options: ToastOptions, scale?: ScaleValue | null) => string;
+  dismiss: (id: string) => void;
 }
 
 const DEFAULT_DURATION = 5000;
 const MAX_VISIBLE = 4;
 
-const ToastContext = createContext<ToastApi | null>(null);
+const ToastContext = createContext<ToastContextValue | null>(null);
 
 /** Module-level so ids stay unique even across two Toasters in one page. */
 let sequence = 0;
@@ -84,11 +94,11 @@ export function Toaster({ children }: ToasterProps) {
     setItems((prev) => prev.filter((t) => t.id !== id));
   }, []);
 
-  const toast = useCallback((options: ToastOptions) => {
+  const toast = useCallback((options: ToastOptions, scale?: ScaleValue | null) => {
     sequence += 1;
     const id = `ui-toast-${sequence}`;
     setItems((prev) => {
-      const next = [...prev, { ...options, id }];
+      const next = [...prev, { ...options, id, scale }];
       // Over the limit: drop the oldest transient notices first. Danger ones
       // are never dropped — they queue instead (see the note above).
       while (next.length > MAX_VISIBLE) {
@@ -101,7 +111,9 @@ export function Toaster({ children }: ToasterProps) {
     return id;
   }, []);
 
-  const api = useMemo<ToastApi>(() => ({ toast, dismiss }), [toast, dismiss]);
+  const api = useMemo<ToastContextValue>(() => ({ toast, dismiss }), [toast, dismiss]);
+  // A Toaster mounted inside a <Scale> sizes its stack to it.
+  const scale = useScale();
 
   // The oldest four show; a queued danger notice appears as one ahead of it
   // is dismissed. Newest sits nearest the corner, where the eye goes.
@@ -113,7 +125,7 @@ export function Toaster({ children }: ToasterProps) {
       {mounted &&
         visible.length > 0 &&
         createPortal(
-          <div className="ui-toaster">
+          <div className="ui-toaster" {...scaleRootProps(scale)}>
             {visible.map((item) => (
               <ToasterItem key={item.id} item={item} dismiss={dismiss} />
             ))}
@@ -155,6 +167,7 @@ function ToasterItem({
   return (
     <div
       className="ui-toaster-item"
+      {...scaleRootProps(item.scale ?? null)}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       onFocus={() => setFocused(true)}
@@ -171,8 +184,15 @@ function ToasterItem({
 /** Raise and dismiss toasts. Must be called beneath a <Toaster>. */
 export function useToast(): ToastApi {
   const api = useContext(ToastContext);
-  if (!api) {
+  // Toasts raised from inside a <Scale> carry it into the portalled stack.
+  // Outside one the api is handed back as it is.
+  const scale = useScale();
+  const scoped = useMemo<ToastApi | null>(
+    () => (api && scale ? { toast: (options) => api.toast(options, scale), dismiss: api.dismiss } : api),
+    [api, scale],
+  );
+  if (!scoped) {
     throw new Error("useToast() must be called inside a <Toaster>. Mount one near the app root.");
   }
-  return api;
+  return scoped;
 }

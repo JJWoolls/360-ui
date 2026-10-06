@@ -14,7 +14,7 @@
   display: inline-flex;
   flex-wrap: wrap;
   align-items: baseline;
-  gap: var(--s2);
+  gap: calc(var(--s2) * var(--ui-space-scale, 1));
 }
 
 .ui-stat-card-trend {

@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { MouseEvent as ReactMouseEvent, ReactNode } from "react";
 import { createPortal } from "react-dom";
+import { scaleRootProps, useScale } from "../Scale/Scale";
 import "./ContextMenu.css";
 
 /**
@@ -66,6 +67,9 @@ function isSelectable(item: ContextMenuItem): boolean {
 
 export function ContextMenu({ x, y, title, items, onClose, inline }: ContextMenuProps) {
   const ref = useRef<HTMLDivElement>(null);
+  // Portalled out of any <Scale>, so the floating menu carries the scale itself;
+  // an inline menu is still inside it and simply inherits.
+  const scale = useScale();
   const itemRefs = useRef<Array<HTMLButtonElement | null>>([]);
   const [pos, setPos] = useState({ x, y, ready: false });
 
@@ -164,9 +168,9 @@ export function ContextMenu({ x, y, title, items, onClose, inline }: ContextMenu
       className={`ui-cmenu${inline ? " is-inline" : ""}`}
       role="menu"
       aria-label={title ?? "Menu"}
-      style={
-        inline ? undefined : { left: pos.x, top: pos.y, visibility: pos.ready ? "visible" : "hidden" }
-      }
+      {...(inline
+        ? { style: undefined }
+        : scaleRootProps(scale, { left: pos.x, top: pos.y, visibility: pos.ready ? "visible" : "hidden" }))}
       // The house menu replaces the OS one wherever it opens, including on
       // itself — a native menu over this would be the exact thing it exists
       // to avoid.

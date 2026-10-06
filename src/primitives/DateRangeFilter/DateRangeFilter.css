@@ -17,35 +17,35 @@
   display: inline-flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: var(--s2);
+  gap: calc(var(--s2) * var(--ui-space-scale, 1));
   max-width: 100%;
 }
 
 .ui-daterange-preset {
-  width: 150px;
+  width: calc(150px * var(--ui-space-scale, 1));
   flex: none;
 }
 
 .ui-daterange-dates {
   display: inline-flex;
   align-items: center;
-  gap: var(--s2);
+  gap: calc(var(--s2) * var(--ui-space-scale, 1));
   min-width: 0;
 }
 
 .ui-daterange-field {
   display: inline-flex;
-  width: 140px;
+  width: calc(140px * var(--ui-space-scale, 1));
   min-width: 0;
 }
 
 .ui-daterange-sep {
   color: var(--text-tertiary);
   font-family: var(--font);
-  font-size: var(--text-md);
+  font-size: calc(var(--text-md) * var(--ui-type-scale, 1));
 }
 
 .ui-daterange[data-size="sm"] .ui-datefield {
-  height: 28px;
-  font-size: var(--text-md);
+  height: calc(28px * max(var(--ui-space-scale, 1), var(--ui-type-scale, 1)));
+  font-size: calc(var(--text-md) * var(--ui-type-scale, 1));
 }

@@ -6,15 +6,15 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--s3);
-  margin-bottom: var(--s3);
-  padding: var(--s2) var(--s3);
+  gap: calc(var(--s3) * var(--ui-space-scale, 1));
+  margin-bottom: calc(var(--s3) * var(--ui-space-scale, 1));
+  padding: calc(var(--s2) * var(--ui-space-scale, 1)) calc(var(--s3) * var(--ui-space-scale, 1));
   background: rgba(var(--danger-rgb), 0.08);
   border: 1px solid rgba(var(--danger-rgb), 0.35);
   border-radius: var(--radius-sm);
 }
 
 .ui-async-stale__text {
-  font-size: var(--text-sm);
+  font-size: calc(var(--text-sm) * var(--ui-type-scale, 1));
   color: var(--text-primary);
 }

@@ -69,12 +69,12 @@
   background: var(--surface);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius);
-  padding: var(--s4);
+  padding: calc(var(--s4) * var(--ui-space-scale, 1));
 }
 
 .ui-card-label {
-  margin-bottom: var(--s2);
-  font-size: var(--text-xs);
+  margin-bottom: calc(var(--s2) * var(--ui-space-scale, 1));
+  font-size: calc(var(--text-xs) * var(--ui-type-scale, 1));
   font-weight: var(--weight-bold);
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -84,7 +84,7 @@
 /* Tabular numerals so a column of cards keeps its digits on the same rails —
    without it "14" and "11" are visibly different widths and the row jitters. */
 .ui-card-value {
-  font-size: var(--text-2xl);
+  font-size: calc(var(--text-2xl) * var(--ui-type-scale, 1));
   font-weight: var(--weight-bold);
   letter-spacing: -0.02em;
   font-variant-numeric: tabular-nums;
@@ -141,18 +141,18 @@
 .ui-card-valuerow {
   display: flex;
   align-items: baseline;
-  gap: var(--s2);
+  gap: calc(var(--s2) * var(--ui-space-scale, 1));
 }
 
 .ui-card-extra {
   display: flex;
   align-items: center;
-  gap: var(--s2);
+  gap: calc(var(--s2) * var(--ui-space-scale, 1));
 }
 
 .ui-card-foot {
-  margin-top: var(--s1);
-  font-size: var(--text-sm);
+  margin-top: calc(var(--s1) * var(--ui-space-scale, 1));
+  font-size: calc(var(--text-sm) * var(--ui-type-scale, 1));
   color: var(--text-tertiary);
 }
 
@@ -181,7 +181,7 @@
 .ui-card-head {
   display: flex;
   align-items: center;
-  gap: var(--s2);
+  gap: calc(var(--s2) * var(--ui-space-scale, 1));
 }
 
 .ui-card-icon {
@@ -194,14 +194,14 @@
   background: var(--surface);
   border: 1px solid var(--border-default);
   border-radius: var(--radius);
-  padding: 14px var(--s4);
+  padding: calc(14px * var(--ui-space-scale, 1)) calc(var(--s4) * var(--ui-space-scale, 1));
 }
 .ui-card[data-kind="stat"] .ui-card-head {
-  margin-bottom: 6px;
+  margin-bottom: calc(6px * var(--ui-space-scale, 1));
 }
 .ui-card[data-kind="stat"] .ui-card-label {
   margin-bottom: 0;
-  font-size: var(--text-sm);
+  font-size: calc(var(--text-sm) * var(--ui-type-scale, 1));
   font-weight: var(--weight-semibold);
   letter-spacing: 0.05em;
   text-transform: uppercase;
@@ -212,7 +212,7 @@
 }
 /* Tone tints the icon + label; the number stays foreground (StatCard rule). */
 .ui-card[data-kind="stat"] .ui-card-value {
-  font-size: 24px;
+  font-size: calc(24px * var(--ui-type-scale, 1));
   letter-spacing: -0.5px;
   color: var(--text-primary);
 }
@@ -243,27 +243,27 @@
 
 /* =========================== tile ========================================= */
 .ui-card[data-kind="tile"] {
-  width: 220px;
+  width: calc(220px * var(--ui-space-scale, 1));
   background: var(--surface-raised);
   border: 1px solid var(--border-strong);
   border-radius: var(--radius-lg);
-  padding: var(--s5);
+  padding: calc(var(--s5) * var(--ui-space-scale, 1));
   text-align: center;
 }
 .ui-card[data-kind="tile"] .ui-card-head {
   justify-content: center;
-  margin-bottom: 18px;
+  margin-bottom: calc(18px * var(--ui-space-scale, 1));
 }
 .ui-card[data-kind="tile"] .ui-card-label {
   margin-bottom: 0;
-  font-size: var(--text-lg);
+  font-size: calc(var(--text-lg) * var(--ui-type-scale, 1));
   font-weight: var(--weight-semibold);
   letter-spacing: normal;
   text-transform: none;
   color: var(--text-primary);
 }
 .ui-card[data-kind="tile"] .ui-card-value {
-  font-size: 32px;
+  font-size: calc(32px * var(--ui-type-scale, 1));
   letter-spacing: normal;
   color: var(--text-primary);
 }
@@ -288,7 +288,7 @@
   color: var(--violet);
 }
 .ui-card[data-kind="tile"] .ui-card-foot {
-  font-size: var(--text-md);
+  font-size: calc(var(--text-md) * var(--ui-type-scale, 1));
   font-weight: var(--weight-medium);
   color: var(--text-secondary);
 }
@@ -302,14 +302,14 @@
   background: rgba(var(--brand-rgb), 0.08);
   border: 1px solid rgba(var(--brand-rgb), 0.25);
   border-radius: var(--radius-lg);
-  padding: 20px;
+  padding: calc(20px * var(--ui-space-scale, 1));
 }
 .ui-card[data-kind="accent"] .ui-card-head {
-  margin-bottom: var(--s2);
+  margin-bottom: calc(var(--s2) * var(--ui-space-scale, 1));
 }
 .ui-card[data-kind="accent"] .ui-card-label {
   margin-bottom: 0;
-  font-size: var(--text-md);
+  font-size: calc(var(--text-md) * var(--ui-type-scale, 1));
   font-weight: var(--weight-bold);
   letter-spacing: 0.05em;
   text-transform: uppercase;
@@ -319,12 +319,12 @@
   color: var(--brand);
 }
 .ui-card[data-kind="accent"] .ui-card-value {
-  font-size: 30px;
+  font-size: calc(30px * var(--ui-type-scale, 1));
   letter-spacing: normal;
   color: var(--brand);
 }
 .ui-card[data-kind="accent"] .ui-card-foot {
-  font-size: var(--text-md);
+  font-size: calc(var(--text-md) * var(--ui-type-scale, 1));
   color: var(--text-secondary);
 }
 .ui-card[data-kind="accent"][data-tone="danger"] {

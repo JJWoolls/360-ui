@@ -15,15 +15,15 @@
 
 .ui-optionpicker-search {
   position: relative;
-  margin-bottom: var(--s2);
+  margin-bottom: calc(var(--s2) * var(--ui-space-scale, 1));
 }
 
 .ui-optionpicker-search svg {
   position: absolute;
   top: 50%;
-  left: var(--s3);
-  width: 14px;
-  height: 14px;
+  left: calc(var(--s3) * var(--ui-space-scale, 1));
+  width: calc(14px * var(--ui-icon-scale, 1));
+  height: calc(14px * var(--ui-icon-scale, 1));
   color: var(--text-secondary);
   translate: 0 -50%;
   pointer-events: none;
@@ -33,13 +33,13 @@
   width: 100%;
 
   /* LMS pl-9 = 36px: icon sits at 12px, text clears it. */
-  padding: var(--s2) var(--s3) var(--s2) calc(var(--s5) + var(--s3));
+  padding: calc(var(--s2) * var(--ui-space-scale, 1)) calc(var(--s3) * var(--ui-space-scale, 1)) calc(var(--s2) * var(--ui-space-scale, 1)) calc((var(--s5) + var(--s3)) * var(--ui-space-scale, 1));
   background: var(--bg);
   border: 1px solid var(--border-default);
   border-radius: var(--radius);
   color: var(--text-primary);
   font-family: var(--font);
-  font-size: var(--text-base);
+  font-size: calc(var(--text-base) * var(--ui-type-scale, 1));
 }
 
 /* LMS focus:ring-2 ring-primary/50 — mouse focus included, so :focus not
@@ -52,22 +52,22 @@
 .ui-optionpicker-list {
   display: flex;
   flex-direction: column;
-  gap: var(--s1);
+  gap: calc(var(--s1) * var(--ui-space-scale, 1));
 }
 
 .ui-optionpicker-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--s2);
+  gap: calc(var(--s2) * var(--ui-space-scale, 1));
   width: 100%;
-  padding: var(--s2) var(--s3);
+  padding: calc(var(--s2) * var(--ui-space-scale, 1)) calc(var(--s3) * var(--ui-space-scale, 1));
   background: transparent;
   border: none;
   border-radius: var(--radius);
   color: var(--text-primary);
   font-family: var(--font);
-  font-size: var(--text-base);
+  font-size: calc(var(--text-base) * var(--ui-type-scale, 1));
   font-weight: var(--weight-normal);
   text-align: left;
   cursor: pointer;
@@ -93,14 +93,14 @@
 /* The selected row's check — LMS: 16px, brand. */
 .ui-optionpicker-row svg {
   flex: none;
-  width: var(--s4);
-  height: var(--s4);
+  width: calc(var(--s4) * var(--ui-icon-scale, 1));
+  height: calc(var(--s4) * var(--ui-icon-scale, 1));
   color: var(--brand);
 }
 
 .ui-optionpicker-empty {
-  padding: var(--s5) 0;
+  padding: calc(var(--s5) * var(--ui-space-scale, 1)) 0;
   color: var(--text-secondary);
-  font-size: var(--text-base);
+  font-size: calc(var(--text-base) * var(--ui-type-scale, 1));
   text-align: center;
 }

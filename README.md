@@ -136,6 +136,38 @@ clear-X buttons beside the field.
   clear/prefix hit areas. `sm` and `md` are unchanged.
 - `Input` forwards its ref to the `<input>` (focus, or anchor a dropdown).
 
+## Scale
+
+One set of parts, sized per screen: wrap the screen in `Scale` instead of
+forking a component.
+
+```tsx
+<Scale size="wall">...</Scale>
+<Scale size="large" spaceScale={1}>...</Scale>   {/* bigger type, same gaps */}
+```
+
+- Three multipliers, each 1 by default: `--ui-type-scale` (font sizes),
+  `--ui-space-scale` (padding, gaps, margins, control heights, container
+  widths) and `--ui-icon-scale` (icon boxes, kit-set svg sizes, dots, check
+  boxes, toggles, spinners, avatars).
+- Presets (type / space / icon): `compact` 0.9 / 0.85 / 0.9, `default` 1 / 1 /
+  1, `large` 1.2 / 1.15 / 1.2, `wall` 1.5 / 1.35 / 1.5. `typeScale`,
+  `spaceScale`, `iconScale` override one axis.
+- Outside a `Scale` nothing is set and every primitive renders exactly as
+  before; every multiplier in the stylesheets falls back to 1.
+- Pop-ups follow the screen that opened them: Modal (and AlertDialog,
+  DatePicker, OptionPickerModal on it), the Select list, Tooltip, ContextMenu
+  and toasts raised with `useToast()` read `useScale()` and set the variables
+  on their portal root. `scaleRootProps(useScale(), style)` does the same for
+  an app's own portal.
+- A fixed-height field (Input, Select trigger, DateField) grows by the larger
+  of type and space, so bigger text never clips. Touch sizes never drop below
+  `--touch-target` or 16px type.
+- Not scaled: borders, radii, letter-spacing, caller-set widths (Table column
+  `width`, `maxHeight`), and svg glyphs a caller sizes itself outside a Button.
+- `Scale` renders a plain block `div` (className and style pass through). An
+  inner `Scale` replaces the outer one's values rather than multiplying them.
+
 ## Windows
 
 `Modal` (and `AlertDialog` on top of it) is the only pop-up window.

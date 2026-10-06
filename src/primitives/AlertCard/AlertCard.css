@@ -11,9 +11,9 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--s2);
+  gap: calc(var(--s2) * var(--ui-space-scale, 1));
   width: 100%;
-  padding: var(--s5);
+  padding: calc(var(--s5) * var(--ui-space-scale, 1));
   background: var(--surface);
   border: 1px solid rgba(var(--ui-alert-rgb), 0.35);
   border-radius: var(--radius-lg);
@@ -42,28 +42,28 @@
   display: grid;
   place-items: center;
   flex: none;
-  width: var(--s7);
-  height: var(--s7);
-  margin-block-end: var(--s1);
+  width: calc(var(--s7) * var(--ui-icon-scale, 1));
+  height: calc(var(--s7) * var(--ui-icon-scale, 1));
+  margin-block-end: calc(var(--s1) * var(--ui-space-scale, 1));
   border-radius: var(--radius-pill);
   background: rgba(var(--ui-alert-rgb), 0.12);
   color: var(--ui-alert-color);
 }
 
 .ui-alert-card-icon svg {
-  width: var(--s5);
-  height: var(--s5);
+  width: calc(var(--s5) * var(--ui-icon-scale, 1));
+  height: calc(var(--s5) * var(--ui-icon-scale, 1));
 }
 
 .ui-alert-card-title {
-  font-size: var(--text-lg);
+  font-size: calc(var(--text-lg) * var(--ui-type-scale, 1));
   font-weight: var(--weight-semibold);
   color: var(--text-primary);
 }
 
 .ui-alert-card-message {
   max-width: 48ch;
-  font-size: var(--text-base);
+  font-size: calc(var(--text-base) * var(--ui-type-scale, 1));
   color: var(--text-secondary);
 }
 
@@ -71,8 +71,8 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: var(--s2);
-  margin-block-start: var(--s3);
+  gap: calc(var(--s2) * var(--ui-space-scale, 1));
+  margin-block-start: calc(var(--s3) * var(--ui-space-scale, 1));
 }
 
 /* alarm — full-strength border and a slow breathing glow. Slow on purpose: a

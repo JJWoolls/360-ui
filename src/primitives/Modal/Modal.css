@@ -10,14 +10,14 @@
    The offset is a fraction of the window, floored at the gutter so a short
    landscape phone still keeps the dialog on screen. */
 .ui-modal-overlay {
-  --ui-modal-top: max(var(--s4), 8vh);
+  --ui-modal-top: max(calc(var(--s4) * var(--ui-space-scale, 1)), 8vh);
   position: fixed;
   inset: 0;
   z-index: var(--z-modal);
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  padding: var(--ui-modal-top) var(--s4) var(--s4);
+  padding: var(--ui-modal-top) calc(var(--s4) * var(--ui-space-scale, 1)) calc(var(--s4) * var(--ui-space-scale, 1));
   background: var(--overlay);
 }
 
@@ -60,15 +60,15 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  max-width: 460px;
+  max-width: calc(460px * var(--ui-space-scale, 1));
 
   /* A modal never grows past the window — its body scrolls instead. Without
      this the footer walks off the bottom of the screen and the primary action
      becomes unreachable. */
-  max-height: calc(100vh - var(--ui-modal-top) - var(--s4));
+  max-height: calc(100vh - var(--ui-modal-top) - var(--s4) * var(--ui-space-scale, 1));
   /* dvh where supported: on a phone the browser chrome eats into 100vh and the
      footer would sit under the toolbar. */
-  max-height: calc(100dvh - var(--ui-modal-top) - var(--s4));
+  max-height: calc(100dvh - var(--ui-modal-top) - var(--s4) * var(--ui-space-scale, 1));
   background: var(--surface);
   border: 1px solid var(--border-default);
   border-radius: var(--radius);
@@ -79,9 +79,9 @@
 .ui-modal-head {
   display: flex;
   align-items: center;
-  gap: var(--s3);
+  gap: calc(var(--s3) * var(--ui-space-scale, 1));
   flex: none;
-  padding: var(--s4);
+  padding: calc(var(--s4) * var(--ui-space-scale, 1));
   border-bottom: 1px solid var(--border-subtle);
 }
 
@@ -89,14 +89,14 @@
   display: grid;
   place-items: center;
   flex: none;
-  width: var(--s5);
-  height: var(--s5);
+  width: calc(var(--s5) * var(--ui-icon-scale, 1));
+  height: calc(var(--s5) * var(--ui-icon-scale, 1));
   border-radius: var(--radius-sm);
 }
 
 .ui-modal-tile svg {
-  width: var(--s3);
-  height: var(--s3);
+  width: calc(var(--s3) * var(--ui-icon-scale, 1));
+  height: calc(var(--s3) * var(--ui-icon-scale, 1));
 }
 
 .ui-modal-tile[data-tone="brand"] {
@@ -124,14 +124,14 @@
 .ui-modal-titles {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: calc(2px * var(--ui-space-scale, 1));
   flex: 1;
   min-width: 0;
 }
 
 .ui-modal-title {
   min-width: 0;
-  font-size: var(--text-lg);
+  font-size: calc(var(--text-lg) * var(--ui-type-scale, 1));
   font-weight: var(--weight-semibold);
   color: var(--text-primary);
 }
@@ -139,7 +139,7 @@
 /* The quieter second line: muted and a step down, so the title still leads. */
 .ui-modal-subtitle {
   min-width: 0;
-  font-size: var(--text-sm);
+  font-size: calc(var(--text-sm) * var(--ui-type-scale, 1));
   font-weight: var(--weight-normal);
   color: var(--text-secondary);
 }
@@ -148,7 +148,7 @@
   display: grid;
   place-items: center;
   flex: none;
-  padding: var(--s1);
+  padding: calc(var(--s1) * var(--ui-space-scale, 1));
   background: transparent;
   border: none;
   border-radius: var(--radius-sm);
@@ -165,16 +165,16 @@
 }
 
 .ui-modal-x svg {
-  width: var(--s4);
-  height: var(--s4);
+  width: calc(var(--s4) * var(--ui-icon-scale, 1));
+  height: calc(var(--s4) * var(--ui-icon-scale, 1));
 }
 
 .ui-modal-body {
   flex: 1;
   min-height: 0;
   overflow-y: auto;
-  padding: var(--s4);
-  font-size: var(--text-base);
+  padding: calc(var(--s4) * var(--ui-space-scale, 1));
+  font-size: calc(var(--text-base) * var(--ui-type-scale, 1));
   color: var(--text-secondary);
 }
 
@@ -188,9 +188,9 @@
 .ui-modal-foot {
   display: flex;
   justify-content: flex-end;
-  gap: var(--s2);
+  gap: calc(var(--s2) * var(--ui-space-scale, 1));
   flex: none;
-  padding: var(--s3) var(--s4);
+  padding: calc(var(--s3) * var(--ui-space-scale, 1)) calc(var(--s4) * var(--ui-space-scale, 1));
   border-top: 1px solid var(--border-subtle);
   background: var(--surface-inset);
 }
@@ -200,8 +200,8 @@
    from the top anchor), so the head and footer pin to the edges and only the
    body scrolls. */
 .ui-modal-overlay[data-size="full"] {
-  --ui-modal-top: var(--s4);
-  padding: var(--s4);
+  --ui-modal-top: calc(var(--s4) * var(--ui-space-scale, 1));
+  padding: calc(var(--s4) * var(--ui-space-scale, 1));
 }
 
 .ui-modal[data-size="full"] {

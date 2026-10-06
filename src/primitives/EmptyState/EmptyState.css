@@ -5,8 +5,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--s2);
-  padding: var(--s6) var(--s4);
+  gap: calc(var(--s2) * var(--ui-space-scale, 1));
+  padding: calc(var(--s6) * var(--ui-space-scale, 1)) calc(var(--s4) * var(--ui-space-scale, 1));
   border: 1px dashed var(--border-default);
   border-radius: var(--radius);
   background: var(--surface-inset);
@@ -15,7 +15,7 @@
 
 .ui-empty-title {
   margin: 0;
-  font-size: var(--text-md);
+  font-size: calc(var(--text-md) * var(--ui-type-scale, 1));
   font-weight: var(--weight-semibold);
   color: var(--text-secondary);
 }
@@ -23,10 +23,10 @@
 .ui-empty-body {
   margin: 0;
   max-width: 48ch;
-  font-size: var(--text-sm);
+  font-size: calc(var(--text-sm) * var(--ui-type-scale, 1));
   color: var(--text-hint);
 }
 
 .ui-empty-action {
-  margin-block-start: var(--s1);
+  margin-block-start: calc(var(--s1) * var(--ui-space-scale, 1));
 }

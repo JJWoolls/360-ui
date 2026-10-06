@@ -22,7 +22,7 @@
 .ui-section-tabs__list {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--s1);
+  gap: calc(var(--s1) * var(--ui-space-scale, 1));
   margin: 0;
   padding: 0;
   list-style: none;
@@ -37,12 +37,12 @@
 .ui-section-tab {
   display: inline-flex;
   align-items: center;
-  gap: var(--s1);
-  padding: var(--s2) var(--s4);
+  gap: calc(var(--s1) * var(--ui-space-scale, 1));
+  padding: calc(var(--s2) * var(--ui-space-scale, 1)) calc(var(--s4) * var(--ui-space-scale, 1));
   border-bottom: 2px solid transparent;
   color: var(--text-tertiary);
   font-family: var(--font);
-  font-size: var(--text-sm);
+  font-size: calc(var(--text-sm) * var(--ui-type-scale, 1));
   font-weight: var(--weight-medium);
   line-height: 1.4;
   text-decoration: none;

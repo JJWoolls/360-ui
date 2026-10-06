@@ -6,7 +6,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: var(--s3);
+  gap: calc(var(--s3) * var(--ui-space-scale, 1));
   width: 100%;
   box-sizing: border-box;
 }
@@ -16,15 +16,15 @@
 .ui-state-frame[data-size="page"] {
   flex: 1;
   min-height: 60vh;
-  padding: var(--s8) var(--s4);
+  padding: calc(var(--s8) * var(--ui-space-scale, 1)) calc(var(--s4) * var(--ui-space-scale, 1));
 }
 
 .ui-state-frame[data-size="section"] {
-  padding: var(--s5) var(--s4);
+  padding: calc(var(--s5) * var(--ui-space-scale, 1)) calc(var(--s4) * var(--ui-space-scale, 1));
 }
 
 /* The card inside never stretches to a wide page; it reads as a message,
    not a banner. */
 .ui-state-frame > .ui-alert-card {
-  max-width: 420px;
+  max-width: calc(420px * var(--ui-space-scale, 1));
 }

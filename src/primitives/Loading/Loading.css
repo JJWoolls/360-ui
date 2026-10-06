@@ -28,13 +28,13 @@
 }
 
 .ui-spinner[data-size="sm"] .ui-spinner-ring {
-  width: var(--s4);
-  height: var(--s4);
+  width: calc(var(--s4) * var(--ui-icon-scale, 1));
+  height: calc(var(--s4) * var(--ui-icon-scale, 1));
 }
 
 .ui-spinner[data-size="md"] .ui-spinner-ring {
-  width: var(--s5);
-  height: var(--s5);
+  width: calc(var(--s5) * var(--ui-icon-scale, 1));
+  height: calc(var(--s5) * var(--ui-icon-scale, 1));
 }
 
 @keyframes ui-spin {
@@ -46,7 +46,7 @@
 .ui-skeleton {
   display: flex;
   flex-direction: column;
-  gap: var(--s2);
+  gap: calc(var(--s2) * var(--ui-space-scale, 1));
   width: 100%;
 }
 
@@ -59,11 +59,11 @@
 }
 
 .ui-skeleton[data-variant="text"] .ui-skeleton-bar {
-  height: var(--s3);
+  height: calc(var(--s3) * var(--ui-type-scale, 1));
 }
 
 .ui-skeleton[data-variant="block"] .ui-skeleton-bar {
-  height: var(--s7);
+  height: calc(var(--s7) * var(--ui-space-scale, 1));
   border-radius: var(--radius);
 }
 

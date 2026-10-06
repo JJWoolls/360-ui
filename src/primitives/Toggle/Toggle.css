@@ -27,15 +27,15 @@
 .ui-toggle {
   display: inline-flex;
   align-items: center;
-  gap: var(--s2);
-  padding: var(--s1) var(--s2);
-  margin-inline-start: calc(var(--s2) * -1);
+  gap: calc(var(--s2) * var(--ui-space-scale, 1));
+  padding: calc(var(--s1) * var(--ui-space-scale, 1)) calc(var(--s2) * var(--ui-space-scale, 1));
+  margin-inline-start: calc(var(--s2) * -1 * var(--ui-space-scale, 1));
   background: transparent;
   border: 1px solid transparent;
   border-radius: var(--radius-sm);
   color: var(--text-primary);
   font-family: var(--font);
-  font-size: var(--text-md);
+  font-size: calc(var(--text-md) * var(--ui-type-scale, 1));
   cursor: pointer;
   text-align: start;
   transition: background-color var(--transition);
@@ -58,8 +58,8 @@
 .ui-toggle-track {
   position: relative;
   flex: none;
-  width: 36px;
-  height: 20px;
+  width: calc(36px * var(--ui-icon-scale, 1));
+  height: calc(20px * var(--ui-icon-scale, 1));
   border-radius: var(--radius-pill);
   background: var(--border-default);
   transition: background-color var(--transition);
@@ -69,10 +69,10 @@
    track so the control reads as physical. */
 .ui-toggle-thumb {
   position: absolute;
-  inset-block-start: 2px;
-  inset-inline-start: 2px;
-  width: 16px;
-  height: 16px;
+  inset-block-start: calc(2px * var(--ui-icon-scale, 1));
+  inset-inline-start: calc(2px * var(--ui-icon-scale, 1));
+  width: calc(16px * var(--ui-icon-scale, 1));
+  height: calc(16px * var(--ui-icon-scale, 1));
   border-radius: var(--radius-pill);
   background: var(--toggle-thumb);
 
@@ -101,7 +101,7 @@
 
 /* travel = track - thumb - both insets = 36 - 16 - 2 - 2 = 16 */
 .ui-toggle[aria-checked="true"] .ui-toggle-thumb {
-  transform: translateX(16px);
+  transform: translateX(calc(16px * var(--ui-icon-scale, 1)));
 }
 
 /* Disabled dims the whole control rather than recolouring the parts — recolouring
