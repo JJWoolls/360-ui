@@ -8,6 +8,7 @@
 
 export const PALETTE_IDS = [
   "atlas",
+  "graphite",
   "nord",
   "gruvbox",
   "catppuccin",
@@ -32,6 +33,7 @@ export interface PaletteInfo {
 
 export const PALETTES: readonly PaletteInfo[] = [
   { id: "atlas", label: "Atlas", description: "Charcoal grounds with the house green." },
+  { id: "graphite", label: "Graphite", description: "Near-black neutral, brighter text and firmer borders. Maximum contrast." },
   { id: "nord", label: "Nord", description: "Cool arctic blues and frost." },
   { id: "gruvbox", label: "Gruvbox", description: "Warm retro browns with orange and amber." },
   { id: "catppuccin", label: "Catppuccin", description: "Soft pastels on deep indigo, with a mauve accent." },
@@ -48,7 +50,6 @@ export const RETIRED_PALETTES: Readonly<Record<string, PaletteId>> = {
   sand: "gruvbox",
   forest: "gruvbox",
   plum: "dracula",
-  graphite: "atlas",
 };
 
 /** Narrow an unknown value (a stored preference) to a palette id: a known id

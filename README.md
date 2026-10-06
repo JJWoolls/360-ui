@@ -173,9 +173,9 @@ forking a component.
 Colour is two independent switches on `<html>`:
 
 - `data-theme` — the mode: `dark` (default) or `light`.
-- `data-palette` — the colour family: `atlas` (default), `nord`, `gruvbox`,
-  `catppuccin`, `tokyo-night`, `dracula`, `solarized`, `rose-pine`. Any
-  palette works in either mode.
+- `data-palette` — the colour family: `atlas` (default), `graphite`, `nord`,
+  `gruvbox`, `catppuccin`, `tokyo-night`, `dracula`, `solarized`, `rose-pine`.
+  Any palette works in either mode.
 
 ```ts
 import "@360digilab/ui/palettes.css";   // once, after the app's own tokens
@@ -184,11 +184,14 @@ import { PALETTES, toPaletteId } from "@360digilab/ui";   // the picker's list
 
 Each palette is a whole colour family taken from an established editor /
 terminal scheme (credited in `palettes.css`): its own backgrounds, text and
-matched accents, not the base re-tinted.
+matched accents, not the base re-tinted. Graphite is the exception: a neutral,
+maximum-contrast variant of the base that keeps the base's status tones and
+accents.
 
 | Palette | Scheme (dark / light) | Dark surface / brand |
 |---|---|---|
 | Atlas | The base: charcoal grounds, the house green. | `#1c1c1c` / `#3ecf8e` |
+| Graphite | Near-black neutral, brighter text, firmer borders, silver accent. | `#171819` / `#e4e4e7` |
 | Nord | Nord Polar Night / Snow Storm. Frost brand. | `#2e3440` / `#88c0d0` |
 | Gruvbox | Gruvbox dark / light. Orange brand. | `#282828` / `#fe8019` |
 | Catppuccin | Mocha / Latte. Mauve brand. | `#1e1e2e` / `#cba6f7` |
@@ -199,7 +202,7 @@ matched accents, not the base re-tinted.
 
 - **Atlas has no block.** With no attribute, or `data-palette="atlas"`, the
   app's own token file is in charge, so the default looks exactly as it did.
-- **A palette sets:** grounds (`--bg`, `--surface*`), borders, the text
+- **A scheme family sets:** grounds (`--bg`, `--surface*`), borders, the text
   ramp, `--brand` (+ `-hover`, `-on`), the `info` / `violet` / `neutral`
   tones, `--danger` / `--warn` / `--success` (+ the `--accent-red` /
   `--accent-amber` aliases), the decorative accents (`pink`, `cyan`,
@@ -225,10 +228,9 @@ matched accents, not the base re-tinted.
   `npm test` checks completeness, the allowed list, twins, identity tokens,
   status hues, and contrast (primary, secondary, tertiary text >= 4.5:1 on
   `--surface`; brand-on >= 4.5:1; tones >= 3:1; inks >= 4.5 / 5:1).
-- **Retired ids:** `ocean`, `sand`, `forest`, `plum`, `graphite` (the
-  first, tinted set). `toPaletteId` maps each to the nearest family
-  (`RETIRED_PALETTES`: nord, gruvbox, gruvbox, dracula, atlas) so a stored
-  choice keeps working.
+- **Retired ids:** `ocean`, `sand`, `forest`, `plum` (the first, tinted
+  set). `toPaletteId` maps each to the nearest family (`RETIRED_PALETTES`:
+  nord, gruvbox, gruvbox, dracula) so a stored choice keeps working.
 - **Retired: `data-map`.** The old single switch (`atlas-dark`, `atlas-light`,
   `midnight`, `ember`, `pine`, `paper`) fused mode and colour, so "warm, but
   light" was impossible. Its ideas became ocean, sand and forest. The

@@ -36,23 +36,30 @@ const REQUIRED = [
   "--text-hint", "--text-disabled", "--muted-rgb",
   "--brand", "--brand-rgb", "--brand-hover", "--brand-on",
   "--info", "--info-rgb", "--violet", "--violet-rgb", "--neutral", "--neutral-rgb",
+  "--background", "--foreground", "--card", "--card-foreground", "--popover", "--popover-foreground",
+  "--primary", "--primary-foreground", "--secondary", "--secondary-foreground", "--muted",
+  "--muted-foreground", "--accent", "--accent-foreground", "--border", "--input", "--ring",
+  "--sidebar-bg", "--sidebar-hover", "--sidebar-text", "--sidebar-text-hover", "--sidebar-icon",
+  "--sidebar-icon-hover", "--sidebar-badge-text", "--sidebar-user-text",
+];
+
+// What a scheme family sets on top: its own status tones and accents. Graphite
+// (a neutral variant of the base, not a scheme) keeps the base's for these.
+const FAMILY = [
   "--danger", "--danger-rgb", "--warn", "--warn-rgb", "--success", "--success-rgb",
   "--accent-red", "--accent-red-rgb", "--accent-amber", "--accent-amber-rgb",
   "--pink", "--pink-rgb", "--cyan", "--cyan-rgb", "--orange", "--orange-rgb", "--lime", "--lime-rgb",
   "--gold", "--gold-rgb", "--pink-ink", "--pink-ink-rgb", "--cyan-ink", "--cyan-ink-rgb",
-  "--orange-ink", "--orange-ink-rgb", "--lime-ink", "--lime-ink-rgb",
-  "--background", "--foreground", "--card", "--card-foreground", "--popover", "--popover-foreground",
-  "--primary", "--primary-foreground", "--secondary", "--secondary-foreground", "--muted",
-  "--muted-foreground", "--accent", "--accent-foreground", "--destructive", "--border", "--input", "--ring",
-  "--sidebar-bg", "--sidebar-hover", "--sidebar-text", "--sidebar-text-hover", "--sidebar-icon",
-  "--sidebar-icon-hover", "--sidebar-badge-text", "--sidebar-user-text",
+  "--orange-ink", "--orange-ink-rgb", "--lime-ink", "--lime-ink-rgb", "--destructive",
 ];
+const NOT_A_FAMILY = ["graphite"];
 
 // Never a palette's to move: identities people read as "which stage / department / place".
 const FORBIDDEN = [/^--stage-/, /^--dept-/, /^--location-/, /^--route-/, /^--pan-/];
 
 // Everything a palette may set: the required set plus nothing else.
-const ALLOWED = new Set(REQUIRED);
+const ALLOWED = new Set([...REQUIRED, ...FAMILY]);
+const FAMILIES = NON_BASE.filter((p) => !NOT_A_FAMILY.includes(p));
 
 const hexToRgb = (h: string) => {
   const s = h.replace("#", "");
@@ -75,7 +82,8 @@ test("every palette defines the full set in dark and light", () => {
     for (const sel of [darkSel(id), lightSel(id)]) {
       const block = R.get(sel);
       assert.ok(block, `missing block ${sel}`);
-      const missing = REQUIRED.filter((t) => !(t in block));
+      const need = (FAMILIES as readonly string[]).includes(id) ? [...REQUIRED, ...FAMILY] : REQUIRED;
+      const missing = need.filter((t) => !(t in block));
       assert.deepEqual(missing, [], `${sel} is missing ${missing.join(", ")}`);
     }
   }
@@ -180,7 +188,7 @@ test("danger stays a red, warn an amber / yellow, success a green", () => {
     "--success": (h) => h >= 55 && h <= 170,
   };
   const bad: string[] = [];
-  for (const id of NON_BASE) {
+  for (const id of FAMILIES) {
     for (const sel of [darkSel(id), lightSel(id)]) {
       const b = R.get(sel)!;
       for (const [t, ok] of Object.entries(bands)) {
@@ -197,7 +205,7 @@ test("danger stays a red, warn an amber / yellow, success a green", () => {
 
 test("tones and accent inks read on their ground", () => {
   const bad: string[] = [];
-  for (const id of NON_BASE) {
+  for (const id of FAMILIES) {
     for (const [sel, light] of [[darkSel(id), false], [lightSel(id), true]] as const) {
       const b = R.get(sel)!;
       for (const t of ["--info", "--violet", "--danger", "--warn", "--success"]) {
@@ -214,11 +222,20 @@ test("tones and accent inks read on their ground", () => {
   assert.deepEqual(bad, []);
 });
 
+test("graphite is kept exactly: a palette, not a scheme family", () => {
+  assert.ok((NON_BASE as readonly string[]).includes("graphite"));
+  for (const sel of [darkSel("graphite"), lightSel("graphite")]) {
+    const set = FAMILY.filter((t) => t in R.get(sel)!);
+    assert.deepEqual(set, [], `${sel} sets family tokens`);
+  }
+});
+
 test("toPaletteId accepts a known id, maps a retired one, and falls back otherwise", () => {
   assert.equal(toPaletteId("nord"), "nord");
   assert.equal(toPaletteId("rose-pine"), "rose-pine");
   assert.equal(toPaletteId("ocean"), "nord");
-  assert.equal(toPaletteId("graphite"), DEFAULT_PALETTE);
+  assert.equal(toPaletteId("graphite"), "graphite");
+  assert.equal(toPaletteId("plum"), "dracula");
   assert.equal(toPaletteId("nope"), DEFAULT_PALETTE);
   assert.equal(toPaletteId("toString"), DEFAULT_PALETTE);
   assert.equal(toPaletteId(null), DEFAULT_PALETTE);

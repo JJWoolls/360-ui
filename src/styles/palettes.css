@@ -3,13 +3,14 @@
    ----------------------------------------------------------------------------
    TWO AXES on <html>:
      data-theme   = "dark" (default) | "light"     — the mode
-     data-palette = "atlas" (default) | "nord" | "gruvbox" | "catppuccin" |
-                    "tokyo-night" | "dracula" | "solarized" | "rose-pine"
+     data-palette = "atlas" (default) | "graphite" | "nord" | "gruvbox" |
+                    "catppuccin" | "tokyo-night" | "dracula" | "solarized" | "rose-pine"
    Any palette in either mode. No attribute, or data-palette="atlas", leaves the
    app's own token file in charge: atlas is the base and has NO block here, so the
    default renders exactly as it did before palettes existed.
 
-   EACH PALETTE IS A WHOLE COLOUR FAMILY, not the base re-tinted. Every one is
+   EACH PALETTE IS A WHOLE COLOUR FAMILY, not the base re-tinted (graphite, a
+   neutral high-contrast variant of the base, excepted — see its block). Every one is
    an established editor / terminal scheme whose grounds, text and accents were
    designed together (credited above each block). The grounds are the scheme's
    own backgrounds; the extra surface steps (inset, sunken, raised, hover,
@@ -50,6 +51,140 @@
    info / violet / danger / warn / success tones >= 3:1 on --surface; the -ink
    variants >= 4.5:1 (dark) and >= 5:1 (light, where they sit on their own tint).
    ========================================================================== */
+
+/* GRAPHITE is the one palette that is not a scheme family: a neutral,
+   maximum-contrast variant of the base. It keeps the base's status tones and
+   decorative accents (it sets none of them), which suit a colourless ground.
+   The test exempts it from the family-wide token list for that reason. */
+/* GRAPHITE — Near-black neutral grounds, brighter text and firmer borders, silver accent. Maximum contrast. */
+:root[data-palette="graphite"] {
+  /* Grounds */
+  --bg: #0e0e0f;
+  --surface: #171819;
+  --surface-inset: #0d0d0e;
+  --surface-sunken: #0b0b0c;
+  --surface-raised: #1f2022;
+  --surface-hover: #1f2123;
+  --surface-elevated: #27282b;
+  --surface-deep: #060606;
+  --surface-is-light: 0;
+  /* Borders */
+  --border-subtle: #2c2e31;
+  --border-default: #3f4146;
+  --border-strong: #4b4e53;
+  /* Text */
+  --text-primary: #f7f7f8;
+  --foreground-soft: #cacbce;
+  --text-secondary: #bcbec1;
+  --text-tertiary: #a8abaf;
+  --text-quaternary: #8a8d93;
+  --text-hint: #6f7278;
+  --text-disabled: #5f6167;
+  --muted-rgb: 138, 141, 147;
+  /* Accent */
+  --brand: #e4e4e7;
+  --brand-rgb: 228, 228, 231;
+  --brand-hover: #c9c9ce;
+  --brand-on: #0a0a0a;
+  /* Tones a palette may move (danger / warn / success never move) */
+  --info: #4a9eff;
+  --info-rgb: 74, 158, 255;
+  --violet: #a78bfa;
+  --violet-rgb: 167, 139, 250;
+  --neutral: #71747a;
+  --neutral-rgb: 113, 116, 122;
+  /* Legacy HSL set (consumed as hsl(var(--x))) */
+  --background: 210 7% 5%;
+  --foreground: 225 4% 78%;
+  --card: 240 5% 9%;
+  --card-foreground: 225 4% 78%;
+  --popover: 240 5% 9%;
+  --popover-foreground: 225 4% 78%;
+  --primary: 240 6% 90%;
+  --primary-foreground: 0 0% 4%;
+  --secondary: 220 4% 14%;
+  --secondary-foreground: 225 4% 78%;
+  --muted: 220 4% 14%;
+  --muted-foreground: 216 3% 72%;
+  --accent: 220 4% 14%;
+  --accent-foreground: 225 4% 78%;
+  --border: 220 5% 23%;
+  --input: 220 5% 22%;
+  --ring: 240 6% 90%;
+  --sidebar-bg: 180 6% 3%;
+  --sidebar-hover: 210 4% 9%;
+  --sidebar-text: 216 3% 72%;
+  --sidebar-text-hover: 223 5% 70%;
+  --sidebar-icon: 217 4% 39%;
+  --sidebar-icon-hover: 216 3% 72%;
+  --sidebar-badge-text: 220 4% 56%;
+  --sidebar-user-text: 225 4% 80%;
+}
+
+:root[data-palette="graphite"][data-theme="light"] {
+  /* Grounds */
+  --bg: #f7f7f7;
+  --surface: #ffffff;
+  --surface-inset: #f9f9f9;
+  --surface-sunken: #f3f3f3;
+  --surface-raised: #f6f6f6;
+  --surface-hover: #ececec;
+  --surface-elevated: #f1f1f1;
+  --surface-deep: #ececec;
+  --surface-is-light: 1;
+  /* Borders */
+  --border-subtle: #d0d0d0;
+  --border-default: #bcbcbc;
+  --border-strong: #b1b1b1;
+  /* Text */
+  --text-primary: #0d0d0d;
+  --foreground-soft: #1c1c1c;
+  --text-secondary: #2d2d2d;
+  --text-tertiary: #444444;
+  --text-quaternary: #676767;
+  --text-hint: #959595;
+  --text-disabled: #b7b7b7;
+  --muted-rgb: 68, 68, 68;
+  /* Accent */
+  --brand: #18181b;
+  --brand-rgb: 24, 24, 27;
+  --brand-hover: #3f3f46;
+  --brand-on: #ffffff;
+  /* Tones a palette may move (danger / warn / success never move) */
+  --info: #1d4ed8;
+  --info-rgb: 29, 78, 216;
+  --violet: #6d28d9;
+  --violet-rgb: 109, 40, 217;
+  --neutral: #757575;
+  --neutral-rgb: 117, 117, 117;
+  /* Legacy HSL set (consumed as hsl(var(--x))) */
+  --background: 0 0% 97%;
+  --foreground: 0 0% 4%;
+  --card: 0 0% 100%;
+  --card-foreground: 0 0% 4%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 0 0% 4%;
+  --primary: 240 6% 10%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 0 0% 93%;
+  --secondary-foreground: 0 0% 4%;
+  --muted: 0 0% 93%;
+  --muted-foreground: 0 0% 29%;
+  --accent: 0 0% 93%;
+  --accent-foreground: 0 0% 4%;
+  --border: 0 0% 77%;
+  --input: 0 0% 77%;
+  --ring: 240 6% 10%;
+  --sidebar-bg: 0 0% 100%;
+  --sidebar-hover: 0 0% 95%;
+  --sidebar-text: 0 0% 29%;
+  --sidebar-text-hover: 0 0% 14%;
+  --sidebar-icon: 0 0% 44%;
+  --sidebar-icon-hover: 0 0% 24%;
+  --sidebar-badge-text: 0 0% 34%;
+  --sidebar-user-text: 0 0% 9%;
+}
+
 
 /* NORD — Cool arctic blues and frost.
    Nord by Arctic Ice Studio (nordtheme.com, MIT). Dark: Polar Night grounds,
@@ -1402,6 +1537,7 @@
    -------------------------------------------------------------------------- */
 :root {
   --palette-preview-atlas: #3ecf8e;
+  --palette-preview-graphite: #e4e4e7;
   --palette-preview-nord: #88c0d0;
   --palette-preview-gruvbox: #fe8019;
   --palette-preview-catppuccin: #cba6f7;
