@@ -33,7 +33,7 @@
   border-radius: var(--radius); /* LMS rounded-lg = 8px, exact */
   color: var(--text-secondary); /* LMS placeholder muted-foreground #999999 -> #a0a0a0 nearest */
   font-family: var(--font);
-  font-size: calc(var(--text-sm) * var(--ui-type-scale, 1)); /* LMS text-sm 14px, exact */
+  font-size: calc(var(--text-base) * var(--ui-type-scale, 1)); /* LMS text-sm 14px -> 16px, the field family's size */
   font-weight: var(--weight-medium);
   text-align: left;
   cursor: pointer;

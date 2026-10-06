@@ -9,7 +9,7 @@
  *   row hover:    hsl(--accent) #262626        -> --surface-hover #252525
  *   row selected: hsl(--secondary) #262626     -> --surface-raised #242424
  *   row text:     hsl(--foreground) #c7c7c7    -> --text-primary #ffffff
- *   text-sm 14px                               -> --text-sm 14px (exact)
+ *   text-sm 14px                               -> --text-base 16px (iOS zooms on focus under 16)
  *   input focus ring 2px rgba(brand,.5) ported as :focus outline below.
  */
 
@@ -39,7 +39,7 @@
   border-radius: var(--radius);
   color: var(--text-primary);
   font-family: var(--font);
-  font-size: calc(var(--text-sm) * var(--ui-type-scale, 1));
+  font-size: calc(var(--text-base) * var(--ui-type-scale, 1));
 }
 
 /* LMS focus:ring-2 ring-primary/50 — mouse focus included, so :focus not
@@ -67,7 +67,7 @@
   border-radius: var(--radius);
   color: var(--text-primary);
   font-family: var(--font);
-  font-size: calc(var(--text-sm) * var(--ui-type-scale, 1));
+  font-size: calc(var(--text-base) * var(--ui-type-scale, 1));
   font-weight: var(--weight-normal);
   text-align: left;
   cursor: pointer;
@@ -101,6 +101,6 @@
 .ui-optionpicker-empty {
   padding: calc(var(--s5) * var(--ui-space-scale, 1)) 0;
   color: var(--text-secondary);
-  font-size: calc(var(--text-sm) * var(--ui-type-scale, 1));
+  font-size: calc(var(--text-base) * var(--ui-type-scale, 1));
   text-align: center;
 }

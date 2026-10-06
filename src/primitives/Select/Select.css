@@ -11,7 +11,8 @@
  *   placeholder:  hsl(--muted-foreground) #999999 -> --text-secondary #a0a0a0
  *   row selected: hsl(--primary)/0.1         -> rgb(--brand-rgb / 10%) (exact)
  *   row hover:    hsl(--accent) #262626      -> --surface-hover #252525
- *   text-sm 14px                             -> --text-sm 14px (exact; sm size -> --text-xs)
+ *   text-sm 14px                             -> --text-base 16px (iOS zooms on
+ *                                               focus under 16; sm size -> --text-sm)
  *   row radius rounded-sm 2px                -> --radius-xs 4px
  *   z-index 99999                            -> --z-tooltip (above modals)
  *   shadow-lg                                -> 0 8px 24px var(--shadow)
@@ -38,7 +39,7 @@
   border-radius: var(--radius);
   color: var(--text-primary);
   font-family: var(--font);
-  font-size: calc(var(--text-sm) * var(--ui-type-scale, 1));
+  font-size: calc(var(--text-base) * var(--ui-type-scale, 1));
   text-align: left;
   cursor: pointer;
   transition:
@@ -68,7 +69,7 @@
 .ui-select-trigger[data-size="sm"] {
   height: calc(28px * max(var(--ui-space-scale, 1), var(--ui-type-scale, 1)));
   padding: calc(var(--s1) * var(--ui-space-scale, 1)) calc(var(--s2) * var(--ui-space-scale, 1));
-  font-size: calc(var(--text-xs) * var(--ui-type-scale, 1));
+  font-size: calc(var(--text-sm) * var(--ui-type-scale, 1));
 }
 
 /* Mark + label, side by side; the label is the part that truncates. */
@@ -154,7 +155,7 @@
   border-radius: var(--radius-sm);
   color: var(--text-primary);
   font-family: var(--font);
-  font-size: calc(var(--text-sm) * var(--ui-type-scale, 1));
+  font-size: calc(var(--text-base) * var(--ui-type-scale, 1));
 }
 
 .ui-select-search::placeholder {
@@ -188,7 +189,7 @@
   border-radius: var(--radius-xs);
   color: var(--text-primary);
   font-family: var(--font);
-  font-size: calc(var(--text-sm) * var(--ui-type-scale, 1));
+  font-size: calc(var(--text-base) * var(--ui-type-scale, 1));
   cursor: pointer;
   user-select: none;
   transition: background-color var(--transition);
@@ -293,6 +294,6 @@
 .ui-select-empty {
   padding: calc(var(--s4) * var(--ui-space-scale, 1)) 0;
   color: var(--text-secondary);
-  font-size: calc(var(--text-sm) * var(--ui-type-scale, 1));
+  font-size: calc(var(--text-base) * var(--ui-type-scale, 1));
   text-align: center;
 }

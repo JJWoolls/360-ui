@@ -9,7 +9,10 @@
  * Those numbers came from the LMS's StyledSelect when Select was ported
  * (see the mapping table at the top of Select.css), so this is the LMS's own
  * field, not a new opinion: 36px tall, --s2/--s3 padding, 1px --border-default,
- * --radius, --text-sm (14px). The inline sm size steps down to --text-xs.
+ * --radius, --text-base (16px). 16 is also the floor below which iOS Safari
+ * zooms the page when a field takes focus, so the default size must not drop
+ * under it. The inline sm size steps down to --text-sm, and on a touch screen
+ * is floored back to 16px (see the touch block below).
  *
  * WHAT IS NOT SHARED WITH THE TRIGGER: the trigger is a button and gets
  * cursor: pointer; a text field keeps the I-beam. And the trigger lays its
@@ -26,7 +29,7 @@
   border-radius: var(--radius);
   color: var(--text-primary);
   font-family: var(--font);
-  font-size: calc(var(--text-sm) * var(--ui-type-scale, 1));
+  font-size: calc(var(--text-base) * var(--ui-type-scale, 1));
   transition:
     background-color var(--transition),
     border-color var(--transition),
@@ -78,7 +81,7 @@
 .ui-input[data-size="sm"] {
   height: calc(28px * max(var(--ui-space-scale, 1), var(--ui-type-scale, 1)));
   padding: calc(var(--s1) * var(--ui-space-scale, 1)) calc(var(--s2) * var(--ui-space-scale, 1));
-  font-size: calc(var(--text-xs) * var(--ui-type-scale, 1));
+  font-size: calc(var(--text-sm) * var(--ui-type-scale, 1));
 }
 
 .ui-textarea[data-size="sm"] {
@@ -126,7 +129,7 @@
   align-items: center;
   color: var(--text-secondary);
   font-family: var(--font);
-  font-size: calc(var(--text-sm) * var(--ui-type-scale, 1));
+  font-size: calc(var(--text-base) * var(--ui-type-scale, 1));
   pointer-events: none; /* clicking the sign must focus the field, not block it */
 }
 
@@ -140,7 +143,7 @@
 }
 
 .ui-input-wrap[data-size="sm"] .ui-input-affix {
-  font-size: calc(var(--text-xs) * var(--ui-type-scale, 1));
+  font-size: calc(var(--text-sm) * var(--ui-type-scale, 1));
 }
 
 .ui-input-wrap[data-size="sm"] .ui-input-affix svg {
@@ -271,6 +274,17 @@
   height: calc(var(--touch-target) * max(1, var(--ui-space-scale, 1), var(--ui-type-scale, 1)));
   padding: calc(var(--s2) * var(--ui-space-scale, 1)) calc(var(--s3) * var(--ui-space-scale, 1));
   font-size: max(16px, calc(16px * var(--ui-type-scale, 1)));
+}
+
+/* The inline sm size is still a focusable text field, so on a touch screen it
+   takes the same 16px floor: a smaller-looking row field is not worth the page
+   zooming every time a finger taps it. Same media query the Button uses for
+   its touch floor; a mouse never matches, so desktop keeps the 14px inline. */
+@media (pointer: coarse) {
+  .ui-input[data-size="sm"],
+  .ui-input-wrap[data-size="sm"] .ui-input-affix {
+    font-size: max(16px, calc(var(--text-sm) * var(--ui-type-scale, 1)));
+  }
 }
 
 .ui-textarea[data-size="touch"] {

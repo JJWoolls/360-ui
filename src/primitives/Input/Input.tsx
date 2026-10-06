@@ -19,7 +19,7 @@ const useIsoLayoutEffect = typeof window === "undefined" ? useEffect : useLayout
  *
  * That also means nothing here was invented. Select.css was ported from the
  * LMS's own StyledSelect, so these numbers are the LMS's numbers, arrived at
- * through it: 36px tall, 8px/12px padding, 1px border, --radius, 14px type.
+ * through it: 36px tall, 8px/12px padding, 1px border, --radius, 16px type (the iOS no-zoom floor).
  *
  * WHY IT WAS WORTH BUILDING. The LMS had at least five different local
  * `inputClass` constants — 25 call sites on one of them, 252 on another — each
