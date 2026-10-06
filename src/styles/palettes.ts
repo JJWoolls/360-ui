@@ -6,7 +6,16 @@
    block there has an id here.
    ========================================================================== */
 
-export const PALETTE_IDS = ["atlas", "ocean", "sand", "forest", "plum", "graphite"] as const;
+export const PALETTE_IDS = [
+  "atlas",
+  "nord",
+  "gruvbox",
+  "catppuccin",
+  "tokyo-night",
+  "dracula",
+  "solarized",
+  "rose-pine",
+] as const;
 
 export type PaletteId = (typeof PALETTE_IDS)[number];
 
@@ -23,16 +32,29 @@ export interface PaletteInfo {
 
 export const PALETTES: readonly PaletteInfo[] = [
   { id: "atlas", label: "Atlas", description: "Charcoal grounds with the house green." },
-  { id: "ocean", label: "Ocean", description: "Navy and steel grounds with a clear blue accent." },
-  { id: "sand", label: "Sand", description: "Warm brown and tan grounds with a caramel accent." },
-  { id: "forest", label: "Forest", description: "Deep green grounds with a moss accent." },
-  { id: "plum", label: "Plum", description: "Aubergine grounds with an orchid accent." },
-  { id: "graphite", label: "Graphite", description: "Near-black neutral, brighter text and firmer borders. Maximum contrast." },
+  { id: "nord", label: "Nord", description: "Cool arctic blues and frost." },
+  { id: "gruvbox", label: "Gruvbox", description: "Warm retro browns with orange and amber." },
+  { id: "catppuccin", label: "Catppuccin", description: "Soft pastels on deep indigo, with a mauve accent." },
+  { id: "tokyo-night", label: "Tokyo Night", description: "Neon city blues and magentas after dark." },
+  { id: "dracula", label: "Dracula", description: "Vivid neon accents on a dark violet-grey." },
+  { id: "solarized", label: "Solarized", description: "Precise teal and cream with balanced accents." },
+  { id: "rose-pine", label: "Rosé Pine", description: "Muted rose, gold and pine. Soft and low-key." },
 ];
 
-/** Narrow an unknown value (a stored preference) to a palette id, else the default. */
+/** Ids that were once offered, mapped to the family closest in feel, so a
+ *  stored choice keeps rendering something like what its owner picked. */
+export const RETIRED_PALETTES: Readonly<Record<string, PaletteId>> = {
+  ocean: "nord",
+  sand: "gruvbox",
+  forest: "gruvbox",
+  plum: "dracula",
+  graphite: "atlas",
+};
+
+/** Narrow an unknown value (a stored preference) to a palette id: a known id
+ *  as is, a retired id as its successor, anything else as the default. */
 export function toPaletteId(value: unknown): PaletteId {
-  return typeof value === "string" && (PALETTE_IDS as readonly string[]).includes(value)
-    ? (value as PaletteId)
-    : DEFAULT_PALETTE;
+  if (typeof value !== "string") return DEFAULT_PALETTE;
+  if ((PALETTE_IDS as readonly string[]).includes(value)) return value as PaletteId;
+  return Object.prototype.hasOwnProperty.call(RETIRED_PALETTES, value) ? RETIRED_PALETTES[value] : DEFAULT_PALETTE;
 }

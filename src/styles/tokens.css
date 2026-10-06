@@ -12,8 +12,8 @@
 
    The older data-map="…" switch (atlas-dark, atlas-light, midnight, ember,
    pine, paper) is RETIRED: it fused mode and colour into one attribute, so a
-   person could not have "warm, but light". Its colour ideas live on as the
-   ocean, sand and forest palettes; mode is data-theme alone.
+   person could not have "warm, but light". Mode is data-theme alone; colour
+   families are data-palette (palettes.css).
 
    The dark values are ported VERBATIM from lab-portal's globals.css.
 
@@ -49,8 +49,9 @@
   --info-rgb:        74, 158, 255;
   --violet:          #a78bfa;
   --violet-rgb:      167, 139, 250;
-  /* Accent hues — identity colours (e.g. one per file type), not status. Same
-     values in every palette, as in lab-portal's globals.css "extended accent palette". */
+  /* Accent hues — decorative colours (e.g. one per file type), not status. Each
+     palette in palettes.css sets its family's own; these are the base values,
+     as in lab-portal's globals.css "extended accent palette". */
   --pink:            #ec4899;
   --pink-rgb:        236, 72, 153;
   --cyan:            #06b6d4;

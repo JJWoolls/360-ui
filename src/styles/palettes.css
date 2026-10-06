@@ -3,20 +3,33 @@
    ----------------------------------------------------------------------------
    TWO AXES on <html>:
      data-theme   = "dark" (default) | "light"     — the mode
-     data-palette = "atlas" (default) | "ocean" | "sand" | "forest" | "plum" | "graphite"
+     data-palette = "atlas" (default) | "nord" | "gruvbox" | "catppuccin" |
+                    "tokyo-night" | "dracula" | "solarized" | "rose-pine"
    Any palette in either mode. No attribute, or data-palette="atlas", leaves the
    app's own token file in charge: atlas is the base and has NO block here, so the
    default renders exactly as it did before palettes existed.
 
-   WHAT A PALETTE MAY SET (and nothing else — test/palettes.test.ts enforces it):
+   EACH PALETTE IS A WHOLE COLOUR FAMILY, not the base re-tinted. Every one is
+   an established editor / terminal scheme whose grounds, text and accents were
+   designed together (credited above each block). The grounds are the scheme's
+   own backgrounds; the extra surface steps (inset, sunken, raised, hover,
+   elevated, deep) use the scheme's own background shades where it has them and
+   small lightness steps from its base where it does not. A palette that only
+   moved the hue of one ramp read as the same theme through coloured glass.
+
+   WHAT A PALETTE SETS (test/palettes.test.ts enforces the list):
      grounds, borders, the text ramp, brand (+hover, +on), the info / violet /
-     neutral tones, --muted-rgb, --surface-is-light, and the legacy HSL set the
-     app's utility classes read (hsl(var(--card)) and friends).
-   WHAT IT MAY NOT: the identity palettes (--stage-*, --dept-*, --location-*,
-     --route-*), the pan contrast pair, or --danger / --warn / --success. Those
-     carry meaning — a stage, a place, an alarm — and must read the same in every
-     palette. The decorative accents (pink, cyan, orange, lime, gold) and the
-     shadow / overlay values are left to the base too: they read on every ground.
+     neutral tones, --danger / --warn / --success (and their app aliases
+     --accent-red / --accent-amber), the decorative accents (pink, cyan, orange,
+     lime, gold) and their -ink text variants, --muted-rgb, --surface-is-light,
+     and the legacy HSL set the app's utility classes read (hsl(var(--card)),
+     hsl(var(--destructive)) and friends).
+   MEANING HOLDS: danger is the family's red, warn its yellow / amber, success
+     its green. The test checks the hue band, so no family can turn danger blue.
+   WHAT STAYS FIXED: the identity palettes (--stage-*, --dept-*, --location-*,
+     --route-*) and the pan contrast pair. People read those as "which stage /
+     department / place", so they must look the same for everyone. Shadows and
+     overlays are left to the base too.
 
    -rgb TWINS: every colour a palette sets that has an -rgb companion is set
    with it, in the same block, and the test proves each pair names the same
@@ -24,661 +37,1361 @@
 
    --surface-is-light is 0 on a dark ground and 1 on a light one. Code that has
    to choose ink for an arbitrary colour (a solid swatch chip) reads THIS, not
-   the mode name, so a mid-tone palette can say what its ground actually is.
+   the mode name, so a palette can say what its ground actually is.
 
    SPECIFICITY, deliberately: every selector starts with :root[data-palette]
    (0,2,0; light adds [data-theme], 0,3,0) so it beats an app's
    :root / [data-theme="light"] defaults (0,1,0) whatever order the bundler
    emits the stylesheets in. Load order must never decide colour.
 
-   Values were drafted by holding each palette's hue and saturation over the
-   atlas lightness ramp, then checked for contrast: primary, secondary and
-   tertiary text are at least 4.5:1 on --surface in every palette and mode.
+   CONTRAST: the schemes' published values are used as they are, except where a
+   value had to move (lightness only, hue kept) to read: primary, secondary and
+   tertiary text >= 4.5:1 on --surface; --brand-on >= 4.5:1 on --brand; the
+   info / violet / danger / warn / success tones >= 3:1 on --surface; the -ink
+   variants >= 4.5:1 (dark) and >= 5:1 (light, where they sit on their own tint).
    ========================================================================== */
 
-/* OCEAN — Navy and steel grounds with a clear blue accent. Calm and cool. */
-:root[data-palette="ocean"] {
+/* NORD — Cool arctic blues and frost.
+   Nord by Arctic Ice Studio (nordtheme.com, MIT). Dark: Polar Night grounds,
+   Snow Storm text, Frost brand, Aurora tones. Light: Snow Storm grounds. */
+:root[data-palette="nord"] {
   /* Grounds */
-  --bg: #0c1018;
-  --surface: #131a26;
-  --surface-inset: #0b1017;
-  --surface-sunken: #0a0e14;
-  --surface-raised: #182130;
-  --surface-hover: #182232;
-  --surface-elevated: #1e293c;
-  --surface-deep: #07090d;
+  --bg: #272c36;
+  --surface: #2e3440;
+  --surface-inset: #292e39;
+  --surface-sunken: #252a33;
+  --surface-raised: #3b4252;
+  --surface-hover: #3b4252;
+  --surface-elevated: #434c5e;
+  --surface-deep: #20242c;
   --surface-is-light: 0;
   /* Borders */
-  --border-subtle: #182131;
-  --border-default: #25334b;
-  --border-strong: #2e3f5d;
+  --border-subtle: #3b4252;
+  --border-default: #434c5e;
+  --border-strong: #4c566a;
   /* Text */
-  --text-primary: #f6f7f9;
-  --foreground-soft: #c2c9d6;
-  --text-secondary: #93a0b7;
-  --text-tertiary: #7c8ca8;
-  --text-quaternary: #586884;
-  --text-hint: #445066;
-  --text-disabled: #364052;
-  --muted-rgb: 88, 104, 132;
-  /* Accent */
-  --brand: #5b9cff;
-  --brand-rgb: 91, 156, 255;
-  --brand-hover: #4785e6;
-  --brand-on: #0b1220;
-  /* Tones a palette may move (danger / warn / success never move) */
-  --info: #38bdf8;
-  --info-rgb: 56, 189, 248;
-  --violet: #a78bfa;
-  --violet-rgb: 167, 139, 250;
-  --neutral: #657186;
-  --neutral-rgb: 101, 113, 134;
+  --text-primary: #eceff4;
+  --foreground-soft: #e5e9f0;
+  --text-secondary: #d8dee9;
+  --text-tertiary: #aeb7c7;
+  --text-quaternary: #7b88a1;
+  --text-hint: #616e88;
+  --text-disabled: #4c566a;
+  --muted-rgb: 123, 136, 161;
+  /* Brand */
+  --brand: #88c0d0;
+  --brand-rgb: 136, 192, 208;
+  --brand-hover: #6eb2c6;
+  --brand-on: #2e3440;
+  /* Tones — the family's own red / yellow / green etc., meaning kept */
+  --info: #81a1c1;
+  --info-rgb: 129, 161, 193;
+  --violet: #b48ead;
+  --violet-rgb: 180, 142, 173;
+  --neutral: #7b88a1;
+  --neutral-rgb: 123, 136, 161;
+  --danger: #bf616a;
+  --danger-rgb: 191, 97, 106;
+  --warn: #ebcb8b;
+  --warn-rgb: 235, 203, 139;
+  --success: #a3be8c;
+  --success-rgb: 163, 190, 140;
+  --accent-red: #bf616a;
+  --accent-red-rgb: 191, 97, 106;
+  --accent-amber: #ebcb8b;
+  --accent-amber-rgb: 235, 203, 139;
+  /* Decorative accents, and the same hues as text on their own tint */
+  --pink: #bc9ab1;
+  --pink-rgb: 188, 154, 177;
+  --cyan: #8fbcbb;
+  --cyan-rgb: 143, 188, 187;
+  --orange: #d08770;
+  --orange-rgb: 208, 135, 112;
+  --lime: #b2be8c;
+  --lime-rgb: 178, 190, 140;
+  --gold: #e2af57;
+  --gold-rgb: 226, 175, 87;
+  --pink-ink: #bc9ab1;
+  --pink-ink-rgb: 188, 154, 177;
+  --cyan-ink: #8fbcbb;
+  --cyan-ink-rgb: 143, 188, 187;
+  --orange-ink: #d18a74;
+  --orange-ink-rgb: 209, 138, 116;
+  --lime-ink: #b2be8c;
+  --lime-ink-rgb: 178, 190, 140;
   /* Legacy HSL set (consumed as hsl(var(--x))) */
-  --background: 220 33% 7%;
-  --foreground: 218 20% 78%;
-  --card: 219 33% 10%;
-  --card-foreground: 218 20% 78%;
-  --popover: 219 33% 10%;
-  --popover-foreground: 218 20% 78%;
-  --primary: 216 100% 68%;
-  --primary-foreground: 220 49% 8%;
-  --secondary: 217 34% 15%;
-  --secondary-foreground: 218 20% 78%;
-  --muted: 217 34% 15%;
-  --muted-foreground: 218 20% 62%;
-  --accent: 217 34% 15%;
-  --accent-foreground: 218 20% 78%;
-  --border: 218 34% 19%;
-  --input: 218 34% 19%;
-  --ring: 216 100% 68%;
-  --sidebar-bg: 213 36% 5%;
-  --sidebar-hover: 218 33% 11%;
-  --sidebar-text: 218 20% 62%;
-  --sidebar-text-hover: 219 20% 70%;
-  --sidebar-icon: 219 20% 27%;
-  --sidebar-icon-hover: 218 20% 62%;
-  --sidebar-badge-text: 218 20% 43%;
-  --sidebar-user-text: 219 20% 80%;
+  --background: 220 16% 18%;
+  --foreground: 218 27% 92%;
+  --card: 220 16% 22%;
+  --card-foreground: 218 27% 92%;
+  --popover: 220 16% 22%;
+  --popover-foreground: 218 27% 92%;
+  --primary: 193 43% 67%;
+  --primary-foreground: 220 16% 22%;
+  --secondary: 222 16% 28%;
+  --secondary-foreground: 218 27% 92%;
+  --muted: 222 16% 28%;
+  --muted-foreground: 219 28% 88%;
+  --accent: 222 16% 28%;
+  --accent-foreground: 218 27% 92%;
+  --destructive: 354 42% 56%;
+  --border: 220 17% 32%;
+  --input: 220 17% 32%;
+  --ring: 193 43% 67%;
+  --sidebar-bg: 220 16% 15%;
+  --sidebar-hover: 220 16% 22%;
+  --sidebar-text: 219 28% 88%;
+  --sidebar-text-hover: 218 27% 92%;
+  --sidebar-icon: 220 17% 46%;
+  --sidebar-icon-hover: 219 28% 88%;
+  --sidebar-badge-text: 219 17% 56%;
+  --sidebar-user-text: 218 27% 92%;
 }
 
-:root[data-palette="ocean"][data-theme="light"] {
+:root[data-palette="nord"][data-theme="light"] {
   /* Grounds */
-  --bg: #f4f6fa;
-  --surface: #ffffff;
-  --surface-inset: #f6f8fb;
-  --surface-sunken: #eef2f8;
-  --surface-raised: #f3f5fa;
-  --surface-hover: #e4eaf3;
-  --surface-elevated: #ebf0f7;
-  --surface-deep: #e4eaf3;
+  --bg: #e5e9f0;
+  --surface: #eceff4;
+  --surface-inset: #e5e9f0;
+  --surface-sunken: #d8dee9;
+  --surface-raised: #f2f4f8;
+  --surface-hover: #e5e9f0;
+  --surface-elevated: #f6f7fa;
+  --surface-deep: #d8dee9;
   --surface-is-light: 1;
   /* Borders */
-  --border-subtle: #e0e7f2;
-  --border-default: #c6d3e6;
-  --border-strong: #b6c7e0;
+  --border-subtle: #d8dee9;
+  --border-default: #c5cdda;
+  --border-strong: #aeb8c8;
   /* Text */
-  --text-primary: #111a27;
-  --foreground-soft: #1b283c;
-  --text-secondary: #253753;
-  --text-tertiary: #334d72;
-  --text-quaternary: #4a6ea4;
-  --text-hint: #829ec7;
-  --text-disabled: #b0c2dc;
-  --muted-rgb: 51, 77, 114;
-  /* Accent */
-  --brand: #2563eb;
-  --brand-rgb: 37, 99, 235;
-  --brand-hover: #1d4ed8;
+  --text-primary: #2e3440;
+  --foreground-soft: #3b4252;
+  --text-secondary: #434c5e;
+  --text-tertiary: #4c566a;
+  --text-quaternary: #616e88;
+  --text-hint: #8c97ad;
+  --text-disabled: #b5bdcb;
+  --muted-rgb: 76, 86, 106;
+  /* Brand */
+  --brand: #5579a5;
+  --brand-rgb: 85, 121, 165;
+  --brand-hover: #49688d;
   --brand-on: #ffffff;
-  /* Tones a palette may move (danger / warn / success never move) */
-  --info: #0369a1;
-  --info-rgb: 3, 105, 161;
-  --violet: #6d28d9;
-  --violet-rgb: 109, 40, 217;
-  --neutral: #657286;
-  --neutral-rgb: 101, 114, 134;
+  /* Tones — the family's own red / yellow / green etc., meaning kept */
+  --info: #5e81ac;
+  --info-rgb: 94, 129, 172;
+  --violet: #a87ca0;
+  --violet-rgb: 168, 124, 160;
+  --neutral: #7b88a1;
+  --neutral-rgb: 123, 136, 161;
+  --danger: #bf616a;
+  --danger-rgb: 191, 97, 106;
+  --warn: #b2811f;
+  --warn-rgb: 178, 129, 31;
+  --success: #719454;
+  --success-rgb: 113, 148, 84;
+  --accent-red: #bf616a;
+  --accent-red-rgb: 191, 97, 106;
+  --accent-amber: #b2811f;
+  --accent-amber-rgb: 178, 129, 31;
+  /* Decorative accents, and the same hues as text on their own tint */
+  --pink: #bc9ab1;
+  --pink-rgb: 188, 154, 177;
+  --cyan: #8fbcbb;
+  --cyan-rgb: 143, 188, 187;
+  --orange: #d08770;
+  --orange-rgb: 208, 135, 112;
+  --lime: #b2be8c;
+  --lime-rgb: 178, 190, 140;
+  --gold: #e2af57;
+  --gold-rgb: 226, 175, 87;
+  --pink-ink: #845876;
+  --pink-ink-rgb: 132, 88, 118;
+  --cyan-ink: #416d6c;
+  --cyan-ink-rgb: 65, 109, 108;
+  --orange-ink: #a04e35;
+  --orange-ink-rgb: 160, 78, 53;
+  --lime-ink: #5f6a3c;
+  --lime-ink-rgb: 95, 106, 60;
   /* Legacy HSL set (consumed as hsl(var(--x))) */
-  --background: 210 37% 97%;
-  --foreground: 215 37% 10%;
-  --card: 0 0% 100%;
-  --card-foreground: 215 37% 10%;
-  --popover: 0 0% 100%;
-  --popover-foreground: 215 37% 10%;
-  --primary: 221 83% 53%;
+  --background: 218 27% 92%;
+  --foreground: 222 16% 28%;
+  --card: 218 27% 94%;
+  --card-foreground: 222 16% 28%;
+  --popover: 218 27% 94%;
+  --popover-foreground: 222 16% 28%;
+  --primary: 213 32% 49%;
   --primary-foreground: 0 0% 100%;
-  --secondary: 214 39% 93%;
-  --secondary-foreground: 215 37% 10%;
-  --muted: 214 39% 93%;
-  --muted-foreground: 216 38% 35%;
-  --accent: 214 39% 93%;
-  --accent-foreground: 215 37% 10%;
-  --border: 217 39% 87%;
-  --input: 217 39% 87%;
-  --ring: 221 83% 53%;
-  --sidebar-bg: 0 0% 100%;
-  --sidebar-hover: 216 38% 95%;
-  --sidebar-text: 216 38% 35%;
-  --sidebar-text-hover: 216 37% 20%;
-  --sidebar-icon: 216 38% 50%;
-  --sidebar-icon-hover: 216 39% 30%;
-  --sidebar-badge-text: 216 38% 40%;
-  --sidebar-user-text: 217 38% 15%;
+  --secondary: 220 30% 96%;
+  --secondary-foreground: 222 16% 28%;
+  --muted: 220 30% 96%;
+  --muted-foreground: 220 17% 32%;
+  --accent: 220 30% 96%;
+  --accent-foreground: 222 16% 28%;
+  --destructive: 354 42% 56%;
+  --border: 217 22% 81%;
+  --input: 217 22% 81%;
+  --ring: 213 32% 49%;
+  --sidebar-bg: 218 27% 94%;
+  --sidebar-hover: 219 28% 88%;
+  --sidebar-text: 220 17% 32%;
+  --sidebar-text-hover: 222 16% 28%;
+  --sidebar-icon: 220 17% 46%;
+  --sidebar-icon-hover: 220 17% 32%;
+  --sidebar-badge-text: 220 17% 46%;
+  --sidebar-user-text: 220 16% 22%;
 }
 
-/* SAND — Warm brown and tan grounds with a caramel accent. Soft and warm. */
-:root[data-palette="sand"] {
+/* GRUVBOX — Warm retro browns with orange and amber.
+   Gruvbox by Pavel Pertsev (github.com/morhetz/gruvbox, MIT). Dark: bg0/bg1
+   grounds, fg ramp, bright accents. Light: the light bg ramp, faded accents. */
+:root[data-palette="gruvbox"] {
   /* Grounds */
-  --bg: #16120e;
-  --surface: #221c16;
-  --surface-inset: #15110e;
-  --surface-sunken: #120f0c;
-  --surface-raised: #2b241d;
-  --surface-hover: #2c251e;
-  --surface-elevated: #362d24;
-  --surface-deep: #0c0a08;
+  --bg: #1d2021;
+  --surface: #282828;
+  --surface-inset: #1d2021;
+  --surface-sunken: #1a1c1d;
+  --surface-raised: #32302f;
+  --surface-hover: #3c3836;
+  --surface-elevated: #3c3836;
+  --surface-deep: #141617;
   --surface-is-light: 0;
   /* Borders */
-  --border-subtle: #251f19;
-  --border-default: #3d3329;
-  --border-strong: #4d4033;
+  --border-subtle: #3c3836;
+  --border-default: #504945;
+  --border-strong: #665c54;
   /* Text */
-  --text-primary: #f9f7f6;
-  --foreground-soft: #d7ccc1;
-  --text-secondary: #b5a08b;
-  --text-tertiary: #a48a71;
-  --text-quaternary: #7c6650;
-  --text-hint: #685542;
-  --text-disabled: #534435;
-  --muted-rgb: 124, 102, 80;
-  /* Accent */
-  --brand: #d4a373;
-  --brand-rgb: 212, 163, 115;
-  --brand-hover: #bf8d5e;
-  --brand-on: #1a120b;
-  /* Tones a palette may move (danger / warn / success never move) */
-  --info: #4a9eff;
-  --info-rgb: 74, 158, 255;
-  --violet: #a78bfa;
-  --violet-rgb: 167, 139, 250;
-  --neutral: #867565;
-  --neutral-rgb: 134, 117, 101;
+  --text-primary: #fbf1c7;
+  --foreground-soft: #ebdbb2;
+  --text-secondary: #d5c4a1;
+  --text-tertiary: #bdae93;
+  --text-quaternary: #a89984;
+  --text-hint: #928374;
+  --text-disabled: #7c6f64;
+  --muted-rgb: 168, 153, 132;
+  /* Brand */
+  --brand: #fe8019;
+  --brand-rgb: 254, 128, 25;
+  --brand-hover: #f26e01;
+  --brand-on: #1d2021;
+  /* Tones — the family's own red / yellow / green etc., meaning kept */
+  --info: #83a598;
+  --info-rgb: 131, 165, 152;
+  --violet: #b16286;
+  --violet-rgb: 177, 98, 134;
+  --neutral: #928374;
+  --neutral-rgb: 146, 131, 116;
+  --danger: #fb4934;
+  --danger-rgb: 251, 73, 52;
+  --warn: #fabd2f;
+  --warn-rgb: 250, 189, 47;
+  --success: #b8bb26;
+  --success-rgb: 184, 187, 38;
+  --accent-red: #fb4934;
+  --accent-red-rgb: 251, 73, 52;
+  --accent-amber: #fabd2f;
+  --accent-amber-rgb: 250, 189, 47;
+  /* Decorative accents, and the same hues as text on their own tint */
+  --pink: #d3869b;
+  --pink-rgb: 211, 134, 155;
+  --cyan: #8ec07c;
+  --cyan-rgb: 142, 192, 124;
+  --orange: #d65d0e;
+  --orange-rgb: 214, 93, 14;
+  --lime: #98971a;
+  --lime-rgb: 152, 151, 26;
+  --gold: #d79921;
+  --gold-rgb: 215, 153, 33;
+  --pink-ink: #d3869b;
+  --pink-ink-rgb: 211, 134, 155;
+  --cyan-ink: #8ec07c;
+  --cyan-ink-rgb: 142, 192, 124;
+  --orange-ink: #ec660f;
+  --orange-ink-rgb: 236, 102, 15;
+  --lime-ink: #98971a;
+  --lime-ink-rgb: 152, 151, 26;
   /* Legacy HSL set (consumed as hsl(var(--x))) */
-  --background: 34 20% 7%;
-  --foreground: 30 21% 78%;
-  --card: 33 22% 10%;
-  --card-foreground: 30 21% 78%;
-  --popover: 33 22% 10%;
-  --popover-foreground: 30 21% 78%;
-  --primary: 30 53% 64%;
-  --primary-foreground: 28 41% 7%;
-  --secondary: 28 19% 15%;
-  --secondary-foreground: 30 21% 78%;
-  --muted: 28 19% 15%;
-  --muted-foreground: 30 22% 60%;
-  --accent: 28 19% 15%;
-  --accent-foreground: 30 21% 78%;
-  --border: 28 20% 17%;
-  --input: 28 20% 17%;
-  --ring: 30 53% 64%;
-  --sidebar-bg: 36 20% 5%;
-  --sidebar-hover: 30 21% 11%;
-  --sidebar-text: 30 22% 60%;
-  --sidebar-text-hover: 31 22% 70%;
-  --sidebar-icon: 30 22% 27%;
-  --sidebar-icon-hover: 30 22% 60%;
-  --sidebar-badge-text: 30 22% 40%;
-  --sidebar-user-text: 30 22% 80%;
+  --background: 195 6% 12%;
+  --foreground: 43 59% 81%;
+  --card: 0 0% 16%;
+  --card-foreground: 43 59% 81%;
+  --popover: 0 0% 16%;
+  --popover-foreground: 43 59% 81%;
+  --primary: 27 99% 55%;
+  --primary-foreground: 195 6% 12%;
+  --secondary: 20 3% 19%;
+  --secondary-foreground: 43 59% 81%;
+  --muted: 20 3% 19%;
+  --muted-foreground: 40 38% 73%;
+  --accent: 20 3% 19%;
+  --accent-foreground: 43 59% 81%;
+  --destructive: 6 96% 59%;
+  --border: 22 7% 29%;
+  --input: 22 7% 29%;
+  --ring: 27 99% 55%;
+  --sidebar-bg: 200 7% 8%;
+  --sidebar-hover: 0 0% 16%;
+  --sidebar-text: 40 38% 73%;
+  --sidebar-text-hover: 43 59% 81%;
+  --sidebar-icon: 30 12% 51%;
+  --sidebar-icon-hover: 40 38% 73%;
+  --sidebar-badge-text: 35 17% 59%;
+  --sidebar-user-text: 43 59% 81%;
 }
 
-:root[data-palette="sand"][data-theme="light"] {
+:root[data-palette="gruvbox"][data-theme="light"] {
   /* Grounds */
-  --bg: #f7f4ef;
-  --surface: #fcfbfa;
-  --surface-inset: #f8f6f2;
-  --surface-sunken: #f5f0ea;
-  --surface-raised: #f7f3ee;
-  --surface-hover: #f0e9e0;
-  --surface-elevated: #f3eee7;
-  --surface-deep: #f0e9e0;
+  --bg: #f2e5bc;
+  --surface: #fbf1c7;
+  --surface-inset: #f2e5bc;
+  --surface-sunken: #ebdbb2;
+  --surface-raised: #f9f5d7;
+  --surface-hover: #ebdbb2;
+  --surface-elevated: #f9f5d7;
+  --surface-deep: #ebdbb2;
   --surface-is-light: 1;
   /* Borders */
-  --border-subtle: #f1ebe2;
-  --border-default: #e4d9c8;
-  --border-strong: #ddcfb9;
+  --border-subtle: #ebdbb2;
+  --border-default: #d5c4a1;
+  --border-strong: #bdae93;
   /* Text */
-  --text-primary: #231e15;
-  --foreground-soft: #372e20;
-  --text-secondary: #4c3f2c;
-  --text-tertiary: #68573d;
-  --text-quaternary: #957d58;
-  --text-hint: #bca98d;
-  --text-disabled: #d5c9b7;
-  --muted-rgb: 104, 87, 61;
-  /* Accent */
-  --brand: #8a5a2b;
-  --brand-rgb: 138, 90, 43;
-  --brand-hover: #744a22;
+  --text-primary: #282828;
+  --foreground-soft: #3c3836;
+  --text-secondary: #504945;
+  --text-tertiary: #665c54;
+  --text-quaternary: #7c6f64;
+  --text-hint: #a89984;
+  --text-disabled: #bdae93;
+  --muted-rgb: 102, 92, 84;
+  /* Brand */
+  --brand: #af3a03;
+  --brand-rgb: 175, 58, 3;
+  --brand-hover: #8c2e02;
   --brand-on: #ffffff;
-  /* Tones a palette may move (danger / warn / success never move) */
-  --info: #1d4ed8;
-  --info-rgb: 29, 78, 216;
-  --violet: #6d28d9;
-  --violet-rgb: 109, 40, 217;
-  --neutral: #867965;
-  --neutral-rgb: 134, 121, 101;
+  /* Tones — the family's own red / yellow / green etc., meaning kept */
+  --info: #076678;
+  --info-rgb: 7, 102, 120;
+  --violet: #8f3f71;
+  --violet-rgb: 143, 63, 113;
+  --neutral: #7c6f64;
+  --neutral-rgb: 124, 111, 100;
+  --danger: #9d0006;
+  --danger-rgb: 157, 0, 6;
+  --warn: #b57614;
+  --warn-rgb: 181, 118, 20;
+  --success: #79740e;
+  --success-rgb: 121, 116, 14;
+  --accent-red: #9d0006;
+  --accent-red-rgb: 157, 0, 6;
+  --accent-amber: #b57614;
+  --accent-amber-rgb: 181, 118, 20;
+  /* Decorative accents, and the same hues as text on their own tint */
+  --pink: #b16286;
+  --pink-rgb: 177, 98, 134;
+  --cyan: #427b58;
+  --cyan-rgb: 66, 123, 88;
+  --orange: #d65d0e;
+  --orange-rgb: 214, 93, 14;
+  --lime: #98971a;
+  --lime-rgb: 152, 151, 26;
+  --gold: #d79921;
+  --gold-rgb: 215, 153, 33;
+  --pink-ink: #9b4d70;
+  --pink-ink-rgb: 155, 77, 112;
+  --cyan-ink: #3d7151;
+  --cyan-ink-rgb: 61, 113, 81;
+  --orange-ink: #aa4a0b;
+  --orange-ink-rgb: 170, 74, 11;
+  --lime-ink: #6a6a12;
+  --lime-ink-rgb: 106, 106, 18;
   /* Legacy HSL set (consumed as hsl(var(--x))) */
-  --background: 34 30% 95%;
-  --foreground: 37 25% 10%;
-  --card: 30 25% 98%;
-  --card-foreground: 37 25% 10%;
-  --popover: 30 25% 98%;
-  --popover-foreground: 37 25% 10%;
-  --primary: 30 52% 35%;
+  --background: 46 67% 84%;
+  --foreground: 20 5% 22%;
+  --card: 48 87% 88%;
+  --card-foreground: 20 5% 22%;
+  --popover: 48 87% 88%;
+  --popover-foreground: 20 5% 22%;
+  --primary: 19 97% 35%;
   --primary-foreground: 0 0% 100%;
-  --secondary: 36 35% 92%;
-  --secondary-foreground: 37 25% 10%;
-  --muted: 36 35% 92%;
-  --muted-foreground: 37 26% 35%;
-  --accent: 36 35% 92%;
-  --accent-foreground: 37 25% 10%;
-  --border: 35 33% 87%;
-  --input: 37 35% 85%;
-  --ring: 30 52% 35%;
-  --sidebar-bg: 30 25% 98%;
-  --sidebar-hover: 38 33% 94%;
-  --sidebar-text: 37 26% 35%;
-  --sidebar-text-hover: 37 25% 20%;
-  --sidebar-icon: 36 26% 50%;
-  --sidebar-icon-hover: 35 25% 30%;
-  --sidebar-badge-text: 36 26% 40%;
-  --sidebar-user-text: 36 26% 15%;
+  --secondary: 53 74% 91%;
+  --secondary-foreground: 20 5% 22%;
+  --muted: 53 74% 91%;
+  --muted-foreground: 22 7% 29%;
+  --accent: 53 74% 91%;
+  --accent-foreground: 20 5% 22%;
+  --destructive: 358 100% 31%;
+  --border: 40 38% 73%;
+  --input: 40 38% 73%;
+  --ring: 19 97% 35%;
+  --sidebar-bg: 48 87% 88%;
+  --sidebar-hover: 43 59% 81%;
+  --sidebar-text: 22 7% 29%;
+  --sidebar-text-hover: 20 5% 22%;
+  --sidebar-icon: 28 11% 44%;
+  --sidebar-icon-hover: 22 7% 29%;
+  --sidebar-badge-text: 28 11% 44%;
+  --sidebar-user-text: 0 0% 16%;
 }
 
-/* FOREST — Deep green grounds with a moss accent. Quiet and natural. */
-:root[data-palette="forest"] {
+/* CATPPUCCIN — Soft pastels on deep indigo, mauve accent.
+   Catppuccin (catppuccin.com, MIT). Dark: Mocha. Light: Latte. Mauve is the
+   brand: it is the flavour's signature accent and reads clearly as the action. */
+:root[data-palette="catppuccin"] {
   /* Grounds */
-  --bg: #0e1612;
-  --surface: #15231c;
-  --surface-inset: #0d1511;
-  --surface-sunken: #0b130f;
-  --surface-raised: #1b2d25;
-  --surface-hover: #1c2e26;
-  --surface-elevated: #22382e;
-  --surface-deep: #080c0a;
+  --bg: #181825;
+  --surface: #1e1e2e;
+  --surface-inset: #181825;
+  --surface-sunken: #151521;
+  --surface-raised: #252536;
+  --surface-hover: #2a2b3c;
+  --surface-elevated: #313244;
+  --surface-deep: #11111b;
   --surface-is-light: 0;
   /* Borders */
-  --border-subtle: #182720;
-  --border-default: #273f34;
-  --border-strong: #314f41;
+  --border-subtle: #313244;
+  --border-default: #45475a;
+  --border-strong: #585b70;
   /* Text */
-  --text-primary: #f6f8f7;
-  --foreground-soft: #c5d3cc;
-  --text-secondary: #93ada1;
-  --text-tertiary: #779989;
-  --text-quaternary: #587467;
-  --text-hint: #496156;
-  --text-disabled: #3b4e45;
-  --muted-rgb: 88, 116, 103;
-  /* Accent */
-  --brand: #a3c96b;
-  --brand-rgb: 163, 201, 107;
-  --brand-hover: #8fb558;
-  --brand-on: #0f1a0f;
-  /* Tones a palette may move (danger / warn / success never move) */
-  --info: #4a9eff;
-  --info-rgb: 74, 158, 255;
-  --violet: #a78bfa;
-  --violet-rgb: 167, 139, 250;
-  --neutral: #658676;
-  --neutral-rgb: 101, 134, 118;
+  --text-primary: #cdd6f4;
+  --foreground-soft: #bac2de;
+  --text-secondary: #bac2de;
+  --text-tertiary: #a6adc8;
+  --text-quaternary: #7f849c;
+  --text-hint: #6c7086;
+  --text-disabled: #585b70;
+  --muted-rgb: 127, 132, 156;
+  /* Brand */
+  --brand: #cba6f7;
+  --brand-rgb: 203, 166, 247;
+  --brand-hover: #b885f4;
+  --brand-on: #11111b;
+  /* Tones — the family's own red / yellow / green etc., meaning kept */
+  --info: #89b4fa;
+  --info-rgb: 137, 180, 250;
+  --violet: #b4befe;
+  --violet-rgb: 180, 190, 254;
+  --neutral: #7f849c;
+  --neutral-rgb: 127, 132, 156;
+  --danger: #f38ba8;
+  --danger-rgb: 243, 139, 168;
+  --warn: #f9e2af;
+  --warn-rgb: 249, 226, 175;
+  --success: #a6e3a1;
+  --success-rgb: 166, 227, 161;
+  --accent-red: #f38ba8;
+  --accent-red-rgb: 243, 139, 168;
+  --accent-amber: #f9e2af;
+  --accent-amber-rgb: 249, 226, 175;
+  /* Decorative accents, and the same hues as text on their own tint */
+  --pink: #f5c2e7;
+  --pink-rgb: 245, 194, 231;
+  --cyan: #89dceb;
+  --cyan-rgb: 137, 220, 235;
+  --orange: #fab387;
+  --orange-rgb: 250, 179, 135;
+  --lime: #cde3a1;
+  --lime-rgb: 205, 227, 161;
+  --gold: #e5c890;
+  --gold-rgb: 229, 200, 144;
+  --pink-ink: #f5c2e7;
+  --pink-ink-rgb: 245, 194, 231;
+  --cyan-ink: #89dceb;
+  --cyan-ink-rgb: 137, 220, 235;
+  --orange-ink: #fab387;
+  --orange-ink-rgb: 250, 179, 135;
+  --lime-ink: #cde3a1;
+  --lime-ink-rgb: 205, 227, 161;
   /* Legacy HSL set (consumed as hsl(var(--x))) */
-  --background: 150 22% 7%;
-  --foreground: 150 14% 78%;
-  --card: 152 25% 10%;
-  --card-foreground: 150 14% 78%;
-  --popover: 152 25% 10%;
-  --popover-foreground: 150 14% 78%;
-  --primary: 84 47% 60%;
-  --primary-foreground: 120 27% 8%;
-  --secondary: 153 24% 15%;
-  --secondary-foreground: 150 14% 78%;
-  --muted: 153 24% 15%;
-  --muted-foreground: 152 14% 60%;
-  --accent: 153 24% 15%;
-  --accent-foreground: 150 14% 78%;
-  --border: 151 24% 17%;
-  --input: 151 24% 17%;
-  --ring: 84 47% 60%;
-  --sidebar-bg: 150 23% 5%;
-  --sidebar-hover: 150 25% 11%;
-  --sidebar-text: 152 14% 60%;
-  --sidebar-text-hover: 151 14% 70%;
-  --sidebar-icon: 152 14% 27%;
-  --sidebar-icon-hover: 152 14% 60%;
-  --sidebar-badge-text: 152 14% 40%;
-  --sidebar-user-text: 150 14% 80%;
+  --background: 240 21% 12%;
+  --foreground: 227 35% 80%;
+  --card: 240 21% 15%;
+  --card-foreground: 227 35% 80%;
+  --popover: 240 21% 15%;
+  --popover-foreground: 227 35% 80%;
+  --primary: 267 84% 81%;
+  --primary-foreground: 240 23% 9%;
+  --secondary: 240 19% 18%;
+  --secondary-foreground: 227 35% 80%;
+  --muted: 240 19% 18%;
+  --muted-foreground: 227 35% 80%;
+  --accent: 240 19% 18%;
+  --accent-foreground: 227 35% 80%;
+  --destructive: 343 81% 75%;
+  --border: 234 13% 31%;
+  --input: 234 13% 31%;
+  --ring: 267 84% 81%;
+  --sidebar-bg: 240 23% 9%;
+  --sidebar-hover: 240 21% 15%;
+  --sidebar-text: 227 35% 80%;
+  --sidebar-text-hover: 227 35% 80%;
+  --sidebar-icon: 231 11% 47%;
+  --sidebar-icon-hover: 227 35% 80%;
+  --sidebar-badge-text: 230 13% 55%;
+  --sidebar-user-text: 227 35% 80%;
 }
 
-:root[data-palette="forest"][data-theme="light"] {
+:root[data-palette="catppuccin"][data-theme="light"] {
   /* Grounds */
-  --bg: #f5f9f7;
-  --surface: #ffffff;
-  --surface-inset: #f8faf8;
-  --surface-sunken: #f0f6f2;
-  --surface-raised: #f4f8f5;
-  --surface-hover: #e7f0ea;
-  --surface-elevated: #eef4f0;
-  --surface-deep: #e7f0ea;
+  --bg: #e6e9ef;
+  --surface: #eff1f5;
+  --surface-inset: #e6e9ef;
+  --surface-sunken: #dce0e8;
+  --surface-raised: #f4f5f8;
+  --surface-hover: #e6e9ef;
+  --surface-elevated: #f7f8fa;
+  --surface-deep: #dce0e8;
   --surface-is-light: 1;
   /* Borders */
-  --border-subtle: #e4eee7;
-  --border-default: #cddfd3;
-  --border-strong: #c0d6c7;
+  --border-subtle: #dce0e8;
+  --border-default: #ccd0da;
+  --border-strong: #bcc0cc;
   /* Text */
-  --text-primary: #15231a;
-  --foreground-soft: #203728;
-  --text-secondary: #2c4c37;
-  --text-tertiary: #3d684c;
-  --text-quaternary: #58956c;
-  --text-hint: #8dbc9d;
-  --text-disabled: #b7d5c1;
-  --muted-rgb: 61, 104, 76;
-  /* Accent */
-  --brand: #3f6b1f;
-  --brand-rgb: 63, 107, 31;
-  --brand-hover: #33591a;
+  --text-primary: #4c4f69;
+  --foreground-soft: #4c4f69;
+  --text-secondary: #5c5f77;
+  --text-tertiary: #6a6d82;
+  --text-quaternary: #8c8fa1;
+  --text-hint: #9ca0b0;
+  --text-disabled: #acb0be;
+  --muted-rgb: 106, 109, 130;
+  /* Brand */
+  --brand: #8839ef;
+  --brand-rgb: 136, 57, 239;
+  --brand-hover: #7418ec;
   --brand-on: #ffffff;
-  /* Tones a palette may move (danger / warn / success never move) */
-  --info: #1d4ed8;
-  --info-rgb: 29, 78, 216;
-  --violet: #6d28d9;
-  --violet-rgb: 109, 40, 217;
-  --neutral: #658670;
-  --neutral-rgb: 101, 134, 112;
+  /* Tones — the family's own red / yellow / green etc., meaning kept */
+  --info: #1e66f5;
+  --info-rgb: 30, 102, 245;
+  --violet: #6a81fd;
+  --violet-rgb: 106, 129, 253;
+  --neutral: #7c7f93;
+  --neutral-rgb: 124, 127, 147;
+  --danger: #d20f39;
+  --danger-rgb: 210, 15, 57;
+  --warn: #c27b19;
+  --warn-rgb: 194, 123, 25;
+  --success: #3f9e2a;
+  --success-rgb: 63, 158, 42;
+  --accent-red: #d20f39;
+  --accent-red-rgb: 210, 15, 57;
+  --accent-amber: #c27b19;
+  --accent-amber-rgb: 194, 123, 25;
+  /* Decorative accents, and the same hues as text on their own tint */
+  --pink: #ea76cb;
+  --pink-rgb: 234, 118, 203;
+  --cyan: #04a5e5;
+  --cyan-rgb: 4, 165, 229;
+  --orange: #fe640b;
+  --orange-rgb: 254, 100, 11;
+  --lime: #79a02b;
+  --lime-rgb: 121, 160, 43;
+  --gold: #c48519;
+  --gold-rgb: 196, 133, 25;
+  --pink-ink: #bb1d91;
+  --pink-ink-rgb: 187, 29, 145;
+  --cyan-ink: #036e99;
+  --cyan-ink-rgb: 3, 110, 153;
+  --orange-ink: #b34201;
+  --orange-ink-rgb: 179, 66, 1;
+  --lime-ink: #546f1e;
+  --lime-ink-rgb: 84, 111, 30;
   /* Legacy HSL set (consumed as hsl(var(--x))) */
-  --background: 140 20% 97%;
-  --foreground: 138 25% 10%;
-  --card: 0 0% 100%;
-  --card-foreground: 138 25% 10%;
-  --popover: 0 0% 100%;
-  --popover-foreground: 138 25% 10%;
-  --primary: 95 55% 27%;
+  --background: 220 22% 92%;
+  --foreground: 234 16% 35%;
+  --card: 220 23% 95%;
+  --card-foreground: 234 16% 35%;
+  --popover: 220 23% 95%;
+  --popover-foreground: 234 16% 35%;
+  --primary: 266 85% 58%;
   --primary-foreground: 0 0% 100%;
-  --secondary: 143 22% 93%;
-  --secondary-foreground: 138 25% 10%;
-  --muted: 143 22% 93%;
-  --muted-foreground: 141 26% 35%;
-  --accent: 143 22% 93%;
-  --accent-foreground: 138 25% 10%;
-  --border: 137 21% 87%;
-  --input: 137 21% 87%;
-  --ring: 95 55% 27%;
-  --sidebar-bg: 0 0% 100%;
-  --sidebar-hover: 140 23% 95%;
-  --sidebar-text: 141 26% 35%;
-  --sidebar-text-hover: 141 25% 20%;
-  --sidebar-icon: 140 26% 50%;
-  --sidebar-icon-hover: 140 25% 30%;
-  --sidebar-badge-text: 140 26% 40%;
-  --sidebar-user-text: 141 26% 15%;
+  --secondary: 225 22% 96%;
+  --secondary-foreground: 234 16% 35%;
+  --muted: 225 22% 96%;
+  --muted-foreground: 233 13% 41%;
+  --accent: 225 22% 96%;
+  --accent-foreground: 234 16% 35%;
+  --destructive: 347 87% 44%;
+  --border: 223 16% 83%;
+  --input: 223 16% 83%;
+  --ring: 266 85% 58%;
+  --sidebar-bg: 220 23% 95%;
+  --sidebar-hover: 220 21% 89%;
+  --sidebar-text: 233 13% 41%;
+  --sidebar-text-hover: 234 16% 35%;
+  --sidebar-icon: 231 10% 59%;
+  --sidebar-icon-hover: 233 13% 41%;
+  --sidebar-badge-text: 231 10% 59%;
+  --sidebar-user-text: 234 16% 35%;
 }
 
-/* PLUM — Aubergine grounds with an orchid accent. Rich and moody. */
-:root[data-palette="plum"] {
+/* TOKYO NIGHT — Neon city blues and magentas after dark.
+   Tokyo Night by enkia (MIT); values from folke/tokyonight.nvim (Apache-2.0).
+   Dark: Night. Light: Day; primary text is Tokyo Night Light's ink (#343b58),
+   since Day's blue foreground is meant for code, not paragraphs. */
+:root[data-palette="tokyo-night"] {
   /* Grounds */
-  --bg: #130e16;
-  --surface: #1e1622;
-  --surface-inset: #120d15;
-  --surface-sunken: #100c12;
-  --surface-raised: #261c2c;
-  --surface-hover: #271d2d;
-  --surface-elevated: #302337;
-  --surface-deep: #0b080c;
+  --bg: #16161e;
+  --surface: #1a1b26;
+  --surface-inset: #16161e;
+  --surface-sunken: #13131a;
+  --surface-raised: #1f2335;
+  --surface-hover: #292e42;
+  --surface-elevated: #24283b;
+  --surface-deep: #0f0f14;
   --surface-is-light: 0;
   /* Borders */
-  --border-subtle: #261c2c;
-  --border-default: #3b2c44;
-  --border-strong: #493654;
+  --border-subtle: #292e42;
+  --border-default: #3b4261;
+  --border-strong: #545c7e;
   /* Text */
-  --text-primary: #f8f6f8;
-  --foreground-soft: #cec5d3;
-  --text-secondary: #a898b2;
-  --text-tertiary: #9683a1;
-  --text-quaternary: #725e7d;
-  --text-hint: #584961;
-  --text-disabled: #473b4e;
-  --muted-rgb: 114, 94, 125;
-  /* Accent */
-  --brand: #c084fc;
-  --brand-rgb: 192, 132, 252;
-  --brand-hover: #a96ee6;
-  --brand-on: #1a0f24;
-  /* Tones a palette may move (danger / warn / success never move) */
-  --info: #4a9eff;
-  --info-rgb: 74, 158, 255;
-  --violet: #f0abfc;
-  --violet-rgb: 240, 171, 252;
-  --neutral: #7a6586;
-  --neutral-rgb: 122, 101, 134;
+  --text-primary: #c0caf5;
+  --foreground-soft: #a9b1d6;
+  --text-secondary: #a9b1d6;
+  --text-tertiary: #9aa5ce;
+  --text-quaternary: #737aa2;
+  --text-hint: #565f89;
+  --text-disabled: #414868;
+  --muted-rgb: 115, 122, 162;
+  /* Brand */
+  --brand: #7aa2f7;
+  --brand-rgb: 122, 162, 247;
+  --brand-hover: #588af5;
+  --brand-on: #16161e;
+  /* Tones — the family's own red / yellow / green etc., meaning kept */
+  --info: #7dcfff;
+  --info-rgb: 125, 207, 255;
+  --violet: #bb9af7;
+  --violet-rgb: 187, 154, 247;
+  --neutral: #565f89;
+  --neutral-rgb: 86, 95, 137;
+  --danger: #f7768e;
+  --danger-rgb: 247, 118, 142;
+  --warn: #e0af68;
+  --warn-rgb: 224, 175, 104;
+  --success: #9ece6a;
+  --success-rgb: 158, 206, 106;
+  --accent-red: #f7768e;
+  --accent-red-rgb: 247, 118, 142;
+  --accent-amber: #e0af68;
+  --accent-amber-rgb: 224, 175, 104;
+  /* Decorative accents, and the same hues as text on their own tint */
+  --pink: #ff007c;
+  --pink-rgb: 255, 0, 124;
+  --cyan: #2ac3de;
+  --cyan-rgb: 42, 195, 222;
+  --orange: #ff9e64;
+  --orange-rgb: 255, 158, 100;
+  --lime: #b5ce6a;
+  --lime-rgb: 181, 206, 106;
+  --gold: #d9a346;
+  --gold-rgb: 217, 163, 70;
+  --pink-ink: #ff007c;
+  --pink-ink-rgb: 255, 0, 124;
+  --cyan-ink: #2ac3de;
+  --cyan-ink-rgb: 42, 195, 222;
+  --orange-ink: #ff9e64;
+  --orange-ink-rgb: 255, 158, 100;
+  --lime-ink: #b5ce6a;
+  --lime-ink-rgb: 181, 206, 106;
   /* Legacy HSL set (consumed as hsl(var(--x))) */
-  --background: 278 22% 7%;
-  --foreground: 278 14% 78%;
-  --card: 278 22% 10%;
-  --card-foreground: 278 14% 78%;
-  --popover: 278 22% 10%;
-  --popover-foreground: 278 14% 78%;
-  --primary: 270 95% 75%;
-  --primary-foreground: 271 41% 10%;
-  --secondary: 275 22% 15%;
-  --secondary-foreground: 278 14% 78%;
-  --muted: 275 22% 15%;
-  --muted-foreground: 278 14% 62%;
-  --accent: 275 22% 15%;
-  --accent-foreground: 278 14% 78%;
-  --border: 277 22% 19%;
-  --input: 277 22% 19%;
-  --ring: 270 95% 75%;
-  --sidebar-bg: 270 23% 5%;
-  --sidebar-hover: 280 21% 11%;
-  --sidebar-text: 278 14% 62%;
-  --sidebar-text-hover: 277 14% 70%;
-  --sidebar-icon: 278 14% 27%;
-  --sidebar-icon-hover: 278 14% 62%;
-  --sidebar-badge-text: 279 14% 43%;
-  --sidebar-user-text: 279 14% 80%;
+  --background: 240 15% 10%;
+  --foreground: 229 35% 75%;
+  --card: 235 19% 13%;
+  --card-foreground: 229 35% 75%;
+  --popover: 235 19% 13%;
+  --popover-foreground: 229 35% 75%;
+  --primary: 221 89% 72%;
+  --primary-foreground: 240 15% 10%;
+  --secondary: 229 26% 16%;
+  --secondary-foreground: 229 35% 75%;
+  --muted: 229 26% 16%;
+  --muted-foreground: 229 35% 75%;
+  --accent: 229 26% 16%;
+  --accent-foreground: 229 35% 75%;
+  --destructive: 349 89% 72%;
+  --border: 229 24% 31%;
+  --input: 229 24% 31%;
+  --ring: 221 89% 72%;
+  --sidebar-bg: 240 14% 7%;
+  --sidebar-hover: 235 19% 13%;
+  --sidebar-text: 229 35% 75%;
+  --sidebar-text-hover: 229 35% 75%;
+  --sidebar-icon: 229 23% 44%;
+  --sidebar-icon-hover: 229 35% 75%;
+  --sidebar-badge-text: 231 20% 54%;
+  --sidebar-user-text: 229 35% 75%;
 }
 
-:root[data-palette="plum"][data-theme="light"] {
+:root[data-palette="tokyo-night"][data-theme="light"] {
   /* Grounds */
-  --bg: #f8f5f9;
-  --surface: #ffffff;
-  --surface-inset: #f9f7fa;
-  --surface-sunken: #f4f0f6;
-  --surface-raised: #f7f4f8;
-  --surface-hover: #ede7f1;
-  --surface-elevated: #f2edf5;
-  --surface-deep: #ede7f1;
+  --bg: #e1e2e7;
+  --surface: #e9e9ed;
+  --surface-inset: #dcdee5;
+  --surface-sunken: #d0d5e3;
+  --surface-raised: #eeeff2;
+  --surface-hover: #d0d5e3;
+  --surface-elevated: #f2f3f5;
+  --surface-deep: #c4c8da;
   --surface-is-light: 1;
   /* Borders */
-  --border-subtle: #ebe3ef;
-  --border-default: #dacbe1;
-  --border-strong: #cfbdd9;
+  --border-subtle: #d0d5e3;
+  --border-default: #c4c8da;
+  --border-strong: #a8aecb;
   /* Text */
-  --text-primary: #1e1523;
-  --foreground-soft: #2f2037;
-  --text-secondary: #412c4c;
-  --text-tertiary: #5a3d68;
-  --text-quaternary: #815895;
-  --text-hint: #ac8dbc;
-  --text-disabled: #cbb7d5;
-  --muted-rgb: 90, 61, 104;
-  /* Accent */
-  --brand: #7e3fbf;
-  --brand-rgb: 126, 63, 191;
-  --brand-hover: #6a32a3;
+  --text-primary: #343b58;
+  --foreground-soft: #3b4466;
+  --text-secondary: #4a5482;
+  --text-tertiary: #5466a8;
+  --text-quaternary: #68709a;
+  --text-hint: #8990b3;
+  --text-disabled: #a8aecb;
+  --muted-rgb: 84, 102, 168;
+  /* Brand */
+  --brand: #1e73e7;
+  --brand-rgb: 30, 115, 231;
+  --brand-hover: #1663cc;
   --brand-on: #ffffff;
-  /* Tones a palette may move (danger / warn / success never move) */
-  --info: #1d4ed8;
-  --info-rgb: 29, 78, 216;
-  --violet: #a21caf;
-  --violet-rgb: 162, 28, 175;
-  --neutral: #7b6586;
-  --neutral-rgb: 123, 101, 134;
+  /* Tones — the family's own red / yellow / green etc., meaning kept */
+  --info: #007197;
+  --info-rgb: 0, 113, 151;
+  --violet: #9854f1;
+  --violet-rgb: 152, 84, 241;
+  --neutral: #848cb5;
+  --neutral-rgb: 132, 140, 181;
+  --danger: #f52a65;
+  --danger-rgb: 245, 42, 101;
+  --warn: #8c6c3e;
+  --warn-rgb: 140, 108, 62;
+  --success: #587539;
+  --success-rgb: 88, 117, 57;
+  --accent-red: #f52a65;
+  --accent-red-rgb: 245, 42, 101;
+  --accent-amber: #8c6c3e;
+  --accent-amber-rgb: 140, 108, 62;
+  /* Decorative accents, and the same hues as text on their own tint */
+  --pink: #d20065;
+  --pink-rgb: 210, 0, 101;
+  --cyan: #07879d;
+  --cyan-rgb: 7, 135, 157;
+  --orange: #b15c00;
+  --orange-rgb: 177, 92, 0;
+  --lime: #667539;
+  --lime-rgb: 102, 117, 57;
+  --gold: #a8864b;
+  --gold-rgb: 168, 134, 75;
+  --pink-ink: #c1005d;
+  --pink-ink-rgb: 193, 0, 93;
+  --cyan-ink: #066c7d;
+  --cyan-ink-rgb: 6, 108, 125;
+  --orange-ink: #974f00;
+  --orange-ink-rgb: 151, 79, 0;
+  --lime-ink: #5a6732;
+  --lime-ink-rgb: 90, 103, 50;
   /* Legacy HSL set (consumed as hsl(var(--x))) */
-  --background: 285 25% 97%;
-  --foreground: 282 25% 10%;
-  --card: 0 0% 100%;
-  --card-foreground: 282 25% 10%;
-  --popover: 0 0% 100%;
-  --popover-foreground: 282 25% 10%;
-  --primary: 270 50% 50%;
+  --background: 230 11% 89%;
+  --foreground: 227 27% 32%;
+  --card: 240 10% 92%;
+  --card-foreground: 227 27% 32%;
+  --popover: 240 10% 92%;
+  --popover-foreground: 227 27% 32%;
+  --primary: 215 81% 51%;
   --primary-foreground: 0 0% 100%;
-  --secondary: 280 26% 93%;
-  --secondary-foreground: 282 25% 10%;
-  --muted: 280 26% 93%;
-  --muted-foreground: 280 26% 35%;
-  --accent: 280 26% 93%;
-  --accent-foreground: 282 25% 10%;
-  --border: 282 25% 87%;
-  --input: 282 25% 87%;
-  --ring: 270 50% 50%;
-  --sidebar-bg: 0 0% 100%;
-  --sidebar-hover: 274 28% 95%;
-  --sidebar-text: 280 26% 35%;
-  --sidebar-text-hover: 279 25% 20%;
-  --sidebar-icon: 280 26% 50%;
-  --sidebar-icon-hover: 280 25% 30%;
-  --sidebar-badge-text: 280 26% 40%;
-  --sidebar-user-text: 282 26% 15%;
+  --secondary: 225 13% 94%;
+  --secondary-foreground: 227 27% 32%;
+  --muted: 225 13% 94%;
+  --muted-foreground: 229 27% 40%;
+  --accent: 225 13% 94%;
+  --accent-foreground: 227 27% 32%;
+  --destructive: 343 91% 56%;
+  --border: 229 23% 81%;
+  --input: 229 23% 81%;
+  --ring: 215 81% 51%;
+  --sidebar-bg: 240 10% 92%;
+  --sidebar-hover: 224 25% 85%;
+  --sidebar-text: 229 27% 40%;
+  --sidebar-text-hover: 227 27% 32%;
+  --sidebar-icon: 230 20% 51%;
+  --sidebar-icon-hover: 229 27% 40%;
+  --sidebar-badge-text: 230 20% 51%;
+  --sidebar-user-text: 228 26% 27%;
 }
 
-/* GRAPHITE — Near-black neutral grounds, brighter text and firmer borders, silver accent. Maximum contrast. */
-:root[data-palette="graphite"] {
+/* DRACULA — Vivid neon accents on a dark violet-grey.
+   Dracula by Zeno Rocha (draculatheme.com, MIT). Dark: Dracula with its
+   official darker/lighter background steps. Light: Alucard. The text ramp
+   between foreground and comment is mixed from the two. */
+:root[data-palette="dracula"] {
   /* Grounds */
-  --bg: #0e0e0f;
-  --surface: #171819;
-  --surface-inset: #0d0d0e;
-  --surface-sunken: #0b0b0c;
-  --surface-raised: #1f2022;
-  --surface-hover: #1f2123;
-  --surface-elevated: #27282b;
-  --surface-deep: #060606;
+  --bg: #21222c;
+  --surface: #282a36;
+  --surface-inset: #21222c;
+  --surface-sunken: #191a21;
+  --surface-raised: #2f3140;
+  --surface-hover: #343746;
+  --surface-elevated: #424450;
+  --surface-deep: #14151b;
   --surface-is-light: 0;
   /* Borders */
-  --border-subtle: #2c2e31;
-  --border-default: #3f4146;
-  --border-strong: #4b4e53;
+  --border-subtle: #343746;
+  --border-default: #44475a;
+  --border-strong: #565970;
   /* Text */
-  --text-primary: #f7f7f8;
-  --foreground-soft: #cacbce;
-  --text-secondary: #bcbec1;
-  --text-tertiary: #a8abaf;
-  --text-quaternary: #8a8d93;
-  --text-hint: #6f7278;
-  --text-disabled: #5f6167;
-  --muted-rgb: 138, 141, 147;
-  /* Accent */
-  --brand: #e4e4e7;
-  --brand-rgb: 228, 228, 231;
-  --brand-hover: #c9c9ce;
-  --brand-on: #0a0a0a;
-  /* Tones a palette may move (danger / warn / success never move) */
-  --info: #4a9eff;
-  --info-rgb: 74, 158, 255;
-  --violet: #a78bfa;
-  --violet-rgb: 167, 139, 250;
-  --neutral: #71747a;
-  --neutral-rgb: 113, 116, 122;
+  --text-primary: #f8f8f2;
+  --foreground-soft: #e6e8e9;
+  --text-secondary: #cbd0db;
+  --text-tertiary: #b5bccf;
+  --text-quaternary: #6272a4;
+  --text-hint: #515c83;
+  --text-disabled: #44475a;
+  --muted-rgb: 98, 114, 164;
+  /* Brand */
+  --brand: #bd93f9;
+  --brand-rgb: 189, 147, 249;
+  --brand-hover: #a871f7;
+  --brand-on: #191a21;
+  /* Tones — the family's own red / yellow / green etc., meaning kept */
+  --info: #8be9fd;
+  --info-rgb: 139, 233, 253;
+  --violet: #bd93f9;
+  --violet-rgb: 189, 147, 249;
+  --neutral: #6272a4;
+  --neutral-rgb: 98, 114, 164;
+  --danger: #ff5555;
+  --danger-rgb: 255, 85, 85;
+  --warn: #ffb86c;
+  --warn-rgb: 255, 184, 108;
+  --success: #50fa7b;
+  --success-rgb: 80, 250, 123;
+  --accent-red: #ff5555;
+  --accent-red-rgb: 255, 85, 85;
+  --accent-amber: #ffb86c;
+  --accent-amber-rgb: 255, 184, 108;
+  /* Decorative accents, and the same hues as text on their own tint */
+  --pink: #ff79c6;
+  --pink-rgb: 255, 121, 198;
+  --cyan: #8be9fd;
+  --cyan-rgb: 139, 233, 253;
+  --orange: #ffb86c;
+  --orange-rgb: 255, 184, 108;
+  --lime: #f1fa8c;
+  --lime-rgb: 241, 250, 140;
+  --gold: #f7d151;
+  --gold-rgb: 247, 209, 81;
+  --pink-ink: #ff79c6;
+  --pink-ink-rgb: 255, 121, 198;
+  --cyan-ink: #8be9fd;
+  --cyan-ink-rgb: 139, 233, 253;
+  --orange-ink: #ffb86c;
+  --orange-ink-rgb: 255, 184, 108;
+  --lime-ink: #f1fa8c;
+  --lime-ink-rgb: 241, 250, 140;
   /* Legacy HSL set (consumed as hsl(var(--x))) */
-  --background: 210 7% 5%;
-  --foreground: 225 4% 78%;
-  --card: 240 5% 9%;
-  --card-foreground: 225 4% 78%;
-  --popover: 240 5% 9%;
-  --popover-foreground: 225 4% 78%;
-  --primary: 240 6% 90%;
-  --primary-foreground: 0 0% 4%;
-  --secondary: 220 4% 14%;
-  --secondary-foreground: 225 4% 78%;
-  --muted: 220 4% 14%;
-  --muted-foreground: 216 3% 72%;
-  --accent: 220 4% 14%;
-  --accent-foreground: 225 4% 78%;
-  --border: 220 5% 23%;
-  --input: 220 5% 22%;
-  --ring: 240 6% 90%;
-  --sidebar-bg: 180 6% 3%;
-  --sidebar-hover: 210 4% 9%;
-  --sidebar-text: 216 3% 72%;
-  --sidebar-text-hover: 223 5% 70%;
-  --sidebar-icon: 217 4% 39%;
-  --sidebar-icon-hover: 216 3% 72%;
-  --sidebar-badge-text: 220 4% 56%;
-  --sidebar-user-text: 225 4% 80%;
+  --background: 235 14% 15%;
+  --foreground: 200 6% 91%;
+  --card: 231 15% 18%;
+  --card-foreground: 200 6% 91%;
+  --popover: 231 15% 18%;
+  --popover-foreground: 200 6% 91%;
+  --primary: 265 89% 78%;
+  --primary-foreground: 233 14% 11%;
+  --secondary: 233 15% 22%;
+  --secondary-foreground: 200 6% 91%;
+  --muted: 233 15% 22%;
+  --muted-foreground: 221 18% 83%;
+  --accent: 233 15% 22%;
+  --accent-foreground: 200 6% 91%;
+  --destructive: 0 100% 67%;
+  --border: 232 14% 31%;
+  --input: 232 14% 31%;
+  --ring: 265 89% 78%;
+  --sidebar-bg: 231 15% 9%;
+  --sidebar-hover: 231 15% 18%;
+  --sidebar-text: 221 18% 83%;
+  --sidebar-text-hover: 200 6% 91%;
+  --sidebar-icon: 227 24% 42%;
+  --sidebar-icon-hover: 221 18% 83%;
+  --sidebar-badge-text: 225 27% 51%;
+  --sidebar-user-text: 200 6% 91%;
 }
 
-:root[data-palette="graphite"][data-theme="light"] {
+:root[data-palette="dracula"][data-theme="light"] {
   /* Grounds */
-  --bg: #f7f7f7;
-  --surface: #ffffff;
-  --surface-inset: #f9f9f9;
-  --surface-sunken: #f3f3f3;
-  --surface-raised: #f6f6f6;
-  --surface-hover: #ececec;
-  --surface-elevated: #f1f1f1;
-  --surface-deep: #ececec;
+  --bg: #f6f2e0;
+  --surface: #fffbeb;
+  --surface-inset: #f8f4e3;
+  --surface-sunken: #ece8d6;
+  --surface-raised: #fffdf4;
+  --surface-hover: #f2eedb;
+  --surface-elevated: #fffef8;
+  --surface-deep: #e8e4d0;
   --surface-is-light: 1;
   /* Borders */
-  --border-subtle: #d0d0d0;
-  --border-default: #bcbcbc;
-  --border-strong: #b1b1b1;
+  --border-subtle: #ebe7d5;
+  --border-default: #cfcfde;
+  --border-strong: #b4b4c8;
   /* Text */
-  --text-primary: #0d0d0d;
-  --foreground-soft: #1c1c1c;
-  --text-secondary: #2d2d2d;
-  --text-tertiary: #444444;
-  --text-quaternary: #676767;
-  --text-hint: #959595;
-  --text-disabled: #b7b7b7;
-  --muted-rgb: 68, 68, 68;
-  /* Accent */
-  --brand: #18181b;
-  --brand-rgb: 24, 24, 27;
-  --brand-hover: #3f3f46;
+  --text-primary: #1f1f1f;
+  --foreground-soft: #2d2b37;
+  --text-secondary: #413e5b;
+  --text-tertiary: #635d97;
+  --text-quaternary: #8a85ac;
+  --text-hint: #a9a4bd;
+  --text-disabled: #cfcfde;
+  --muted-rgb: 99, 93, 151;
+  /* Brand */
+  --brand: #644ac9;
+  --brand-rgb: 100, 74, 201;
+  --brand-hover: #5137b8;
   --brand-on: #ffffff;
-  /* Tones a palette may move (danger / warn / success never move) */
-  --info: #1d4ed8;
-  --info-rgb: 29, 78, 216;
-  --violet: #6d28d9;
-  --violet-rgb: 109, 40, 217;
-  --neutral: #757575;
-  --neutral-rgb: 117, 117, 117;
+  /* Tones — the family's own red / yellow / green etc., meaning kept */
+  --info: #036a96;
+  --info-rgb: 3, 106, 150;
+  --violet: #644ac9;
+  --violet-rgb: 100, 74, 201;
+  --neutral: #635d97;
+  --neutral-rgb: 99, 93, 151;
+  --danger: #cb3a2a;
+  --danger-rgb: 203, 58, 42;
+  --warn: #a34d14;
+  --warn-rgb: 163, 77, 20;
+  --success: #14710a;
+  --success-rgb: 20, 113, 10;
+  --accent-red: #cb3a2a;
+  --accent-red-rgb: 203, 58, 42;
+  --accent-amber: #a34d14;
+  --accent-amber-rgb: 163, 77, 20;
+  /* Decorative accents, and the same hues as text on their own tint */
+  --pink: #a3144d;
+  --pink-rgb: 163, 20, 77;
+  --cyan: #036a96;
+  --cyan-rgb: 3, 106, 150;
+  --orange: #a34d14;
+  --orange-rgb: 163, 77, 20;
+  --lime: #5f880c;
+  --lime-rgb: 95, 136, 12;
+  --gold: #846e15;
+  --gold-rgb: 132, 110, 21;
+  --pink-ink: #a3144d;
+  --pink-ink-rgb: 163, 20, 77;
+  --cyan-ink: #036a96;
+  --cyan-ink-rgb: 3, 106, 150;
+  --orange-ink: #a34d14;
+  --orange-ink-rgb: 163, 77, 20;
+  --lime-ink: #53760a;
+  --lime-ink-rgb: 83, 118, 10;
   /* Legacy HSL set (consumed as hsl(var(--x))) */
-  --background: 0 0% 97%;
-  --foreground: 0 0% 4%;
-  --card: 0 0% 100%;
-  --card-foreground: 0 0% 4%;
-  --popover: 0 0% 100%;
-  --popover-foreground: 0 0% 4%;
-  --primary: 240 6% 10%;
+  --background: 49 55% 92%;
+  --foreground: 250 12% 19%;
+  --card: 48 100% 96%;
+  --card-foreground: 250 12% 19%;
+  --popover: 48 100% 96%;
+  --popover-foreground: 250 12% 19%;
+  --primary: 252 54% 54%;
   --primary-foreground: 0 0% 100%;
-  --secondary: 0 0% 93%;
-  --secondary-foreground: 0 0% 4%;
-  --muted: 0 0% 93%;
-  --muted-foreground: 0 0% 29%;
-  --accent: 0 0% 93%;
-  --accent-foreground: 0 0% 4%;
-  --border: 0 0% 77%;
-  --input: 0 0% 77%;
-  --ring: 240 6% 10%;
-  --sidebar-bg: 0 0% 100%;
-  --sidebar-hover: 0 0% 95%;
-  --sidebar-text: 0 0% 29%;
-  --sidebar-text-hover: 0 0% 14%;
-  --sidebar-icon: 0 0% 44%;
-  --sidebar-icon-hover: 0 0% 24%;
-  --sidebar-badge-text: 0 0% 34%;
-  --sidebar-user-text: 0 0% 9%;
+  --secondary: 49 100% 98%;
+  --secondary-foreground: 250 12% 19%;
+  --muted: 49 100% 98%;
+  --muted-foreground: 246 19% 30%;
+  --accent: 49 100% 98%;
+  --accent-foreground: 250 12% 19%;
+  --destructive: 6 66% 48%;
+  --border: 240 19% 84%;
+  --input: 240 19% 84%;
+  --ring: 252 54% 54%;
+  --sidebar-bg: 48 100% 96%;
+  --sidebar-hover: 49 37% 88%;
+  --sidebar-text: 246 19% 30%;
+  --sidebar-text-hover: 250 12% 19%;
+  --sidebar-icon: 248 19% 60%;
+  --sidebar-icon-hover: 246 19% 30%;
+  --sidebar-badge-text: 248 19% 60%;
+  --sidebar-user-text: 0 0% 12%;
+}
+
+/* SOLARIZED — Precise teal and cream with balanced accents.
+   Solarized by Ethan Schoonover (ethanschoonover.com/solarized, MIT). The
+   sixteen colours are used as published; the in-between ground steps are
+   small lightness moves from base03 / base3. */
+:root[data-palette="solarized"] {
+  /* Grounds */
+  --bg: #00212b;
+  --surface: #002b36;
+  --surface-inset: #00252f;
+  --surface-sunken: #00212a;
+  --surface-raised: #073642;
+  --surface-hover: #073642;
+  --surface-elevated: #0b3d4a;
+  --surface-deep: #001a21;
+  --surface-is-light: 0;
+  /* Borders */
+  --border-subtle: #073642;
+  --border-default: #0e4553;
+  --border-strong: #2d5561;
+  /* Text */
+  --text-primary: #eee8d5;
+  --foreground-soft: #93a1a1;
+  --text-secondary: #93a1a1;
+  --text-tertiary: #839496;
+  --text-quaternary: #586e75;
+  --text-hint: #4a5f66;
+  --text-disabled: #2c4a53;
+  --muted-rgb: 88, 110, 117;
+  /* Brand */
+  --brand: #268bd2;
+  --brand-rgb: 38, 139, 210;
+  --brand-hover: #2177b4;
+  --brand-on: #00141a;
+  /* Tones — the family's own red / yellow / green etc., meaning kept */
+  --info: #2aa198;
+  --info-rgb: 42, 161, 152;
+  --violet: #6c71c4;
+  --violet-rgb: 108, 113, 196;
+  --neutral: #586e75;
+  --neutral-rgb: 88, 110, 117;
+  --danger: #dc322f;
+  --danger-rgb: 220, 50, 47;
+  --warn: #b58900;
+  --warn-rgb: 181, 137, 0;
+  --success: #859900;
+  --success-rgb: 133, 153, 0;
+  --accent-red: #dc322f;
+  --accent-red-rgb: 220, 50, 47;
+  --accent-amber: #b58900;
+  --accent-amber-rgb: 181, 137, 0;
+  /* Decorative accents, and the same hues as text on their own tint */
+  --pink: #d33682;
+  --pink-rgb: 211, 54, 130;
+  --cyan: #2aa198;
+  --cyan-rgb: 42, 161, 152;
+  --orange: #cb4b16;
+  --orange-rgb: 203, 75, 22;
+  --lime: #739900;
+  --lime-rgb: 115, 153, 0;
+  --gold: #b58900;
+  --gold-rgb: 181, 137, 0;
+  --pink-ink: #dd629d;
+  --pink-ink-rgb: 221, 98, 157;
+  --cyan-ink: #2aa198;
+  --cyan-ink-rgb: 42, 161, 152;
+  --orange-ink: #e8652e;
+  --orange-ink-rgb: 232, 101, 46;
+  --lime-ink: #749a00;
+  --lime-ink-rgb: 116, 154, 0;
+  /* Legacy HSL set (consumed as hsl(var(--x))) */
+  --background: 194 100% 8%;
+  --foreground: 180 7% 60%;
+  --card: 192 100% 11%;
+  --card-foreground: 180 7% 60%;
+  --popover: 192 100% 11%;
+  --popover-foreground: 180 7% 60%;
+  --primary: 205 69% 49%;
+  --primary-foreground: 194 100% 5%;
+  --secondary: 192 81% 14%;
+  --secondary-foreground: 180 7% 60%;
+  --muted: 192 81% 14%;
+  --muted-foreground: 180 7% 60%;
+  --accent: 192 81% 14%;
+  --accent-foreground: 180 7% 60%;
+  --destructive: 1 71% 52%;
+  --border: 192 71% 19%;
+  --input: 192 71% 19%;
+  --ring: 205 69% 49%;
+  --sidebar-bg: 193 100% 6%;
+  --sidebar-hover: 192 100% 11%;
+  --sidebar-text: 180 7% 60%;
+  --sidebar-text-hover: 180 7% 60%;
+  --sidebar-icon: 195 16% 35%;
+  --sidebar-icon-hover: 180 7% 60%;
+  --sidebar-badge-text: 194 14% 40%;
+  --sidebar-user-text: 180 7% 60%;
+}
+
+:root[data-palette="solarized"][data-theme="light"] {
+  /* Grounds */
+  --bg: #eee8d5;
+  --surface: #fdf6e3;
+  --surface-inset: #f5efdc;
+  --surface-sunken: #eee8d5;
+  --surface-raised: #fffaf0;
+  --surface-hover: #eee8d5;
+  --surface-elevated: #fffbf2;
+  --surface-deep: #e4ddc8;
+  --surface-is-light: 1;
+  /* Borders */
+  --border-subtle: #eee8d5;
+  --border-default: #ddd6c1;
+  --border-strong: #c9c2ad;
+  /* Text */
+  --text-primary: #073642;
+  --foreground-soft: #2a4a52;
+  --text-secondary: #586e75;
+  --text-tertiary: #5f747c;
+  --text-quaternary: #93a1a1;
+  --text-hint: #a8b3b0;
+  --text-disabled: #c8c8bc;
+  --muted-rgb: 95, 116, 124;
+  /* Brand */
+  --brand: #227bba;
+  --brand-rgb: 34, 123, 186;
+  --brand-hover: #1c679c;
+  --brand-on: #ffffff;
+  /* Tones — the family's own red / yellow / green etc., meaning kept */
+  --info: #299e95;
+  --info-rgb: 41, 158, 149;
+  --violet: #6c71c4;
+  --violet-rgb: 108, 113, 196;
+  --neutral: #93a1a1;
+  --neutral-rgb: 147, 161, 161;
+  --danger: #dc322f;
+  --danger-rgb: 220, 50, 47;
+  --warn: #b48800;
+  --warn-rgb: 180, 136, 0;
+  --success: #849800;
+  --success-rgb: 132, 152, 0;
+  --accent-red: #dc322f;
+  --accent-red-rgb: 220, 50, 47;
+  --accent-amber: #b48800;
+  --accent-amber-rgb: 180, 136, 0;
+  /* Decorative accents, and the same hues as text on their own tint */
+  --pink: #d33682;
+  --pink-rgb: 211, 54, 130;
+  --cyan: #2aa198;
+  --cyan-rgb: 42, 161, 152;
+  --orange: #cb4b16;
+  --orange-rgb: 203, 75, 22;
+  --lime: #739900;
+  --lime-rgb: 115, 153, 0;
+  --gold: #b58900;
+  --gold-rgb: 181, 137, 0;
+  --pink-ink: #c22b74;
+  --pink-ink-rgb: 194, 43, 116;
+  --cyan-ink: #1f766f;
+  --cyan-ink-rgb: 31, 118, 111;
+  --orange-ink: #b74414;
+  --orange-ink-rgb: 183, 68, 20;
+  --lime-ink: #567300;
+  --lime-ink-rgb: 86, 115, 0;
+  /* Legacy HSL set (consumed as hsl(var(--x))) */
+  --background: 46 42% 88%;
+  --foreground: 192 32% 24%;
+  --card: 44 87% 94%;
+  --card-foreground: 192 32% 24%;
+  --popover: 44 87% 94%;
+  --popover-foreground: 192 32% 24%;
+  --primary: 205 69% 43%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 40 100% 97%;
+  --secondary-foreground: 192 32% 24%;
+  --muted: 40 100% 97%;
+  --muted-foreground: 194 14% 40%;
+  --accent: 40 100% 97%;
+  --accent-foreground: 192 32% 24%;
+  --destructive: 1 71% 52%;
+  --border: 45 29% 81%;
+  --input: 45 29% 81%;
+  --ring: 205 69% 43%;
+  --sidebar-bg: 44 87% 94%;
+  --sidebar-hover: 46 42% 88%;
+  --sidebar-text: 194 14% 40%;
+  --sidebar-text-hover: 192 32% 24%;
+  --sidebar-icon: 180 7% 60%;
+  --sidebar-icon-hover: 194 14% 40%;
+  --sidebar-badge-text: 180 7% 60%;
+  --sidebar-user-text: 192 81% 14%;
+}
+
+/* ROSÉ PINE — Muted rose, gold and pine. Soft and low-key.
+   Rosé Pine (rosepinetheme.com, MIT). Dark: Main. Light: Dawn. Rose is the
+   brand in Main. Dawn's rose cannot carry white text without turning
+   brick-red beside danger, so Dawn's brand is pine. The family has no green
+   (its terminal green is pine, a teal), so success is foam's / pine's tone
+   turned to green. */
+:root[data-palette="rose-pine"] {
+  /* Grounds */
+  --bg: #191724;
+  --surface: #1f1d2e;
+  --surface-inset: #16141f;
+  --surface-sunken: #13111c;
+  --surface-raised: #21202e;
+  --surface-hover: #26233a;
+  --surface-elevated: #26233a;
+  --surface-deep: #0f0e17;
+  --surface-is-light: 0;
+  /* Borders */
+  --border-subtle: #26233a;
+  --border-default: #403d52;
+  --border-strong: #524f67;
+  /* Text */
+  --text-primary: #e0def4;
+  --foreground-soft: #d0cee5;
+  --text-secondary: #b8b5cf;
+  --text-tertiary: #908caa;
+  --text-quaternary: #6e6a86;
+  --text-hint: #5e5b74;
+  --text-disabled: #403d52;
+  --muted-rgb: 110, 106, 134;
+  /* Brand */
+  --brand: #ebbcba;
+  --brand-rgb: 235, 188, 186;
+  --brand-hover: #e3a19e;
+  --brand-on: #191724;
+  /* Tones — the family's own red / yellow / green etc., meaning kept */
+  --info: #9ccfd8;
+  --info-rgb: 156, 207, 216;
+  --violet: #c4a7e7;
+  --violet-rgb: 196, 167, 231;
+  --neutral: #6e6a86;
+  --neutral-rgb: 110, 106, 134;
+  --danger: #eb6f92;
+  --danger-rgb: 235, 111, 146;
+  --warn: #f6c177;
+  --warn-rgb: 246, 193, 119;
+  --success: #9cd8b0;
+  --success-rgb: 156, 216, 176;
+  --accent-red: #eb6f92;
+  --accent-red-rgb: 235, 111, 146;
+  --accent-amber: #f6c177;
+  --accent-amber-rgb: 246, 193, 119;
+  /* Decorative accents, and the same hues as text on their own tint */
+  --pink: #e6aac8;
+  --pink-rgb: 230, 170, 200;
+  --cyan: #9ccfd8;
+  --cyan-rgb: 156, 207, 216;
+  --orange: #f59f6d;
+  --orange-rgb: 245, 159, 109;
+  --lime: #d1f564;
+  --lime-rgb: 209, 245, 100;
+  --gold: #f3b447;
+  --gold-rgb: 243, 180, 71;
+  --pink-ink: #e6aac8;
+  --pink-ink-rgb: 230, 170, 200;
+  --cyan-ink: #9ccfd8;
+  --cyan-ink-rgb: 156, 207, 216;
+  --orange-ink: #f59f6d;
+  --orange-ink-rgb: 245, 159, 109;
+  --lime-ink: #d1f564;
+  --lime-ink-rgb: 209, 245, 100;
+  /* Legacy HSL set (consumed as hsl(var(--x))) */
+  --background: 249 22% 12%;
+  --foreground: 245 31% 85%;
+  --card: 247 23% 15%;
+  --card-foreground: 245 31% 85%;
+  --popover: 247 23% 15%;
+  --popover-foreground: 245 31% 85%;
+  --primary: 2 55% 83%;
+  --primary-foreground: 249 22% 12%;
+  --secondary: 244 18% 15%;
+  --secondary-foreground: 245 31% 85%;
+  --muted: 244 18% 15%;
+  --muted-foreground: 247 21% 76%;
+  --accent: 244 18% 15%;
+  --accent-foreground: 245 31% 85%;
+  --destructive: 343 76% 68%;
+  --border: 249 15% 28%;
+  --input: 249 15% 28%;
+  --ring: 2 55% 83%;
+  --sidebar-bg: 247 24% 7%;
+  --sidebar-hover: 247 23% 15%;
+  --sidebar-text: 247 21% 76%;
+  --sidebar-text-hover: 245 31% 85%;
+  --sidebar-icon: 247 12% 41%;
+  --sidebar-icon-hover: 247 21% 76%;
+  --sidebar-badge-text: 249 12% 47%;
+  --sidebar-user-text: 245 31% 85%;
+}
+
+:root[data-palette="rose-pine"][data-theme="light"] {
+  /* Grounds */
+  --bg: #faf4ed;
+  --surface: #fffaf3;
+  --surface-inset: #f4ede8;
+  --surface-sunken: #f2e9e1;
+  --surface-raised: #fffcf8;
+  --surface-hover: #f4ede8;
+  --surface-elevated: #fffdfa;
+  --surface-deep: #f2e9e1;
+  --surface-is-light: 1;
+  /* Borders */
+  --border-subtle: #f2e9e1;
+  --border-default: #dfdad9;
+  --border-strong: #cecacd;
+  /* Text */
+  --text-primary: #575279;
+  --foreground-soft: #605b80;
+  --text-secondary: #74708f;
+  --text-tertiary: #74708f;
+  --text-quaternary: #9893a5;
+  --text-hint: #b7b2bc;
+  --text-disabled: #cecacd;
+  --muted-rgb: 116, 112, 143;
+  /* Brand */
+  --brand: #286983;
+  --brand-rgb: 40, 105, 131;
+  --brand-hover: #205368;
+  --brand-on: #ffffff;
+  /* Tones — the family's own red / yellow / green etc., meaning kept */
+  --info: #56949f;
+  --info-rgb: 86, 148, 159;
+  --violet: #907aa9;
+  --violet-rgb: 144, 122, 169;
+  --neutral: #9893a5;
+  --neutral-rgb: 152, 147, 165;
+  --danger: #b4637a;
+  --danger-rgb: 180, 99, 122;
+  --warn: #ce8015;
+  --warn-rgb: 206, 128, 21;
+  --success: #28834e;
+  --success-rgb: 40, 131, 78;
+  --accent-red: #b4637a;
+  --accent-red-rgb: 180, 99, 122;
+  --accent-amber: #ce8015;
+  --accent-amber-rgb: 206, 128, 21;
+  /* Decorative accents, and the same hues as text on their own tint */
+  --pink: #d77eab;
+  --pink-rgb: 215, 126, 171;
+  --cyan: #56949f;
+  --cyan-rgb: 86, 148, 159;
+  --orange: #e86a22;
+  --orange-rgb: 232, 106, 34;
+  --lime: #acde17;
+  --lime-rgb: 172, 222, 23;
+  --gold: #ea9d34;
+  --gold-rgb: 234, 157, 52;
+  --pink-ink: #bc3a7c;
+  --pink-ink-rgb: 188, 58, 124;
+  --cyan-ink: #44747d;
+  --cyan-ink-rgb: 68, 116, 125;
+  --orange-ink: #b44d13;
+  --orange-ink-rgb: 180, 77, 19;
+  --lime-ink: #5b760c;
+  --lime-ink-rgb: 91, 118, 12;
+  /* Legacy HSL set (consumed as hsl(var(--x))) */
+  --background: 32 57% 95%;
+  --foreground: 248 17% 43%;
+  --card: 35 100% 98%;
+  --card-foreground: 248 17% 43%;
+  --popover: 35 100% 98%;
+  --popover-foreground: 248 17% 43%;
+  --primary: 197 53% 34%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 34 100% 99%;
+  --secondary-foreground: 248 17% 43%;
+  --muted: 34 100% 99%;
+  --muted-foreground: 248 12% 50%;
+  --accent: 34 100% 99%;
+  --accent-foreground: 248 17% 43%;
+  --destructive: 343 35% 55%;
+  --border: 10 9% 86%;
+  --input: 10 9% 86%;
+  --ring: 197 53% 34%;
+  --sidebar-bg: 35 100% 98%;
+  --sidebar-hover: 28 40% 92%;
+  --sidebar-text: 248 12% 50%;
+  --sidebar-text-hover: 248 17% 43%;
+  --sidebar-icon: 257 9% 61%;
+  --sidebar-icon-hover: 248 12% 50%;
+  --sidebar-badge-text: 257 9% 61%;
+  --sidebar-user-text: 248 19% 40%;
 }
 
 /* ----------------------------------------------------------------------------
@@ -688,10 +1401,12 @@
    Retune a palette's --brand and retune its swatch with it (the test checks).
    -------------------------------------------------------------------------- */
 :root {
-  --palette-preview-atlas:    #3ecf8e;
-  --palette-preview-ocean:    #5b9cff;
-  --palette-preview-sand:     #d4a373;
-  --palette-preview-forest:   #a3c96b;
-  --palette-preview-plum:     #c084fc;
-  --palette-preview-graphite: #e4e4e7;
+  --palette-preview-atlas: #3ecf8e;
+  --palette-preview-nord: #88c0d0;
+  --palette-preview-gruvbox: #fe8019;
+  --palette-preview-catppuccin: #cba6f7;
+  --palette-preview-tokyo-night: #7aa2f7;
+  --palette-preview-dracula: #bd93f9;
+  --palette-preview-solarized: #268bd2;
+  --palette-preview-rose-pine: #ebbcba;
 }

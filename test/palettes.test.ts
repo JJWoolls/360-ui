@@ -4,7 +4,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
-import { PALETTE_IDS, DEFAULT_PALETTE, toPaletteId } from "../src/styles/palettes.ts";
+import { PALETTE_IDS, DEFAULT_PALETTE, RETIRED_PALETTES, toPaletteId } from "../src/styles/palettes.ts";
 
 const read = (p: string) =>
   readFileSync(fileURLToPath(new URL(p, import.meta.url)), "utf8").replace(/\/\*[\s\S]*?\*\//g, "");
@@ -36,16 +36,23 @@ const REQUIRED = [
   "--text-hint", "--text-disabled", "--muted-rgb",
   "--brand", "--brand-rgb", "--brand-hover", "--brand-on",
   "--info", "--info-rgb", "--violet", "--violet-rgb", "--neutral", "--neutral-rgb",
+  "--danger", "--danger-rgb", "--warn", "--warn-rgb", "--success", "--success-rgb",
+  "--accent-red", "--accent-red-rgb", "--accent-amber", "--accent-amber-rgb",
+  "--pink", "--pink-rgb", "--cyan", "--cyan-rgb", "--orange", "--orange-rgb", "--lime", "--lime-rgb",
+  "--gold", "--gold-rgb", "--pink-ink", "--pink-ink-rgb", "--cyan-ink", "--cyan-ink-rgb",
+  "--orange-ink", "--orange-ink-rgb", "--lime-ink", "--lime-ink-rgb",
   "--background", "--foreground", "--card", "--card-foreground", "--popover", "--popover-foreground",
   "--primary", "--primary-foreground", "--secondary", "--secondary-foreground", "--muted",
-  "--muted-foreground", "--accent", "--accent-foreground", "--border", "--input", "--ring",
+  "--muted-foreground", "--accent", "--accent-foreground", "--destructive", "--border", "--input", "--ring",
   "--sidebar-bg", "--sidebar-hover", "--sidebar-text", "--sidebar-text-hover", "--sidebar-icon",
   "--sidebar-icon-hover", "--sidebar-badge-text", "--sidebar-user-text",
 ];
 
-// Never a palette's to move: identities and alarm meanings.
-const FORBIDDEN = [/^--stage-/, /^--dept-/, /^--location-/, /^--route-/, /^--pan-/, /^--danger/, /^--warn/,
-  /^--success/, /^--accent-red/, /^--accent-amber/, /^--destructive/];
+// Never a palette's to move: identities people read as "which stage / department / place".
+const FORBIDDEN = [/^--stage-/, /^--dept-/, /^--location-/, /^--route-/, /^--pan-/];
+
+// Everything a palette may set: the required set plus nothing else.
+const ALLOWED = new Set(REQUIRED);
 
 const hexToRgb = (h: string) => {
   const s = h.replace("#", "");
@@ -88,7 +95,7 @@ test("every palette block in the CSS is a known palette id", () => {
   }
 });
 
-test("a palette never sets an identity or alarm token", () => {
+test("a palette never sets an identity token", () => {
   const bad: string[] = [];
   for (const [sel, block] of R) for (const t of Object.keys(block)) if (FORBIDDEN.some((re) => re.test(t))) bad.push(`${sel} ${t}`);
   assert.deepEqual(bad, []);
@@ -104,7 +111,9 @@ test("every -rgb twin names the same colour as its token", () => {
       if (hexToRgb(base) !== v.replace(/\s+/g, " ")) bad.push(`${sel} ${t}=${v} vs ${base}`);
     }
     // And the other way: a colour that has a twin anywhere must carry it here.
-    for (const t of ["--brand", "--info", "--violet", "--neutral"]) {
+    for (const t of ["--brand", "--info", "--violet", "--neutral", "--danger", "--warn", "--success", "--accent-red",
+      "--accent-amber", "--pink", "--cyan", "--orange", "--lime", "--gold", "--pink-ink", "--cyan-ink", "--orange-ink",
+      "--lime-ink"]) {
       if (t in block && !(`${t}-rgb` in block)) bad.push(`${sel} sets ${t} without ${t}-rgb`);
     }
   }
@@ -142,10 +151,81 @@ test("each preview swatch is its palette's dark brand", () => {
   assert.ok(root[`--palette-preview-${DEFAULT_PALETTE}`]);
 });
 
-test("toPaletteId accepts a known id and falls back otherwise", () => {
-  assert.equal(toPaletteId("ocean"), "ocean");
+test("a palette sets nothing outside the allowed list", () => {
+  const bad: string[] = [];
+  for (const [sel, block] of R) {
+    if (sel === ":root") continue;
+    for (const t of Object.keys(block)) if (!ALLOWED.has(t)) bad.push(`${sel} ${t}`);
+  }
+  assert.deepEqual(bad, []);
+});
+
+const hueOf = (h: string) => {
+  const [r, g, b] = hexToRgb(h).split(", ").map((v) => Number(v) / 255);
+  const mx = Math.max(r, g, b), mn = Math.min(r, g, b), d = mx - mn;
+  if (d === 0) return { h: 0, s: 0 };
+  const l = (mx + mn) / 2;
+  const s = l > 0.5 ? d / (2 - mx - mn) : d / (mx + mn);
+  const h0 = mx === r ? (g - b) / d + (g < b ? 6 : 0) : mx === g ? (b - r) / d + 2 : (r - g) / d + 4;
+  return { h: h0 * 60, s };
+};
+
+test("danger stays a red, warn an amber / yellow, success a green", () => {
+  // Loose hue bands: wide enough for every family's own take (Gruvbox's olive
+  // green, Rosé Pine's pink-leaning love), narrow enough that no family can
+  // make danger blue or success orange.
+  const bands: Record<string, (h: number) => boolean> = {
+    "--danger": (h) => h >= 335 || h <= 15,
+    "--warn": (h) => h >= 20 && h <= 52,
+    "--success": (h) => h >= 55 && h <= 170,
+  };
+  const bad: string[] = [];
+  for (const id of NON_BASE) {
+    for (const sel of [darkSel(id), lightSel(id)]) {
+      const b = R.get(sel)!;
+      for (const [t, ok] of Object.entries(bands)) {
+        const { h, s } = hueOf(b[t]);
+        if (!ok(h) || s < 0.25) bad.push(`${sel} ${t} ${b[t]} hue ${h.toFixed(0)} sat ${s.toFixed(2)}`);
+      }
+      // The app's aliases name the same colour as the tone they stand for.
+      if (b["--accent-red"] !== b["--danger"]) bad.push(`${sel} --accent-red differs from --danger`);
+      if (b["--accent-amber"] !== b["--warn"]) bad.push(`${sel} --accent-amber differs from --warn`);
+    }
+  }
+  assert.deepEqual(bad, []);
+});
+
+test("tones and accent inks read on their ground", () => {
+  const bad: string[] = [];
+  for (const id of NON_BASE) {
+    for (const [sel, light] of [[darkSel(id), false], [lightSel(id), true]] as const) {
+      const b = R.get(sel)!;
+      for (const t of ["--info", "--violet", "--danger", "--warn", "--success"]) {
+        const c = contrast(b[t], b["--surface"]);
+        if (c < 3) bad.push(`${sel} ${t} ${c.toFixed(2)}:1`);
+      }
+      // Inks are text on their own faint tint: light grounds need the margin.
+      for (const t of ["--pink-ink", "--cyan-ink", "--orange-ink", "--lime-ink"]) {
+        const c = contrast(b[t], b["--surface"]);
+        if (c < (light ? 5 : 4.5)) bad.push(`${sel} ${t} ${c.toFixed(2)}:1`);
+      }
+    }
+  }
+  assert.deepEqual(bad, []);
+});
+
+test("toPaletteId accepts a known id, maps a retired one, and falls back otherwise", () => {
+  assert.equal(toPaletteId("nord"), "nord");
+  assert.equal(toPaletteId("rose-pine"), "rose-pine");
+  assert.equal(toPaletteId("ocean"), "nord");
+  assert.equal(toPaletteId("graphite"), DEFAULT_PALETTE);
   assert.equal(toPaletteId("nope"), DEFAULT_PALETTE);
+  assert.equal(toPaletteId("toString"), DEFAULT_PALETTE);
   assert.equal(toPaletteId(null), DEFAULT_PALETTE);
+  for (const [old, to] of Object.entries(RETIRED_PALETTES)) {
+    assert.ok(!(PALETTE_IDS as readonly string[]).includes(old), `${old} is retired but still offered`);
+    assert.ok((PALETTE_IDS as readonly string[]).includes(to), `${old} maps to unknown ${to}`);
+  }
 });
 
 test("the retired data-map switch is gone from the kit's CSS", () => {

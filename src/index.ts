@@ -17,7 +17,7 @@
 export * from "./primitives";
 
 // Palettes — the names a picker offers; the colours are in palettes.css.
-export { PALETTES, PALETTE_IDS, DEFAULT_PALETTE, toPaletteId } from "./styles/palettes";
+export { PALETTES, PALETTE_IDS, DEFAULT_PALETTE, RETIRED_PALETTES, toPaletteId } from "./styles/palettes";
 export type { PaletteId, PaletteInfo } from "./styles/palettes";
 
 // Hooks that are not parts but carry a house rule. useAsyncData is the one way

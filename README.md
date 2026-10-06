@@ -173,33 +173,45 @@ forking a component.
 Colour is two independent switches on `<html>`:
 
 - `data-theme` — the mode: `dark` (default) or `light`.
-- `data-palette` — the colour family: `atlas` (default), `ocean`, `sand`,
-  `forest`, `plum`, `graphite`. Any palette works in either mode.
+- `data-palette` — the colour family: `atlas` (default), `nord`, `gruvbox`,
+  `catppuccin`, `tokyo-night`, `dracula`, `solarized`, `rose-pine`. Any
+  palette works in either mode.
 
 ```ts
 import "@360digilab/ui/palettes.css";   // once, after the app's own tokens
 import { PALETTES, toPaletteId } from "@360digilab/ui";   // the picker's list
 ```
 
-| Palette | Character | Dark surface / brand |
+Each palette is a whole colour family taken from an established editor /
+terminal scheme (credited in `palettes.css`): its own backgrounds, text and
+matched accents, not the base re-tinted.
+
+| Palette | Scheme (dark / light) | Dark surface / brand |
 |---|---|---|
-| Atlas | Charcoal grounds, the house green. The base. | `#1c1c1c` / `#3ecf8e` |
-| Ocean | Navy and steel grounds, clear blue accent. | `#131a26` / `#5b9cff` |
-| Sand | Warm brown and tan grounds, caramel accent. | `#221c16` / `#d4a373` |
-| Forest | Deep green grounds, moss accent. | `#15231c` / `#a3c96b` |
-| Plum | Aubergine grounds, orchid accent. | `#1e1622` / `#c084fc` |
-| Graphite | Near-black neutral, brighter text, firmer borders, silver accent. | `#171819` / `#e4e4e7` |
+| Atlas | The base: charcoal grounds, the house green. | `#1c1c1c` / `#3ecf8e` |
+| Nord | Nord Polar Night / Snow Storm. Frost brand. | `#2e3440` / `#88c0d0` |
+| Gruvbox | Gruvbox dark / light. Orange brand. | `#282828` / `#fe8019` |
+| Catppuccin | Mocha / Latte. Mauve brand. | `#1e1e2e` / `#cba6f7` |
+| Tokyo Night | Night / Day. Blue brand. | `#1a1b26` / `#7aa2f7` |
+| Dracula | Dracula / Alucard. Purple brand. | `#282a36` / `#bd93f9` |
+| Solarized | Solarized dark / light. Blue brand. | `#002b36` / `#268bd2` |
+| Rosé Pine | Main / Dawn. Rose brand (pine in Dawn). | `#1f1d2e` / `#ebbcba` |
 
 - **Atlas has no block.** With no attribute, or `data-palette="atlas"`, the
   app's own token file is in charge, so the default looks exactly as it did.
-- **A palette may set:** grounds (`--bg`, `--surface*`), borders, the text
-  ramp, `--brand` (+ `-hover`, `-on`), the `info` / `violet` / `neutral` tones,
-  `--muted-rgb`, `--surface-is-light`, and the legacy HSL set (`--card`,
-  `--primary`, `--sidebar-*` …) that utility classes read as `hsl(var(--x))`.
+- **A palette sets:** grounds (`--bg`, `--surface*`), borders, the text
+  ramp, `--brand` (+ `-hover`, `-on`), the `info` / `violet` / `neutral`
+  tones, `--danger` / `--warn` / `--success` (+ the `--accent-red` /
+  `--accent-amber` aliases), the decorative accents (`pink`, `cyan`,
+  `orange`, `lime`, `gold`) and their `-ink` variants, `--muted-rgb`,
+  `--surface-is-light`, and the legacy HSL set (`--card`, `--primary`,
+  `--destructive`, `--sidebar-*` …) that utility classes read as
+  `hsl(var(--x))`. The test refuses any other token.
+- **Meaning holds:** danger is the family's red, warn its amber / yellow,
+  success its green; the test checks each hue band.
 - **A palette may not set:** `--stage-*`, `--dept-*`, `--location-*`,
-  `--route-*`, the pan contrast pair, or `--danger` / `--warn` / `--success`.
-  Those carry meaning and read the same everywhere. The decorative accents and
-  shadows stay with the base.
+  `--route-*` or the pan contrast pair. Those are identities (which stage,
+  department, place) and look the same for everyone. Shadows stay with the base.
 - **Twins:** every colour a palette sets with an `-rgb` companion is set
   together with it; the test proves each pair agrees, so
   `rgba(var(--x-rgb), a)` always follows a palette swap.
@@ -210,8 +222,13 @@ import { PALETTES, toPaletteId } from "@360digilab/ui";   // the picker's list
   `[data-theme="light"]` defaults however the bundler orders the stylesheets.
 - Adding a palette: a dark and a light block in `src/styles/palettes.css`, its
   id in `src/styles/palettes.ts`, its swatch `--palette-preview-<id>`.
-  `npm test` checks completeness, twins, forbidden tokens and text contrast
-  (primary, secondary, tertiary >= 4.5:1 on `--surface`).
+  `npm test` checks completeness, the allowed list, twins, identity tokens,
+  status hues, and contrast (primary, secondary, tertiary text >= 4.5:1 on
+  `--surface`; brand-on >= 4.5:1; tones >= 3:1; inks >= 4.5 / 5:1).
+- **Retired ids:** `ocean`, `sand`, `forest`, `plum`, `graphite` (the
+  first, tinted set). `toPaletteId` maps each to the nearest family
+  (`RETIRED_PALETTES`: nord, gruvbox, gruvbox, dracula, atlas) so a stored
+  choice keeps working.
 - **Retired: `data-map`.** The old single switch (`atlas-dark`, `atlas-light`,
   `midnight`, `ember`, `pine`, `paper`) fused mode and colour, so "warm, but
   light" was impossible. Its ideas became ocean, sand and forest. The
