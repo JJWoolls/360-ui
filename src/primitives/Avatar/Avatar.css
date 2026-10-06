@@ -24,7 +24,7 @@
 .ui-avatar[data-size="xs"] { --ui-avatar-size: 20px; font-size: calc(8px * var(--ui-type-scale, 1)); }
 .ui-avatar[data-size="sm"] { --ui-avatar-size: var(--s5); font-size: calc(var(--text-xs) * var(--ui-type-scale, 1)); }
 .ui-avatar[data-size="md"] { --ui-avatar-size: 28px; font-size: calc(var(--text-sm) * var(--ui-type-scale, 1)); }
-.ui-avatar[data-size="lg"] { --ui-avatar-size: var(--s6); font-size: calc(var(--text-md) * var(--ui-type-scale, 1)); }
+.ui-avatar[data-size="lg"] { --ui-avatar-size: var(--s6); font-size: calc(var(--text-base) * var(--ui-type-scale, 1)); }
 .ui-avatar[data-size="xl"] { --ui-avatar-size: 56px; font-size: calc(var(--text-xl) * var(--ui-type-scale, 1)); }
 
 .ui-avatar-photo {

@@ -176,13 +176,24 @@
 
   --font: "DM Sans", "Segoe UI", system-ui, -apple-system, sans-serif;
 
-  --text-xs:  10px;
-  --text-sm:  11px;
+  /* TYPE SCALE — Tailwind's own steps, the same values the LMS defines under
+     these names (decided 2026-10-06: small text is 14px). The kit used to carry
+     its own denser scale (sm 11, base 13); an app that does not load this file
+     supplies its own values for these names, so two scales under one set of
+     names meant every primitive rendered off its spec in that app. One scale,
+     the consumer's.
+
+     --text-md is NOT a step. Tailwind has no "md", and the LMS defines it as
+     12px — below sm. It is kept only so existing consumer references resolve;
+     no primitive reads it (that is how SectionLabel's sm came out larger than
+     its md). Use xs/sm/base. */
+  --text-xs:  12px;
+  --text-sm:  14px;
   --text-md:  12px;
-  --text-base:13px;
-  --text-lg:  15px;
-  --text-xl:  18px;
-  --text-2xl: 22px;
+  --text-base:16px;
+  --text-lg:  18px;
+  --text-xl:  20px;
+  --text-2xl: 24px;
 
   --weight-normal:   400;
   --weight-medium:   500;

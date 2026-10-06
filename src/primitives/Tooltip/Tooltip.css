@@ -28,7 +28,7 @@
   border: 1px solid var(--border-default);
   border-radius: var(--radius-sm);
   color: var(--text-primary);
-  font-size: calc(var(--text-md) * var(--ui-type-scale, 1));
+  font-size: calc(var(--text-xs) * var(--ui-type-scale, 1));
   font-weight: var(--weight-medium);
   white-space: nowrap;
   transition: opacity var(--transition);

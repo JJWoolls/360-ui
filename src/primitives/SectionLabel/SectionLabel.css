@@ -13,7 +13,7 @@
   margin: 0 0 calc(var(--s2) * var(--ui-space-scale, 1));
   padding: 0;
   font-family: var(--font);
-  font-size: calc(var(--text-md) * var(--ui-type-scale, 1)); /* 12px */
+  font-size: calc(var(--text-sm) * var(--ui-type-scale, 1)); /* 14px */
   font-weight: var(--weight-semibold);
   line-height: 1.4;
   letter-spacing: 0.02em;
@@ -21,7 +21,7 @@
 }
 
 .ui-section-label[data-size="sm"] {
-  font-size: calc(var(--text-sm) * var(--ui-type-scale, 1)); /* 11px */
+  font-size: calc(var(--text-xs) * var(--ui-type-scale, 1)); /* 12px */
 }
 
 /* With an action, the ROW carries the bottom gap and the label drops its own,

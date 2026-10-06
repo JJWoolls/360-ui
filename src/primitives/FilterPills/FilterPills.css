@@ -62,17 +62,17 @@
 
 /* SIZES. "md" is the ordinary screen. "sm" is for production boards, where
  * every pixel of height is a row of the list the operator cannot see — the
- * same reason the Badge has an in-table size. Only the box changes; the
- * recipe is identical. */
+ * same reason the Badge has an in-table size. The box and the type step
+ * shrink together (md on sm, sm on xs); the recipe is identical. */
 .ui-pills[data-size="md"] .ui-pill {
   padding: calc(var(--s1) * var(--ui-space-scale, 1)) calc(var(--s3) * var(--ui-space-scale, 1));
-  font-size: calc(var(--text-md) * var(--ui-type-scale, 1));
+  font-size: calc(var(--text-sm) * var(--ui-type-scale, 1));
   min-height: calc(var(--s6) * var(--ui-space-scale, 1));
 }
 
 .ui-pills[data-size="sm"] .ui-pill {
   padding: calc(var(--s1) / 2 * var(--ui-space-scale, 1)) calc(var(--s2) * var(--ui-space-scale, 1));
-  font-size: calc(var(--text-sm) * var(--ui-type-scale, 1));
+  font-size: calc(var(--text-xs) * var(--ui-type-scale, 1));
   min-height: calc(var(--s5) * var(--ui-space-scale, 1));
 }
 

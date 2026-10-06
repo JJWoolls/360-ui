@@ -50,7 +50,7 @@
      style off the real bundle rather than trusting the source. */
   border-radius: var(--radius-xs);
   font-family: var(--font);
-  font-size: calc(var(--text-sm) * var(--ui-type-scale, 1)); /* 11px */
+  font-size: calc(var(--text-sm) * var(--ui-type-scale, 1)); /* 14px */
   font-weight: var(--weight-semibold);
   letter-spacing: 0.3px;
   white-space: nowrap;

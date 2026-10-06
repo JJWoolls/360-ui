@@ -51,16 +51,16 @@
 }
 
 /* SIZES — the same boxes as FilterPills, so a tab row and a pill row beside
- * each other line up. Only the box changes. */
+ * each other line up, and the same type steps (md on sm, sm on xs). */
 .ui-status-tabs[data-size="md"] .ui-status-tab {
   padding: calc(var(--s1) * var(--ui-space-scale, 1)) calc(var(--s3) * var(--ui-space-scale, 1));
-  font-size: calc(var(--text-md) * var(--ui-type-scale, 1));
+  font-size: calc(var(--text-sm) * var(--ui-type-scale, 1));
   min-height: calc((var(--s6) - var(--s1)) * var(--ui-space-scale, 1));
 }
 
 .ui-status-tabs[data-size="sm"] .ui-status-tab {
   padding: calc(var(--s1) / 2 * var(--ui-space-scale, 1)) calc(var(--s2) * var(--ui-space-scale, 1));
-  font-size: calc(var(--text-sm) * var(--ui-type-scale, 1));
+  font-size: calc(var(--text-xs) * var(--ui-type-scale, 1));
   min-height: calc((var(--s5) - var(--s1)) * var(--ui-space-scale, 1));
 }
 

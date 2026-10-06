@@ -11,7 +11,7 @@
   border-radius: var(--radius-sm);
   color: var(--text-primary);
   font-family: var(--font);
-  font-size: calc(var(--text-md) * var(--ui-type-scale, 1));
+  font-size: calc(var(--text-xs) * var(--ui-type-scale, 1));
   cursor: pointer;
   text-align: start;
   transition: background-color var(--transition);

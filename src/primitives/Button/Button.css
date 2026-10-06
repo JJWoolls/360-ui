@@ -58,12 +58,12 @@
 /* xs — the in-row control. Matches the in-table Badge's box (tight padding,
    no min-height beyond its own line) so a pressable chip does not make its row
    taller than the labels beside it. Border and hover still apply: it is a
-   button, just a small one. */
+   button, just a small one. The smallest type step and the same weight as
+   every other size: smaller is what makes it read as xs, not heavier. */
 .ui-btn[data-size="xs"] {
   gap: calc(var(--s1) * var(--ui-space-scale, 1));
   padding: 1px calc(var(--s2) * var(--ui-space-scale, 1));
-  font-size: calc(var(--text-sm) * var(--ui-type-scale, 1));
-  font-weight: var(--weight-bold);
+  font-size: calc(var(--text-xs) * var(--ui-type-scale, 1));
   line-height: 1.3;
   border-radius: var(--radius-xs);
 }
@@ -80,9 +80,10 @@
   min-height: calc(var(--s5) * var(--ui-space-scale, 1));
 }
 
+/* md shares sm's type step; the larger box is what makes it md. */
 .ui-btn[data-size="md"] {
   padding: calc(var(--s2) * var(--ui-space-scale, 1)) calc(var(--s4) * var(--ui-space-scale, 1));
-  font-size: calc(var(--text-md) * var(--ui-type-scale, 1));
+  font-size: calc(var(--text-sm) * var(--ui-type-scale, 1));
   min-height: calc(var(--s6) * var(--ui-space-scale, 1));
 }
 

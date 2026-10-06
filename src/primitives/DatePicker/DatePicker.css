@@ -33,7 +33,7 @@
   border-radius: var(--radius); /* LMS rounded-lg = 8px, exact */
   color: var(--text-secondary); /* LMS placeholder muted-foreground #999999 -> #a0a0a0 nearest */
   font-family: var(--font);
-  font-size: calc(var(--text-base) * var(--ui-type-scale, 1)); /* LMS text-sm 14px -> 13px nearest */
+  font-size: calc(var(--text-sm) * var(--ui-type-scale, 1)); /* LMS text-sm 14px, exact */
   font-weight: var(--weight-medium);
   text-align: left;
   cursor: pointer;
@@ -133,7 +133,7 @@
 
 .ui-datepicker-month {
   color: var(--text-primary); /* LMS foreground #c7c7c7 -> #ffffff nearest */
-  font-size: calc(var(--text-md) * var(--ui-type-scale, 1)); /* MiniCalendar text-xs = 12px, exact */
+  font-size: calc(var(--text-xs) * var(--ui-type-scale, 1)); /* MiniCalendar text-xs = 12px, exact */
   font-weight: var(--weight-semibold); /* font-semibold, exact */
 }
 
@@ -186,7 +186,7 @@
   border-radius: var(--radius-xs); /* "rounded" = 4px, exact */
   color: var(--text-primary); /* LMS foreground #c7c7c7 -> #ffffff nearest */
   font-family: var(--font);
-  font-size: calc(var(--text-sm) * var(--ui-type-scale, 1)); /* text-[11px] = 11px, exact */
+  font-size: calc(11px * var(--ui-type-scale, 1)); /* MiniCalendar text-[11px] — off scale, kept literal */
   font-weight: var(--weight-normal); /* fontWeight 400, exact */
   cursor: pointer;
   transition:

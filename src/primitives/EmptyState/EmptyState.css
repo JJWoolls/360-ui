@@ -15,15 +15,16 @@
 
 .ui-empty-title {
   margin: 0;
-  font-size: calc(var(--text-md) * var(--ui-type-scale, 1));
+  font-size: calc(var(--text-sm) * var(--ui-type-scale, 1));
   font-weight: var(--weight-semibold);
   color: var(--text-secondary);
 }
 
+/* One step below the title: the body explains the title, it never outranks it. */
 .ui-empty-body {
   margin: 0;
   max-width: 48ch;
-  font-size: calc(var(--text-sm) * var(--ui-type-scale, 1));
+  font-size: calc(var(--text-xs) * var(--ui-type-scale, 1));
   color: var(--text-hint);
 }
 

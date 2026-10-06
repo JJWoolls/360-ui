@@ -42,10 +42,10 @@
 .ui-daterange-sep {
   color: var(--text-tertiary);
   font-family: var(--font);
-  font-size: calc(var(--text-md) * var(--ui-type-scale, 1));
+  font-size: calc(var(--text-xs) * var(--ui-type-scale, 1));
 }
 
 .ui-daterange[data-size="sm"] .ui-datefield {
   height: calc(28px * max(var(--ui-space-scale, 1), var(--ui-type-scale, 1)));
-  font-size: calc(var(--text-md) * var(--ui-type-scale, 1));
+  font-size: calc(var(--text-xs) * var(--ui-type-scale, 1));
 }

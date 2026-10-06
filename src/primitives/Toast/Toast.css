@@ -81,7 +81,7 @@
 
 .ui-toast-body {
   margin-top: calc(var(--s1) * var(--ui-space-scale, 1));
-  font-size: calc(var(--text-md) * var(--ui-type-scale, 1));
+  font-size: calc(var(--text-xs) * var(--ui-type-scale, 1));
   color: var(--text-tertiary);
 }
 

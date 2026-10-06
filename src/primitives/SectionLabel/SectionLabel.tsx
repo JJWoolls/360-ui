@@ -27,8 +27,8 @@ import "./SectionLabel.css";
 export type SectionLabelElement = "div" | "h2" | "h3" | "span";
 
 /**
- *   "md" — the default: the size pages were hand-rolling (12px).
- *   "sm" — for dense panels and sidebars (11px).
+ *   "md" — the default: small text (14px).
+ *   "sm" — for dense panels and sidebars, one step down (12px).
  */
 export type SectionLabelSize = "sm" | "md";
 

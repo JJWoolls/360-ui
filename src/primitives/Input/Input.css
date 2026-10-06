@@ -9,7 +9,7 @@
  * Those numbers came from the LMS's StyledSelect when Select was ported
  * (see the mapping table at the top of Select.css), so this is the LMS's own
  * field, not a new opinion: 36px tall, --s2/--s3 padding, 1px --border-default,
- * --radius, --text-base.
+ * --radius, --text-sm (14px). The inline sm size steps down to --text-xs.
  *
  * WHAT IS NOT SHARED WITH THE TRIGGER: the trigger is a button and gets
  * cursor: pointer; a text field keeps the I-beam. And the trigger lays its
@@ -26,7 +26,7 @@
   border-radius: var(--radius);
   color: var(--text-primary);
   font-family: var(--font);
-  font-size: calc(var(--text-base) * var(--ui-type-scale, 1));
+  font-size: calc(var(--text-sm) * var(--ui-type-scale, 1));
   transition:
     background-color var(--transition),
     border-color var(--transition),
@@ -78,7 +78,7 @@
 .ui-input[data-size="sm"] {
   height: calc(28px * max(var(--ui-space-scale, 1), var(--ui-type-scale, 1)));
   padding: calc(var(--s1) * var(--ui-space-scale, 1)) calc(var(--s2) * var(--ui-space-scale, 1));
-  font-size: calc(var(--text-sm) * var(--ui-type-scale, 1));
+  font-size: calc(var(--text-xs) * var(--ui-type-scale, 1));
 }
 
 .ui-textarea[data-size="sm"] {
@@ -126,7 +126,7 @@
   align-items: center;
   color: var(--text-secondary);
   font-family: var(--font);
-  font-size: calc(var(--text-base) * var(--ui-type-scale, 1));
+  font-size: calc(var(--text-sm) * var(--ui-type-scale, 1));
   pointer-events: none; /* clicking the sign must focus the field, not block it */
 }
 
@@ -140,7 +140,7 @@
 }
 
 .ui-input-wrap[data-size="sm"] .ui-input-affix {
-  font-size: calc(var(--text-sm) * var(--ui-type-scale, 1));
+  font-size: calc(var(--text-xs) * var(--ui-type-scale, 1));
 }
 
 .ui-input-wrap[data-size="sm"] .ui-input-affix svg {

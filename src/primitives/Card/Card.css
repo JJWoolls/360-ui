@@ -42,9 +42,9 @@
  *              radius  rounded-xl 12px                 -> var(--radius-lg)
  *              padding p-5 20px                        -> 20px literal (between s4/s5; no token)
  *              head    mb 8px, gap 8px, icon 16px      -> var(--s2)
- *              label   text-xs 12px / 700 / upper /.05em -> var(--text-md) / var(--weight-bold), muted (--text-secondary)
+ *              label   text-xs 12px / 700 / upper /.05em -> var(--text-xs) / var(--weight-bold), muted (--text-secondary)
  *              value   text-3xl 30px / 700            -> 30px literal, tone (default brand)
- *              foot    text-xs 12px, mt 4px           -> var(--text-md), var(--s1), muted
+ *              foot    text-xs 12px, mt 4px           -> var(--text-xs), var(--s1), muted
  *              hover   NONE — clickable, but only transition-colors, no bg/border change. Ported as-is.
  *              tone    colours the whole tint (bg + border + icon + value); defaults to brand.
  *
@@ -288,7 +288,7 @@
   color: var(--violet);
 }
 .ui-card[data-kind="tile"] .ui-card-foot {
-  font-size: calc(var(--text-md) * var(--ui-type-scale, 1));
+  font-size: calc(var(--text-xs) * var(--ui-type-scale, 1));
   font-weight: var(--weight-medium);
   color: var(--text-secondary);
 }
@@ -309,7 +309,7 @@
 }
 .ui-card[data-kind="accent"] .ui-card-label {
   margin-bottom: 0;
-  font-size: calc(var(--text-md) * var(--ui-type-scale, 1));
+  font-size: calc(var(--text-xs) * var(--ui-type-scale, 1));
   font-weight: var(--weight-bold);
   letter-spacing: 0.05em;
   text-transform: uppercase;
@@ -324,7 +324,7 @@
   color: var(--brand);
 }
 .ui-card[data-kind="accent"] .ui-card-foot {
-  font-size: calc(var(--text-md) * var(--ui-type-scale, 1));
+  font-size: calc(var(--text-xs) * var(--ui-type-scale, 1));
   color: var(--text-secondary);
 }
 .ui-card[data-kind="accent"][data-tone="danger"] {
