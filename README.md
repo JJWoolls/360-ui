@@ -275,6 +275,21 @@ One dropdown: `Select`. Never a native `<select>`, and never a local copy.
 - The list is portaled, so a scrolling Modal never clips it, and inside a Modal
   the first Escape closes the list and the second the window.
 
+A form field that holds a set is `MultiSelect`, the same field and panel with
+check marks that toggle and a list that stays open:
+
+```tsx
+<MultiSelect ariaLabel="Teams" options={teams} value={ids}
+             withPrimary primary={main}
+             onChange={(next, primary) => { setIds(next); setMain(primary); }} />
+```
+
+- Always searchable. The closed field shows chips, the primary first, then "+N".
+- `withPrimary` adds a star per row; the primary always stays one of the
+  selected values (first pick becomes it, removing it hands it on).
+- Keys: Enter toggles, Space toggles until a search is typed, Shift+Enter stars.
+- For filtering a list on screen use `FilterPills`; this is for forms.
+
 ## SectionLabel
 
 One section heading: `SectionLabel`, so pages don't hand-roll a small

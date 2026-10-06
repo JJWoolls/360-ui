@@ -142,6 +142,13 @@ export type { OptionPickerModalProps, OptionPickerOption } from "./OptionPicker/
 export { Select } from "./Select/Select";
 export type { SelectProps, SelectOption, SelectSize } from "./Select/Select";
 
+// MultiSelect — the Select's pick-several sibling: same field and panel,
+// chips + "+N" in the closed field, an optional primary star per set.
+export { MultiSelect } from "./MultiSelect/MultiSelect";
+export type { MultiSelectProps, MultiSelectOption, MultiSelectSize } from "./MultiSelect/MultiSelect";
+export { toggleValue, makePrimary, settlePrimary } from "./MultiSelect/logic";
+export type { MultiSelectState } from "./MultiSelect/logic";
+
 // Input / Textarea — the house text field, which is the Select's trigger
 // without the chevron. They live next to each other in the barrel because they
 // must stay identical in shape; see the note at the top of Input.css.

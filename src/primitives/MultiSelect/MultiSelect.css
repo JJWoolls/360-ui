@@ -1,0 +1,159 @@
+/* MultiSelect — tokens only.
+ *
+ * Builds on Select.css (the trigger, panel, rows, check mark and search box are
+ * the Select's own classes, so the two dropdowns cannot drift). This file adds
+ * only what a set needs: chips in the closed field, the primary star, and the
+ * count-and-clear foot of the panel.
+ */
+
+/* Chips sit on one line inside the field's fixed height; whatever does not
+   fit is counted in "+N", never wrapped onto a second row. */
+.ui-multiselect-value {
+  gap: calc(var(--s1) * var(--ui-space-scale, 1));
+  overflow: hidden;
+}
+
+.ui-multiselect-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: calc(var(--s1) * var(--ui-space-scale, 1));
+  min-width: 0;
+  max-width: calc(160px * var(--ui-space-scale, 1));
+  height: calc(22px * var(--ui-space-scale, 1));
+  padding: 0 calc(var(--s2) * var(--ui-space-scale, 1));
+  background: var(--surface-raised);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-pill);
+  color: var(--text-primary);
+  font-size: calc(var(--text-sm) * var(--ui-type-scale, 1));
+  white-space: nowrap;
+}
+
+.ui-multiselect-chip[data-size="sm"] {
+  height: calc(18px * var(--ui-space-scale, 1));
+  padding: 0 calc(var(--s1) * var(--ui-space-scale, 1));
+  font-size: calc(var(--text-xs) * var(--ui-type-scale, 1));
+}
+
+/* The primary chip wears the brand edge, the way the selected row wears the
+   brand tint: one colour means "the main one" in both places. */
+.ui-multiselect-chip[data-primary] {
+  border-color: rgba(var(--brand-rgb), 0.55);
+  background: rgba(var(--brand-rgb), 0.1);
+}
+
+.ui-multiselect-chip .ui-multiselect-star-glyph {
+  color: var(--brand);
+}
+
+.ui-multiselect-chip-label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ui-multiselect-more {
+  flex: none;
+  color: var(--text-secondary);
+  font-size: calc(var(--text-sm) * var(--ui-type-scale, 1));
+  font-weight: var(--weight-medium);
+}
+
+.ui-multiselect-more[data-size="sm"] {
+  font-size: calc(var(--text-xs) * var(--ui-type-scale, 1));
+}
+
+.ui-multiselect-star-glyph {
+  flex: none;
+  width: calc(12px * var(--ui-icon-scale, 1));
+  height: calc(12px * var(--ui-icon-scale, 1));
+}
+
+/* ---- rows --------------------------------------------------------------- */
+
+.ui-multiselect-row-text {
+  flex: 1 1 auto;
+}
+
+/* The row star: dim outline until hovered or on, then the brand colour. */
+.ui-multiselect-star {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: calc(24px * var(--ui-space-scale, 1));
+  height: calc(24px * var(--ui-space-scale, 1));
+  margin-left: calc(var(--s2) * var(--ui-space-scale, 1));
+  padding: 0;
+  background: transparent;
+  border: 0;
+  border-radius: var(--radius-xs);
+  color: var(--text-hint);
+  cursor: pointer;
+  transition: color var(--transition), background-color var(--transition);
+}
+
+.ui-multiselect-star:hover {
+  color: var(--brand);
+  background: var(--surface-hover);
+}
+
+.ui-multiselect-star[data-on] {
+  color: var(--brand);
+}
+
+.ui-multiselect-star .ui-multiselect-star-glyph {
+  width: calc(14px * var(--ui-icon-scale, 1));
+  height: calc(14px * var(--ui-icon-scale, 1));
+}
+
+/* ---- foot --------------------------------------------------------------- */
+
+.ui-multiselect-foot {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: calc(var(--s1) * var(--ui-space-scale, 1)) calc(var(--s3) * var(--ui-space-scale, 1));
+  border-top: 1px solid var(--border-default);
+  color: var(--text-secondary);
+  font-size: calc(var(--text-sm) * var(--ui-type-scale, 1));
+}
+
+.ui-multiselect-clear {
+  padding: calc(var(--s1) * var(--ui-space-scale, 1)) calc(var(--s2) * var(--ui-space-scale, 1));
+  background: transparent;
+  border: 0;
+  border-radius: var(--radius-xs);
+  color: var(--brand);
+  font-family: var(--font);
+  font-size: inherit;
+  font-weight: var(--weight-medium);
+  cursor: pointer;
+}
+
+.ui-multiselect-clear:hover {
+  background: var(--surface-hover);
+}
+
+/* The search box keeps 16px on touch screens whatever the field size: below
+   16px iOS Safari zooms the page when a field takes focus. Select.css already
+   draws it at --text-base; this floor holds if a Scale shrinks the type. */
+@media (pointer: coarse) {
+  .ui-multiselect-search {
+    font-size: max(16px, calc(var(--text-base) * var(--ui-type-scale, 1)));
+  }
+}
+
+/* Read by screen readers, never drawn. */
+.ui-multiselect-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
