@@ -5,11 +5,17 @@
    a font except this file. Components read tokens. That is what makes "change
    the primitive, it changes everywhere" true instead of aspirational.
 
-   A COLOR MAP is a value swap and nothing more. Every map defines the SAME token
-   names, so no component ever knows which map is active. Adding a map = one more
-   block below. Changing one = editing hex. That is the whole design.
+   This file holds the BASE colours (the atlas palette) in both modes: dark on
+   :root, light on [data-theme="light"]. Every other palette lives in
+   palettes.css, keyed by <html data-palette="…">, and is a value swap over these
+   same names, so no component ever knows which palette is active.
 
-   atlas-dark and atlas-light are ported VERBATIM from lab-portal's globals.css.
+   The older data-map="…" switch (atlas-dark, atlas-light, midnight, ember,
+   pine, paper) is RETIRED: it fused mode and colour into one attribute, so a
+   person could not have "warm, but light". Its colour ideas live on as the
+   ocean, sand and forest palettes; mode is data-theme alone.
+
+   The dark values are ported VERBATIM from lab-portal's globals.css.
 
    NOTE — Atlas defines its colors twice: shadcn HSL triplets (--primary:
    153 70% 53%) and semantic hex (--brand: #3ecf8e). Same green, two spellings,
@@ -17,8 +23,7 @@
    hex set. Do not reintroduce the parallel HSL system.
    ========================================================================== */
 
-:root,
-:root[data-map="atlas-dark"] {
+:root {
   --bg:              #121212;
   --surface:         #1c1c1c;
   --surface-raised:  #242424;
@@ -45,7 +50,7 @@
   --violet:          #a78bfa;
   --violet-rgb:      167, 139, 250;
   /* Accent hues — identity colours (e.g. one per file type), not status. Same
-     values in every map, as in lab-portal's globals.css "extended accent palette". */
+     values in every palette, as in lab-portal's globals.css "extended accent palette". */
   --pink:            #ec4899;
   --pink-rgb:        236, 72, 153;
   --cyan:            #06b6d4;
@@ -54,11 +59,25 @@
   --orange-rgb:      251, 146, 60;
   --lime:            #a3e635;
   --lime-rgb:        163, 230, 53;
+  /* The same accent hues when they are the TEXT on their own faint tint (a
+     toned Button's label). On a dark ground the bright hue already reads, so
+     ink = the hue; light grounds darken it (below). */
+  --pink-ink:        #ec4899;
+  --pink-ink-rgb:    236, 72, 153;
+  --cyan-ink:        #06b6d4;
+  --cyan-ink-rgb:    6, 182, 212;
+  --orange-ink:      #fb923c;
+  --orange-ink-rgb:  251, 146, 60;
+  --lime-ink:        #a3e635;
+  --lime-ink-rgb:    163, 230, 53;
   /* Neutral badge tone. The LMS "Audit" badge is #666 on rgba(102,102,102,.1). */
   --muted-rgb:       102, 102, 102;
   --toggle-thumb:    #ffffff;
   --overlay:         rgba(0, 0, 0, 0.6);
   --shadow:          rgba(0, 0, 0, 0.45);
+  /* 0 = dark ground, 1 = light. Read this, not the mode name, to choose ink for
+     an arbitrary colour (palettes.css sets it per palette and mode). */
+  --surface-is-light: 0;
   color-scheme: dark;
 }
 
@@ -72,7 +91,6 @@
    were identical; the -rgb ones were not, and 422 tinted backgrounds went
    transparent with no error anywhere. An app owns its tokens; the kit reads
    them. Do not import this into an app that already has a token file. */
-:root[data-map="atlas-light"],
 [data-theme="light"] {
   --bg:              #f7f7f7;
   --surface:         #ffffff;
@@ -107,183 +125,27 @@
   --orange-rgb:      251, 146, 60;
   --lime:            #a3e635;
   --lime-rgb:        163, 230, 53;
+  /* As labels on their own 12% ground over white the bright hues read
+     1.4–3.0:1 (lime worst). Tailwind 800 shades: >= 5.1:1 at rest and on the
+     20% hover ground. */
+  --pink-ink:        #9d174d;
+  --pink-ink-rgb:    157, 23, 77;
+  --cyan-ink:        #155e75;
+  --cyan-ink-rgb:    21, 94, 117;
+  --orange-ink:      #9a3412;
+  --orange-ink-rgb:  154, 52, 18;
+  --lime-ink:        #3f6212;
+  --lime-ink-rgb:    63, 98, 18;
   --muted-rgb:       75, 85, 99;
   --toggle-thumb:    #ffffff;
   --overlay:         rgba(0, 0, 0, 0.3);
   --shadow:          rgba(0, 0, 0, 0.12);
-  color-scheme: light;
-}
-
-/* Cool blue-grey ground; neutrals carry a blue bias so they read as chosen. */
-:root[data-map="midnight"] {
-  --bg:              #0f1116;
-  --surface:         #171a21;
-  --surface-raised:  #1e222b;
-  --surface-hover:   #222732;
-  --surface-inset:   #0c0e12;
-  --border-subtle:   #1c202a;
-  --border-default:  #2c3340;
-  --border-strong:   #3a4353;
-  --text-primary:    #f2f5fa;
-  --text-secondary:  #98a3b6;
-  --text-tertiary:   #7d879a;
-  --text-hint:       #545e70;
-  --text-disabled:   #3d4453;
-  --brand:           #5b9cff;
-  --brand-hover:     #4785e6;
-  --brand-rgb:       91, 156, 255;
-  --brand-on:        #0b0f18;
-  --danger:          #ff5c6c;
-  --danger-rgb:      255, 92, 108;
-  --warn:            #f0a93c;
-  --warn-rgb:        240, 169, 60;
-  --info:            #56c8e8;
-  --info-rgb:        86, 200, 232;
-  --violet:          #b28cfa;
-  --violet-rgb:      178, 140, 250;
-  --pink:            #ec4899;
-  --pink-rgb:        236, 72, 153;
-  --cyan:            #06b6d4;
-  --cyan-rgb:        6, 182, 212;
-  --orange:          #fb923c;
-  --orange-rgb:      251, 146, 60;
-  --lime:            #a3e635;
-  --lime-rgb:        163, 230, 53;
-  --muted-rgb:       125, 135, 154;
-  --toggle-thumb:    #f2f5fa;
-  --overlay:         rgba(0, 0, 0, 0.65);
-  --shadow:          rgba(0, 0, 0, 0.5);
-  color-scheme: dark;
-}
-
-/* Warm dark, amber accent, neutrals biased warm. */
-:root[data-map="ember"] {
-  --bg:              #14100d;
-  --surface:         #1e1813;
-  --surface-raised:  #271f19;
-  --surface-hover:   #2d241d;
-  --surface-inset:   #100c09;
-  --border-subtle:   #241d17;
-  --border-default:  #3a2f25;
-  --border-strong:   #4c3e31;
-  --text-primary:    #fdf6ee;
-  --text-secondary:  #b3a495;
-  --text-tertiary:   #948577;
-  --text-hint:       #665a4e;
-  --text-disabled:   #4a4038;
-  --brand:           #f0a03c;
-  --brand-hover:     #d6872a;
-  --brand-rgb:       240, 160, 60;
-  --brand-on:        #14100d;
-  --danger:          #f2634f;
-  --danger-rgb:      242, 99, 79;
-  --warn:            #e8c33f;
-  --warn-rgb:        232, 195, 63;
-  --info:            #5fb0c4;
-  --info-rgb:        95, 176, 196;
-  --violet:          #c294e0;
-  --violet-rgb:      194, 148, 224;
-  --pink:            #ec4899;
-  --pink-rgb:        236, 72, 153;
-  --cyan:            #06b6d4;
-  --cyan-rgb:        6, 182, 212;
-  --orange:          #fb923c;
-  --orange-rgb:      251, 146, 60;
-  --lime:            #a3e635;
-  --lime-rgb:        163, 230, 53;
-  --muted-rgb:       148, 133, 119;
-  --toggle-thumb:    #fdf6ee;
-  --overlay:         rgba(0, 0, 0, 0.65);
-  --shadow:          rgba(0, 0, 0, 0.5);
-  color-scheme: dark;
-}
-
-/* Deep teal ground — the Atlas green on a ground that belongs to it. */
-:root[data-map="pine"] {
-  --bg:              #0c1411;
-  --surface:         #131d19;
-  --surface-raised:  #1a2620;
-  --surface-hover:   #1f2d26;
-  --surface-inset:   #09100d;
-  --border-subtle:   #18231e;
-  --border-default:  #27362e;
-  --border-strong:   #35473d;
-  --text-primary:    #f0f7f3;
-  --text-secondary:  #93a89d;
-  --text-tertiary:   #7a8f84;
-  --text-hint:       #52655b;
-  --text-disabled:   #3c4a43;
-  --brand:           #3ecf8e;
-  --brand-hover:     #35b87e;
-  --brand-rgb:       62, 207, 142;
-  --brand-on:        #08110d;
-  --danger:          #ff5f6d;
-  --danger-rgb:      255, 95, 109;
-  --warn:            #e9b23c;
-  --warn-rgb:        233, 178, 60;
-  --info:            #4fb8d8;
-  --info-rgb:        79, 184, 216;
-  --violet:          #a78bfa;
-  --violet-rgb:      167, 139, 250;
-  --pink:            #ec4899;
-  --pink-rgb:        236, 72, 153;
-  --cyan:            #06b6d4;
-  --cyan-rgb:        6, 182, 212;
-  --orange:          #fb923c;
-  --orange-rgb:      251, 146, 60;
-  --lime:            #a3e635;
-  --lime-rgb:        163, 230, 53;
-  --muted-rgb:       122, 143, 132;
-  --toggle-thumb:    #f0f7f3;
-  --overlay:         rgba(0, 0, 0, 0.65);
-  --shadow:          rgba(0, 0, 0, 0.5);
-  color-scheme: dark;
-}
-
-/* Warm light, for daylight. */
-:root[data-map="paper"] {
-  --bg:              #f2efe9;
-  --surface:         #fffdf9;
-  --surface-raised:  #f8f5ef;
-  --surface-hover:   #ece7dd;
-  --surface-inset:   #eae5db;
-  --border-subtle:   #e4ded1;
-  --border-default:  #d3cbba;
-  --border-strong:   #bdb3a0;
-  --text-primary:    #1c1a16;
-  --text-secondary:  #4a4539;
-  --text-tertiary:   #6b6455;
-  --text-hint:       #9c9483;
-  --text-disabled:   #bdb6a6;
-  --brand:           #1f8f5f;
-  --brand-hover:     #17744c;
-  --brand-rgb:       31, 143, 95;
-  --brand-on:        #ffffff;
-  --danger:          #c2402f;
-  --danger-rgb:      194, 64, 47;
-  --warn:            #9a6512;
-  --warn-rgb:        154, 101, 18;
-  --info:            #1f5f9e;
-  --info-rgb:        31, 95, 158;
-  --violet:          #6b3fb5;
-  --violet-rgb:      107, 63, 181;
-  --pink:            #ec4899;
-  --pink-rgb:        236, 72, 153;
-  --cyan:            #06b6d4;
-  --cyan-rgb:        6, 182, 212;
-  --orange:          #fb923c;
-  --orange-rgb:      251, 146, 60;
-  --lime:            #a3e635;
-  --lime-rgb:        163, 230, 53;
-  --muted-rgb:       107, 100, 85;
-  --toggle-thumb:    #ffffff;
-  --overlay:         rgba(40, 34, 20, 0.4);
-  --shadow:          rgba(60, 50, 30, 0.13);
+  --surface-is-light: 1;
   color-scheme: light;
 }
 
 /* ----------------------------------------------------------------------------
-   SCALE — map-independent. Spacing is a 4px scale; if a screen wants a step that
+   SCALE — palette- and mode-independent. Spacing is a 4px scale; if a screen wants a step that
    isn't here, the SCALE is wrong. That's a conversation, not a one-off value.
    -------------------------------------------------------------------------- */
 :root {
@@ -331,31 +193,4 @@
   --z-tooltip: 70;
 
   --transition: 0.15s ease;
-}
-
-/* ----------------------------------------------------------------------------
-   MAP PREVIEW SWATCHES — each map's brand color, readable from ANY map.
-   ----------------------------------------------------------------------------
-   The one honest exception to "a component never names a color", and it earns
-   it: the map switcher's dot must show the brand of the map that chip SELECTS,
-   not the map that is currently active. var(--brand) cannot express that — it
-   always resolves to whatever map is live right now, so every dot would be the
-   same color and the switcher would tell you nothing.
-
-   So the six values live HERE, where literal colors are legal, and the chip
-   reads one by data attribute. Each is a copy of that map's --brand: if you
-   retune a map's brand above, retune its twin below or the switcher starts
-   lying about what it's offering.
-
-   DELIBERATELY on plain :root, NOT inside the map blocks. Every map must define
-   an identical token set (scripts/check-tokens.mjs enforces exactly this), and
-   these are map-independent by definition — all six are true at once.
-   -------------------------------------------------------------------------- */
-:root {
-  --map-preview-atlas-dark:  #3ecf8e;
-  --map-preview-atlas-light: #1f9d63;
-  --map-preview-midnight:    #5b9cff;
-  --map-preview-ember:       #f0a03c;
-  --map-preview-pine:        #3ecf8e;
-  --map-preview-paper:       #1f8f5f;
 }

@@ -1,0 +1,697 @@
+/* ============================================================================
+   Palettes — the colour axis, independent of light / dark.
+   ----------------------------------------------------------------------------
+   TWO AXES on <html>:
+     data-theme   = "dark" (default) | "light"     — the mode
+     data-palette = "atlas" (default) | "ocean" | "sand" | "forest" | "plum" | "graphite"
+   Any palette in either mode. No attribute, or data-palette="atlas", leaves the
+   app's own token file in charge: atlas is the base and has NO block here, so the
+   default renders exactly as it did before palettes existed.
+
+   WHAT A PALETTE MAY SET (and nothing else — test/palettes.test.ts enforces it):
+     grounds, borders, the text ramp, brand (+hover, +on), the info / violet /
+     neutral tones, --muted-rgb, --surface-is-light, and the legacy HSL set the
+     app's utility classes read (hsl(var(--card)) and friends).
+   WHAT IT MAY NOT: the identity palettes (--stage-*, --dept-*, --location-*,
+     --route-*), the pan contrast pair, or --danger / --warn / --success. Those
+     carry meaning — a stage, a place, an alarm — and must read the same in every
+     palette. The decorative accents (pink, cyan, orange, lime, gold) and the
+     shadow / overlay values are left to the base too: they read on every ground.
+
+   -rgb TWINS: every colour a palette sets that has an -rgb companion is set
+   with it, in the same block, and the test proves each pair names the same
+   colour. A palette swap can never leave rgba(var(--x-rgb), a) on the old hue.
+
+   --surface-is-light is 0 on a dark ground and 1 on a light one. Code that has
+   to choose ink for an arbitrary colour (a solid swatch chip) reads THIS, not
+   the mode name, so a mid-tone palette can say what its ground actually is.
+
+   SPECIFICITY, deliberately: every selector starts with :root[data-palette]
+   (0,2,0; light adds [data-theme], 0,3,0) so it beats an app's
+   :root / [data-theme="light"] defaults (0,1,0) whatever order the bundler
+   emits the stylesheets in. Load order must never decide colour.
+
+   Values were drafted by holding each palette's hue and saturation over the
+   atlas lightness ramp, then checked for contrast: primary, secondary and
+   tertiary text are at least 4.5:1 on --surface in every palette and mode.
+   ========================================================================== */
+
+/* OCEAN — Navy and steel grounds with a clear blue accent. Calm and cool. */
+:root[data-palette="ocean"] {
+  /* Grounds */
+  --bg: #0c1018;
+  --surface: #131a26;
+  --surface-inset: #0b1017;
+  --surface-sunken: #0a0e14;
+  --surface-raised: #182130;
+  --surface-hover: #182232;
+  --surface-elevated: #1e293c;
+  --surface-deep: #07090d;
+  --surface-is-light: 0;
+  /* Borders */
+  --border-subtle: #182131;
+  --border-default: #25334b;
+  --border-strong: #2e3f5d;
+  /* Text */
+  --text-primary: #f6f7f9;
+  --foreground-soft: #c2c9d6;
+  --text-secondary: #93a0b7;
+  --text-tertiary: #7c8ca8;
+  --text-quaternary: #586884;
+  --text-hint: #445066;
+  --text-disabled: #364052;
+  --muted-rgb: 88, 104, 132;
+  /* Accent */
+  --brand: #5b9cff;
+  --brand-rgb: 91, 156, 255;
+  --brand-hover: #4785e6;
+  --brand-on: #0b1220;
+  /* Tones a palette may move (danger / warn / success never move) */
+  --info: #38bdf8;
+  --info-rgb: 56, 189, 248;
+  --violet: #a78bfa;
+  --violet-rgb: 167, 139, 250;
+  --neutral: #657186;
+  --neutral-rgb: 101, 113, 134;
+  /* Legacy HSL set (consumed as hsl(var(--x))) */
+  --background: 220 33% 7%;
+  --foreground: 218 20% 78%;
+  --card: 219 33% 10%;
+  --card-foreground: 218 20% 78%;
+  --popover: 219 33% 10%;
+  --popover-foreground: 218 20% 78%;
+  --primary: 216 100% 68%;
+  --primary-foreground: 220 49% 8%;
+  --secondary: 217 34% 15%;
+  --secondary-foreground: 218 20% 78%;
+  --muted: 217 34% 15%;
+  --muted-foreground: 218 20% 62%;
+  --accent: 217 34% 15%;
+  --accent-foreground: 218 20% 78%;
+  --border: 218 34% 19%;
+  --input: 218 34% 19%;
+  --ring: 216 100% 68%;
+  --sidebar-bg: 213 36% 5%;
+  --sidebar-hover: 218 33% 11%;
+  --sidebar-text: 218 20% 62%;
+  --sidebar-text-hover: 219 20% 70%;
+  --sidebar-icon: 219 20% 27%;
+  --sidebar-icon-hover: 218 20% 62%;
+  --sidebar-badge-text: 218 20% 43%;
+  --sidebar-user-text: 219 20% 80%;
+}
+
+:root[data-palette="ocean"][data-theme="light"] {
+  /* Grounds */
+  --bg: #f4f6fa;
+  --surface: #ffffff;
+  --surface-inset: #f6f8fb;
+  --surface-sunken: #eef2f8;
+  --surface-raised: #f3f5fa;
+  --surface-hover: #e4eaf3;
+  --surface-elevated: #ebf0f7;
+  --surface-deep: #e4eaf3;
+  --surface-is-light: 1;
+  /* Borders */
+  --border-subtle: #e0e7f2;
+  --border-default: #c6d3e6;
+  --border-strong: #b6c7e0;
+  /* Text */
+  --text-primary: #111a27;
+  --foreground-soft: #1b283c;
+  --text-secondary: #253753;
+  --text-tertiary: #334d72;
+  --text-quaternary: #4a6ea4;
+  --text-hint: #829ec7;
+  --text-disabled: #b0c2dc;
+  --muted-rgb: 51, 77, 114;
+  /* Accent */
+  --brand: #2563eb;
+  --brand-rgb: 37, 99, 235;
+  --brand-hover: #1d4ed8;
+  --brand-on: #ffffff;
+  /* Tones a palette may move (danger / warn / success never move) */
+  --info: #0369a1;
+  --info-rgb: 3, 105, 161;
+  --violet: #6d28d9;
+  --violet-rgb: 109, 40, 217;
+  --neutral: #657286;
+  --neutral-rgb: 101, 114, 134;
+  /* Legacy HSL set (consumed as hsl(var(--x))) */
+  --background: 210 37% 97%;
+  --foreground: 215 37% 10%;
+  --card: 0 0% 100%;
+  --card-foreground: 215 37% 10%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 215 37% 10%;
+  --primary: 221 83% 53%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 214 39% 93%;
+  --secondary-foreground: 215 37% 10%;
+  --muted: 214 39% 93%;
+  --muted-foreground: 216 38% 35%;
+  --accent: 214 39% 93%;
+  --accent-foreground: 215 37% 10%;
+  --border: 217 39% 87%;
+  --input: 217 39% 87%;
+  --ring: 221 83% 53%;
+  --sidebar-bg: 0 0% 100%;
+  --sidebar-hover: 216 38% 95%;
+  --sidebar-text: 216 38% 35%;
+  --sidebar-text-hover: 216 37% 20%;
+  --sidebar-icon: 216 38% 50%;
+  --sidebar-icon-hover: 216 39% 30%;
+  --sidebar-badge-text: 216 38% 40%;
+  --sidebar-user-text: 217 38% 15%;
+}
+
+/* SAND — Warm brown and tan grounds with a caramel accent. Soft and warm. */
+:root[data-palette="sand"] {
+  /* Grounds */
+  --bg: #16120e;
+  --surface: #221c16;
+  --surface-inset: #15110e;
+  --surface-sunken: #120f0c;
+  --surface-raised: #2b241d;
+  --surface-hover: #2c251e;
+  --surface-elevated: #362d24;
+  --surface-deep: #0c0a08;
+  --surface-is-light: 0;
+  /* Borders */
+  --border-subtle: #251f19;
+  --border-default: #3d3329;
+  --border-strong: #4d4033;
+  /* Text */
+  --text-primary: #f9f7f6;
+  --foreground-soft: #d7ccc1;
+  --text-secondary: #b5a08b;
+  --text-tertiary: #a48a71;
+  --text-quaternary: #7c6650;
+  --text-hint: #685542;
+  --text-disabled: #534435;
+  --muted-rgb: 124, 102, 80;
+  /* Accent */
+  --brand: #d4a373;
+  --brand-rgb: 212, 163, 115;
+  --brand-hover: #bf8d5e;
+  --brand-on: #1a120b;
+  /* Tones a palette may move (danger / warn / success never move) */
+  --info: #4a9eff;
+  --info-rgb: 74, 158, 255;
+  --violet: #a78bfa;
+  --violet-rgb: 167, 139, 250;
+  --neutral: #867565;
+  --neutral-rgb: 134, 117, 101;
+  /* Legacy HSL set (consumed as hsl(var(--x))) */
+  --background: 34 20% 7%;
+  --foreground: 30 21% 78%;
+  --card: 33 22% 10%;
+  --card-foreground: 30 21% 78%;
+  --popover: 33 22% 10%;
+  --popover-foreground: 30 21% 78%;
+  --primary: 30 53% 64%;
+  --primary-foreground: 28 41% 7%;
+  --secondary: 28 19% 15%;
+  --secondary-foreground: 30 21% 78%;
+  --muted: 28 19% 15%;
+  --muted-foreground: 30 22% 60%;
+  --accent: 28 19% 15%;
+  --accent-foreground: 30 21% 78%;
+  --border: 28 20% 17%;
+  --input: 28 20% 17%;
+  --ring: 30 53% 64%;
+  --sidebar-bg: 36 20% 5%;
+  --sidebar-hover: 30 21% 11%;
+  --sidebar-text: 30 22% 60%;
+  --sidebar-text-hover: 31 22% 70%;
+  --sidebar-icon: 30 22% 27%;
+  --sidebar-icon-hover: 30 22% 60%;
+  --sidebar-badge-text: 30 22% 40%;
+  --sidebar-user-text: 30 22% 80%;
+}
+
+:root[data-palette="sand"][data-theme="light"] {
+  /* Grounds */
+  --bg: #f7f4ef;
+  --surface: #fcfbfa;
+  --surface-inset: #f8f6f2;
+  --surface-sunken: #f5f0ea;
+  --surface-raised: #f7f3ee;
+  --surface-hover: #f0e9e0;
+  --surface-elevated: #f3eee7;
+  --surface-deep: #f0e9e0;
+  --surface-is-light: 1;
+  /* Borders */
+  --border-subtle: #f1ebe2;
+  --border-default: #e4d9c8;
+  --border-strong: #ddcfb9;
+  /* Text */
+  --text-primary: #231e15;
+  --foreground-soft: #372e20;
+  --text-secondary: #4c3f2c;
+  --text-tertiary: #68573d;
+  --text-quaternary: #957d58;
+  --text-hint: #bca98d;
+  --text-disabled: #d5c9b7;
+  --muted-rgb: 104, 87, 61;
+  /* Accent */
+  --brand: #8a5a2b;
+  --brand-rgb: 138, 90, 43;
+  --brand-hover: #744a22;
+  --brand-on: #ffffff;
+  /* Tones a palette may move (danger / warn / success never move) */
+  --info: #1d4ed8;
+  --info-rgb: 29, 78, 216;
+  --violet: #6d28d9;
+  --violet-rgb: 109, 40, 217;
+  --neutral: #867965;
+  --neutral-rgb: 134, 121, 101;
+  /* Legacy HSL set (consumed as hsl(var(--x))) */
+  --background: 34 30% 95%;
+  --foreground: 37 25% 10%;
+  --card: 30 25% 98%;
+  --card-foreground: 37 25% 10%;
+  --popover: 30 25% 98%;
+  --popover-foreground: 37 25% 10%;
+  --primary: 30 52% 35%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 36 35% 92%;
+  --secondary-foreground: 37 25% 10%;
+  --muted: 36 35% 92%;
+  --muted-foreground: 37 26% 35%;
+  --accent: 36 35% 92%;
+  --accent-foreground: 37 25% 10%;
+  --border: 35 33% 87%;
+  --input: 37 35% 85%;
+  --ring: 30 52% 35%;
+  --sidebar-bg: 30 25% 98%;
+  --sidebar-hover: 38 33% 94%;
+  --sidebar-text: 37 26% 35%;
+  --sidebar-text-hover: 37 25% 20%;
+  --sidebar-icon: 36 26% 50%;
+  --sidebar-icon-hover: 35 25% 30%;
+  --sidebar-badge-text: 36 26% 40%;
+  --sidebar-user-text: 36 26% 15%;
+}
+
+/* FOREST — Deep green grounds with a moss accent. Quiet and natural. */
+:root[data-palette="forest"] {
+  /* Grounds */
+  --bg: #0e1612;
+  --surface: #15231c;
+  --surface-inset: #0d1511;
+  --surface-sunken: #0b130f;
+  --surface-raised: #1b2d25;
+  --surface-hover: #1c2e26;
+  --surface-elevated: #22382e;
+  --surface-deep: #080c0a;
+  --surface-is-light: 0;
+  /* Borders */
+  --border-subtle: #182720;
+  --border-default: #273f34;
+  --border-strong: #314f41;
+  /* Text */
+  --text-primary: #f6f8f7;
+  --foreground-soft: #c5d3cc;
+  --text-secondary: #93ada1;
+  --text-tertiary: #779989;
+  --text-quaternary: #587467;
+  --text-hint: #496156;
+  --text-disabled: #3b4e45;
+  --muted-rgb: 88, 116, 103;
+  /* Accent */
+  --brand: #a3c96b;
+  --brand-rgb: 163, 201, 107;
+  --brand-hover: #8fb558;
+  --brand-on: #0f1a0f;
+  /* Tones a palette may move (danger / warn / success never move) */
+  --info: #4a9eff;
+  --info-rgb: 74, 158, 255;
+  --violet: #a78bfa;
+  --violet-rgb: 167, 139, 250;
+  --neutral: #658676;
+  --neutral-rgb: 101, 134, 118;
+  /* Legacy HSL set (consumed as hsl(var(--x))) */
+  --background: 150 22% 7%;
+  --foreground: 150 14% 78%;
+  --card: 152 25% 10%;
+  --card-foreground: 150 14% 78%;
+  --popover: 152 25% 10%;
+  --popover-foreground: 150 14% 78%;
+  --primary: 84 47% 60%;
+  --primary-foreground: 120 27% 8%;
+  --secondary: 153 24% 15%;
+  --secondary-foreground: 150 14% 78%;
+  --muted: 153 24% 15%;
+  --muted-foreground: 152 14% 60%;
+  --accent: 153 24% 15%;
+  --accent-foreground: 150 14% 78%;
+  --border: 151 24% 17%;
+  --input: 151 24% 17%;
+  --ring: 84 47% 60%;
+  --sidebar-bg: 150 23% 5%;
+  --sidebar-hover: 150 25% 11%;
+  --sidebar-text: 152 14% 60%;
+  --sidebar-text-hover: 151 14% 70%;
+  --sidebar-icon: 152 14% 27%;
+  --sidebar-icon-hover: 152 14% 60%;
+  --sidebar-badge-text: 152 14% 40%;
+  --sidebar-user-text: 150 14% 80%;
+}
+
+:root[data-palette="forest"][data-theme="light"] {
+  /* Grounds */
+  --bg: #f5f9f7;
+  --surface: #ffffff;
+  --surface-inset: #f8faf8;
+  --surface-sunken: #f0f6f2;
+  --surface-raised: #f4f8f5;
+  --surface-hover: #e7f0ea;
+  --surface-elevated: #eef4f0;
+  --surface-deep: #e7f0ea;
+  --surface-is-light: 1;
+  /* Borders */
+  --border-subtle: #e4eee7;
+  --border-default: #cddfd3;
+  --border-strong: #c0d6c7;
+  /* Text */
+  --text-primary: #15231a;
+  --foreground-soft: #203728;
+  --text-secondary: #2c4c37;
+  --text-tertiary: #3d684c;
+  --text-quaternary: #58956c;
+  --text-hint: #8dbc9d;
+  --text-disabled: #b7d5c1;
+  --muted-rgb: 61, 104, 76;
+  /* Accent */
+  --brand: #3f6b1f;
+  --brand-rgb: 63, 107, 31;
+  --brand-hover: #33591a;
+  --brand-on: #ffffff;
+  /* Tones a palette may move (danger / warn / success never move) */
+  --info: #1d4ed8;
+  --info-rgb: 29, 78, 216;
+  --violet: #6d28d9;
+  --violet-rgb: 109, 40, 217;
+  --neutral: #658670;
+  --neutral-rgb: 101, 134, 112;
+  /* Legacy HSL set (consumed as hsl(var(--x))) */
+  --background: 140 20% 97%;
+  --foreground: 138 25% 10%;
+  --card: 0 0% 100%;
+  --card-foreground: 138 25% 10%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 138 25% 10%;
+  --primary: 95 55% 27%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 143 22% 93%;
+  --secondary-foreground: 138 25% 10%;
+  --muted: 143 22% 93%;
+  --muted-foreground: 141 26% 35%;
+  --accent: 143 22% 93%;
+  --accent-foreground: 138 25% 10%;
+  --border: 137 21% 87%;
+  --input: 137 21% 87%;
+  --ring: 95 55% 27%;
+  --sidebar-bg: 0 0% 100%;
+  --sidebar-hover: 140 23% 95%;
+  --sidebar-text: 141 26% 35%;
+  --sidebar-text-hover: 141 25% 20%;
+  --sidebar-icon: 140 26% 50%;
+  --sidebar-icon-hover: 140 25% 30%;
+  --sidebar-badge-text: 140 26% 40%;
+  --sidebar-user-text: 141 26% 15%;
+}
+
+/* PLUM — Aubergine grounds with an orchid accent. Rich and moody. */
+:root[data-palette="plum"] {
+  /* Grounds */
+  --bg: #130e16;
+  --surface: #1e1622;
+  --surface-inset: #120d15;
+  --surface-sunken: #100c12;
+  --surface-raised: #261c2c;
+  --surface-hover: #271d2d;
+  --surface-elevated: #302337;
+  --surface-deep: #0b080c;
+  --surface-is-light: 0;
+  /* Borders */
+  --border-subtle: #261c2c;
+  --border-default: #3b2c44;
+  --border-strong: #493654;
+  /* Text */
+  --text-primary: #f8f6f8;
+  --foreground-soft: #cec5d3;
+  --text-secondary: #a898b2;
+  --text-tertiary: #9683a1;
+  --text-quaternary: #725e7d;
+  --text-hint: #584961;
+  --text-disabled: #473b4e;
+  --muted-rgb: 114, 94, 125;
+  /* Accent */
+  --brand: #c084fc;
+  --brand-rgb: 192, 132, 252;
+  --brand-hover: #a96ee6;
+  --brand-on: #1a0f24;
+  /* Tones a palette may move (danger / warn / success never move) */
+  --info: #4a9eff;
+  --info-rgb: 74, 158, 255;
+  --violet: #f0abfc;
+  --violet-rgb: 240, 171, 252;
+  --neutral: #7a6586;
+  --neutral-rgb: 122, 101, 134;
+  /* Legacy HSL set (consumed as hsl(var(--x))) */
+  --background: 278 22% 7%;
+  --foreground: 278 14% 78%;
+  --card: 278 22% 10%;
+  --card-foreground: 278 14% 78%;
+  --popover: 278 22% 10%;
+  --popover-foreground: 278 14% 78%;
+  --primary: 270 95% 75%;
+  --primary-foreground: 271 41% 10%;
+  --secondary: 275 22% 15%;
+  --secondary-foreground: 278 14% 78%;
+  --muted: 275 22% 15%;
+  --muted-foreground: 278 14% 62%;
+  --accent: 275 22% 15%;
+  --accent-foreground: 278 14% 78%;
+  --border: 277 22% 19%;
+  --input: 277 22% 19%;
+  --ring: 270 95% 75%;
+  --sidebar-bg: 270 23% 5%;
+  --sidebar-hover: 280 21% 11%;
+  --sidebar-text: 278 14% 62%;
+  --sidebar-text-hover: 277 14% 70%;
+  --sidebar-icon: 278 14% 27%;
+  --sidebar-icon-hover: 278 14% 62%;
+  --sidebar-badge-text: 279 14% 43%;
+  --sidebar-user-text: 279 14% 80%;
+}
+
+:root[data-palette="plum"][data-theme="light"] {
+  /* Grounds */
+  --bg: #f8f5f9;
+  --surface: #ffffff;
+  --surface-inset: #f9f7fa;
+  --surface-sunken: #f4f0f6;
+  --surface-raised: #f7f4f8;
+  --surface-hover: #ede7f1;
+  --surface-elevated: #f2edf5;
+  --surface-deep: #ede7f1;
+  --surface-is-light: 1;
+  /* Borders */
+  --border-subtle: #ebe3ef;
+  --border-default: #dacbe1;
+  --border-strong: #cfbdd9;
+  /* Text */
+  --text-primary: #1e1523;
+  --foreground-soft: #2f2037;
+  --text-secondary: #412c4c;
+  --text-tertiary: #5a3d68;
+  --text-quaternary: #815895;
+  --text-hint: #ac8dbc;
+  --text-disabled: #cbb7d5;
+  --muted-rgb: 90, 61, 104;
+  /* Accent */
+  --brand: #7e3fbf;
+  --brand-rgb: 126, 63, 191;
+  --brand-hover: #6a32a3;
+  --brand-on: #ffffff;
+  /* Tones a palette may move (danger / warn / success never move) */
+  --info: #1d4ed8;
+  --info-rgb: 29, 78, 216;
+  --violet: #a21caf;
+  --violet-rgb: 162, 28, 175;
+  --neutral: #7b6586;
+  --neutral-rgb: 123, 101, 134;
+  /* Legacy HSL set (consumed as hsl(var(--x))) */
+  --background: 285 25% 97%;
+  --foreground: 282 25% 10%;
+  --card: 0 0% 100%;
+  --card-foreground: 282 25% 10%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 282 25% 10%;
+  --primary: 270 50% 50%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 280 26% 93%;
+  --secondary-foreground: 282 25% 10%;
+  --muted: 280 26% 93%;
+  --muted-foreground: 280 26% 35%;
+  --accent: 280 26% 93%;
+  --accent-foreground: 282 25% 10%;
+  --border: 282 25% 87%;
+  --input: 282 25% 87%;
+  --ring: 270 50% 50%;
+  --sidebar-bg: 0 0% 100%;
+  --sidebar-hover: 274 28% 95%;
+  --sidebar-text: 280 26% 35%;
+  --sidebar-text-hover: 279 25% 20%;
+  --sidebar-icon: 280 26% 50%;
+  --sidebar-icon-hover: 280 25% 30%;
+  --sidebar-badge-text: 280 26% 40%;
+  --sidebar-user-text: 282 26% 15%;
+}
+
+/* GRAPHITE — Near-black neutral grounds, brighter text and firmer borders, silver accent. Maximum contrast. */
+:root[data-palette="graphite"] {
+  /* Grounds */
+  --bg: #0e0e0f;
+  --surface: #171819;
+  --surface-inset: #0d0d0e;
+  --surface-sunken: #0b0b0c;
+  --surface-raised: #1f2022;
+  --surface-hover: #1f2123;
+  --surface-elevated: #27282b;
+  --surface-deep: #060606;
+  --surface-is-light: 0;
+  /* Borders */
+  --border-subtle: #2c2e31;
+  --border-default: #3f4146;
+  --border-strong: #4b4e53;
+  /* Text */
+  --text-primary: #f7f7f8;
+  --foreground-soft: #cacbce;
+  --text-secondary: #bcbec1;
+  --text-tertiary: #a8abaf;
+  --text-quaternary: #8a8d93;
+  --text-hint: #6f7278;
+  --text-disabled: #5f6167;
+  --muted-rgb: 138, 141, 147;
+  /* Accent */
+  --brand: #e4e4e7;
+  --brand-rgb: 228, 228, 231;
+  --brand-hover: #c9c9ce;
+  --brand-on: #0a0a0a;
+  /* Tones a palette may move (danger / warn / success never move) */
+  --info: #4a9eff;
+  --info-rgb: 74, 158, 255;
+  --violet: #a78bfa;
+  --violet-rgb: 167, 139, 250;
+  --neutral: #71747a;
+  --neutral-rgb: 113, 116, 122;
+  /* Legacy HSL set (consumed as hsl(var(--x))) */
+  --background: 210 7% 5%;
+  --foreground: 225 4% 78%;
+  --card: 240 5% 9%;
+  --card-foreground: 225 4% 78%;
+  --popover: 240 5% 9%;
+  --popover-foreground: 225 4% 78%;
+  --primary: 240 6% 90%;
+  --primary-foreground: 0 0% 4%;
+  --secondary: 220 4% 14%;
+  --secondary-foreground: 225 4% 78%;
+  --muted: 220 4% 14%;
+  --muted-foreground: 216 3% 72%;
+  --accent: 220 4% 14%;
+  --accent-foreground: 225 4% 78%;
+  --border: 220 5% 23%;
+  --input: 220 5% 22%;
+  --ring: 240 6% 90%;
+  --sidebar-bg: 180 6% 3%;
+  --sidebar-hover: 210 4% 9%;
+  --sidebar-text: 216 3% 72%;
+  --sidebar-text-hover: 223 5% 70%;
+  --sidebar-icon: 217 4% 39%;
+  --sidebar-icon-hover: 216 3% 72%;
+  --sidebar-badge-text: 220 4% 56%;
+  --sidebar-user-text: 225 4% 80%;
+}
+
+:root[data-palette="graphite"][data-theme="light"] {
+  /* Grounds */
+  --bg: #f7f7f7;
+  --surface: #ffffff;
+  --surface-inset: #f9f9f9;
+  --surface-sunken: #f3f3f3;
+  --surface-raised: #f6f6f6;
+  --surface-hover: #ececec;
+  --surface-elevated: #f1f1f1;
+  --surface-deep: #ececec;
+  --surface-is-light: 1;
+  /* Borders */
+  --border-subtle: #d0d0d0;
+  --border-default: #bcbcbc;
+  --border-strong: #b1b1b1;
+  /* Text */
+  --text-primary: #0d0d0d;
+  --foreground-soft: #1c1c1c;
+  --text-secondary: #2d2d2d;
+  --text-tertiary: #444444;
+  --text-quaternary: #676767;
+  --text-hint: #959595;
+  --text-disabled: #b7b7b7;
+  --muted-rgb: 68, 68, 68;
+  /* Accent */
+  --brand: #18181b;
+  --brand-rgb: 24, 24, 27;
+  --brand-hover: #3f3f46;
+  --brand-on: #ffffff;
+  /* Tones a palette may move (danger / warn / success never move) */
+  --info: #1d4ed8;
+  --info-rgb: 29, 78, 216;
+  --violet: #6d28d9;
+  --violet-rgb: 109, 40, 217;
+  --neutral: #757575;
+  --neutral-rgb: 117, 117, 117;
+  /* Legacy HSL set (consumed as hsl(var(--x))) */
+  --background: 0 0% 97%;
+  --foreground: 0 0% 4%;
+  --card: 0 0% 100%;
+  --card-foreground: 0 0% 4%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 0 0% 4%;
+  --primary: 240 6% 10%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 0 0% 93%;
+  --secondary-foreground: 0 0% 4%;
+  --muted: 0 0% 93%;
+  --muted-foreground: 0 0% 29%;
+  --accent: 0 0% 93%;
+  --accent-foreground: 0 0% 4%;
+  --border: 0 0% 77%;
+  --input: 0 0% 77%;
+  --ring: 240 6% 10%;
+  --sidebar-bg: 0 0% 100%;
+  --sidebar-hover: 0 0% 95%;
+  --sidebar-text: 0 0% 29%;
+  --sidebar-text-hover: 0 0% 14%;
+  --sidebar-icon: 0 0% 44%;
+  --sidebar-icon-hover: 0 0% 24%;
+  --sidebar-badge-text: 0 0% 34%;
+  --sidebar-user-text: 0 0% 9%;
+}
+
+/* ----------------------------------------------------------------------------
+   PREVIEW SWATCHES — each palette's dark-mode brand, readable from ANY palette.
+   A picker's dot must show the palette it SELECTS, not the one that is live, so
+   var(--brand) cannot serve. Plain :root on purpose: these are all true at once.
+   Retune a palette's --brand and retune its swatch with it (the test checks).
+   -------------------------------------------------------------------------- */
+:root {
+  --palette-preview-atlas:    #3ecf8e;
+  --palette-preview-ocean:    #5b9cff;
+  --palette-preview-sand:     #d4a373;
+  --palette-preview-forest:   #a3c96b;
+  --palette-preview-plum:     #c084fc;
+  --palette-preview-graphite: #e4e4e7;
+}

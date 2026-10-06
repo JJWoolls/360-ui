@@ -11,6 +11,7 @@
     ".": "./src/index.ts",
     "./format": "./src/format/index.ts",
     "./tokens.css": "./src/styles/tokens.css",
+    "./palettes.css": "./src/styles/palettes.css",
     "./package.json": "./package.json"
   },
   "files": [

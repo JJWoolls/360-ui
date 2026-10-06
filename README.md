@@ -168,6 +168,61 @@ forking a component.
 - `Scale` renders a plain block `div` (className and style pass through). An
   inner `Scale` replaces the outer one's values rather than multiplying them.
 
+## Palettes
+
+Colour is two independent switches on `<html>`:
+
+- `data-theme` — the mode: `dark` (default) or `light`.
+- `data-palette` — the colour family: `atlas` (default), `ocean`, `sand`,
+  `forest`, `plum`, `graphite`. Any palette works in either mode.
+
+```ts
+import "@360digilab/ui/palettes.css";   // once, after the app's own tokens
+import { PALETTES, toPaletteId } from "@360digilab/ui";   // the picker's list
+```
+
+| Palette | Character | Dark surface / brand |
+|---|---|---|
+| Atlas | Charcoal grounds, the house green. The base. | `#1c1c1c` / `#3ecf8e` |
+| Ocean | Navy and steel grounds, clear blue accent. | `#131a26` / `#5b9cff` |
+| Sand | Warm brown and tan grounds, caramel accent. | `#221c16` / `#d4a373` |
+| Forest | Deep green grounds, moss accent. | `#15231c` / `#a3c96b` |
+| Plum | Aubergine grounds, orchid accent. | `#1e1622` / `#c084fc` |
+| Graphite | Near-black neutral, brighter text, firmer borders, silver accent. | `#171819` / `#e4e4e7` |
+
+- **Atlas has no block.** With no attribute, or `data-palette="atlas"`, the
+  app's own token file is in charge, so the default looks exactly as it did.
+- **A palette may set:** grounds (`--bg`, `--surface*`), borders, the text
+  ramp, `--brand` (+ `-hover`, `-on`), the `info` / `violet` / `neutral` tones,
+  `--muted-rgb`, `--surface-is-light`, and the legacy HSL set (`--card`,
+  `--primary`, `--sidebar-*` …) that utility classes read as `hsl(var(--x))`.
+- **A palette may not set:** `--stage-*`, `--dept-*`, `--location-*`,
+  `--route-*`, the pan contrast pair, or `--danger` / `--warn` / `--success`.
+  Those carry meaning and read the same everywhere. The decorative accents and
+  shadows stay with the base.
+- **Twins:** every colour a palette sets with an `-rgb` companion is set
+  together with it; the test proves each pair agrees, so
+  `rgba(var(--x-rgb), a)` always follows a palette swap.
+- **`--surface-is-light`** (0 / 1) says what the ground actually is. Code that
+  picks ink for an arbitrary colour reads it, never the mode name.
+- **Specificity, not load order:** every palette selector starts
+  `:root[data-palette=…]`, which outranks an app's `:root` /
+  `[data-theme="light"]` defaults however the bundler orders the stylesheets.
+- Adding a palette: a dark and a light block in `src/styles/palettes.css`, its
+  id in `src/styles/palettes.ts`, its swatch `--palette-preview-<id>`.
+  `npm test` checks completeness, twins, forbidden tokens and text contrast
+  (primary, secondary, tertiary >= 4.5:1 on `--surface`).
+- **Retired: `data-map`.** The old single switch (`atlas-dark`, `atlas-light`,
+  `midnight`, `ember`, `pine`, `paper`) fused mode and colour, so "warm, but
+  light" was impossible. Its ideas became ocean, sand and forest. The
+  `--map-preview-*` swatches are now `--palette-preview-*`. An app still
+  setting `data-map` keeps whatever its own copy of the tokens says; nothing in
+  the kit reads it.
+- The identity hues as button text use `--pink-ink`, `--cyan-ink`,
+  `--orange-ink`, `--lime-ink` (+ `-rgb`): the bright hue in dark, a darker
+  readable shade in light. An app that does not define them falls back to the
+  plain hue.
+
 ## Windows
 
 `Modal` (and `AlertDialog` on top of it) is the only pop-up window.
