@@ -114,6 +114,13 @@ export type { ModalProps, ModalTone } from "./Modal/Modal";
 // without moving the page.
 export { AlertCard } from "./AlertCard/AlertCard";
 export type { AlertCardProps, AlertTone, AlertEmphasis } from "./AlertCard/AlertCard";
+export { AlertIcon } from "./AlertCard/AlertIcon";
+
+// Callout — the family's inline member: a left-aligned notice inside a form or
+// page (a save that failed, a heads-up above a section). Same tones and glyphs
+// as the card; the page around it keeps working.
+export { Callout } from "./Callout/Callout";
+export type { CalloutProps } from "./Callout/Callout";
 
 export { AlertDialog } from "./AlertDialog/AlertDialog";
 export type { AlertDialogProps } from "./AlertDialog/AlertDialog";

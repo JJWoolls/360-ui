@@ -1,0 +1,84 @@
+/* Callout — tokens only, and the same two-property tone pattern as the
+   AlertCard: each data-tone sets one colour and its rgb triple, and every part
+   (wash, edge, glyph, title) reads them. Success is the brand green, as in the
+   card and the Toast. */
+
+.ui-callout {
+  --ui-callout-color: var(--danger);
+  --ui-callout-rgb: var(--danger-rgb);
+
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: calc(var(--s2) * var(--ui-space-scale, 1)) calc(var(--s3) * var(--ui-space-scale, 1));
+  width: 100%;
+  box-sizing: border-box;
+  padding: calc(var(--s3) * var(--ui-space-scale, 1)) calc(var(--s4) * var(--ui-space-scale, 1));
+  /* The wash is the AlertCard icon circle's 12%, halved: a whole banner at
+     12% reads heavier than a 48px circle does. The edge is the card's 35%. */
+  background: rgba(var(--ui-callout-rgb), 0.06);
+  border: 1px solid rgba(var(--ui-callout-rgb), 0.35);
+  border-radius: var(--radius);
+  font-family: var(--font);
+  text-align: left;
+}
+
+.ui-callout[data-tone="warn"] {
+  --ui-callout-color: var(--warn);
+  --ui-callout-rgb: var(--warn-rgb);
+}
+
+.ui-callout[data-tone="info"] {
+  --ui-callout-color: var(--info);
+  --ui-callout-rgb: var(--info-rgb);
+}
+
+.ui-callout[data-tone="success"] {
+  --ui-callout-color: var(--brand);
+  --ui-callout-rgb: var(--brand-rgb);
+}
+
+/* The glyph sits on the first line of text: its box is one line tall at the
+   body size, so a one-line notice centres and a long one keeps it at the top. */
+.ui-callout-icon {
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+  height: calc(var(--text-sm) * 1.5 * var(--ui-type-scale, 1));
+  color: var(--ui-callout-color);
+}
+
+.ui-callout-icon svg {
+  width: calc(var(--s4) * var(--ui-icon-scale, 1));
+  height: calc(var(--s4) * var(--ui-icon-scale, 1));
+}
+
+/* Takes the room left on the row; below ~20ch it gives way and the action
+   wraps to its own line underneath instead of squeezing the words. */
+.ui-callout-text {
+  flex: 1 1 20ch;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--s1) * var(--ui-space-scale, 1));
+  font-size: calc(var(--text-sm) * var(--ui-type-scale, 1));
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.ui-callout-title {
+  font-weight: var(--weight-semibold);
+  color: var(--ui-callout-color);
+}
+
+.ui-callout-body {
+  color: var(--text-primary);
+}
+
+.ui-callout-end {
+  display: flex;
+  align-items: center;
+  flex: none;
+  gap: calc(var(--s2) * var(--ui-space-scale, 1));
+  margin-inline-start: auto;
+}
