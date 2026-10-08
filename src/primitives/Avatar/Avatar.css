@@ -21,11 +21,14 @@
   color: var(--ui-avatar-tint);
 }
 
+/* Initials are sized to the circle, not the text scale: three letters (JW1)
+   must sit inside it. These are the sizes the hand-rolled circles used before
+   the people sweep (Josh 2026-10-08: the text-scale step made them bleed). */
 .ui-avatar[data-size="xs"] { --ui-avatar-size: 20px; font-size: calc(8px * var(--ui-type-scale, 1)); }
-.ui-avatar[data-size="sm"] { --ui-avatar-size: var(--s5); font-size: calc(var(--text-xs) * var(--ui-type-scale, 1)); }
-.ui-avatar[data-size="md"] { --ui-avatar-size: 28px; font-size: calc(var(--text-sm) * var(--ui-type-scale, 1)); }
-.ui-avatar[data-size="lg"] { --ui-avatar-size: var(--s6); font-size: calc(var(--text-base) * var(--ui-type-scale, 1)); }
-.ui-avatar[data-size="xl"] { --ui-avatar-size: 56px; font-size: calc(var(--text-xl) * var(--ui-type-scale, 1)); }
+.ui-avatar[data-size="sm"] { --ui-avatar-size: var(--s5); font-size: calc(9px * var(--ui-type-scale, 1)); }
+.ui-avatar[data-size="md"] { --ui-avatar-size: 28px; font-size: calc(10px * var(--ui-type-scale, 1)); }
+.ui-avatar[data-size="lg"] { --ui-avatar-size: var(--s7); font-size: calc(11px * var(--ui-type-scale, 1)); }
+.ui-avatar[data-size="xl"] { --ui-avatar-size: 56px; font-size: calc(18px * var(--ui-type-scale, 1)); }
 
 .ui-avatar-photo {
   width: 100%;
