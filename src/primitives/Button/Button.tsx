@@ -1,4 +1,5 @@
-import type { ButtonHTMLAttributes, ReactNode } from "react";
+import type { ButtonHTMLAttributes, CSSProperties, ReactNode } from "react";
+import { buttonLook } from "./look";
 import "./Button.css";
 
 /**
@@ -58,8 +59,34 @@ type ButtonColour =
   | { variant?: ButtonVariant; tone?: never }
   | { tone: ButtonTone; variant?: never };
 
-export type ButtonProps = ButtonColour &
-  Omit<ButtonHTMLAttributes<HTMLButtonElement>, "className"> & {
+/**
+ * IDENTITY COLOUR — any CSS colour, typically a token (`var(--route-north)`),
+ * for a button that wears a peer's identity (a route, a stage) rather than a
+ * status. The tones above are a closed set; identities are open-ended and
+ * belong to the app's data, so they arrive as a value instead of a name.
+ *
+ * `variant` then says how loudly the colour is worn, and nothing else:
+ *   (none) / "secondary" — tint + border, the house recipe, in that colour
+ *   "primary"            — solid fill with a label derived for contrast; the
+ *                          one main action on a screen that is already
+ *                          coloured by that identity
+ *   "ghost"              — no ground and no border until hover
+ * Hover, active, focus and disabled are all derived from the colour in CSS.
+ *
+ *   <Button color="var(--route-south)" icon={<Plus />}>Add</Button>
+ *   <Button color="var(--route-south)" variant="primary">Optimize</Button>
+ *
+ * Not combinable with `tone`, and `danger` is not a weight: a destructive
+ * action is a danger button, whatever identity it belongs to.
+ */
+type ButtonIdentity = {
+  color: string;
+  variant?: "primary" | "secondary" | "ghost";
+  tone?: never;
+};
+
+export type ButtonProps = ((ButtonColour & { color?: never }) | ButtonIdentity) &
+  Omit<ButtonHTMLAttributes<HTMLButtonElement>, "className" | "color"> & {
     size?: ButtonSize;
     /** Leading icon. Replaced by the spinner while `loading`. */
     icon?: ReactNode;
@@ -71,12 +98,14 @@ export type ButtonProps = ButtonColour &
 export function Button({
   variant,
   tone,
+  color,
   size = "md",
   icon,
   loading = false,
   disabled = false,
   type = "button",
   children,
+  style,
   ...rest
 }: ButtonProps) {
   // A loading button must not fire. `disabled` on the element is what makes
@@ -84,16 +113,18 @@ export function Button({
   const inert = disabled || loading;
 
   // One attribute carries the colour whichever vocabulary named it: the union
-  // above guarantees at most one of the two arrived, and the CSS has a rule per
-  // value. `secondary` is still the default for a button that says neither.
-  const look = tone ?? variant ?? "secondary";
+  // above guarantees at most one arrived, and the CSS has a rule per value.
+  // `secondary` is still the default for a button that says none. An identity
+  // colour also sets its fill and hands the colour to the CSS as a property.
+  const { colorVar, ...look } = buttonLook({ variant, tone, color });
 
   return (
     <button
       {...rest}
+      {...look}
+      style={colorVar ? ({ ...style, ...colorVar } as CSSProperties) : style}
       type={type}
       className="ui-btn"
-      data-variant={look}
       data-size={size}
       data-loading={loading || undefined}
       disabled={inert}

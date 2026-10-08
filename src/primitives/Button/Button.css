@@ -279,6 +279,95 @@
   background: rgba(var(--tone-rgb), 0.2);
 }
 
+/* ---- identity colour — any colour the call site passes (Button.tsx) --------
+ *
+ * The tones above are a closed set with -rgb companions. An identity colour
+ * (a route, a stage) is open-ended and may be a hex or a var(), so there is no
+ * companion to lean on: every state is derived with color-mix, the way the
+ * FilterPills derive theirs. The colour arrives as --ui-btn-color.
+ *
+ * TINT (the default) is the house recipe exactly — ground 12%, border 35%,
+ * hover deepens the ground to 20% and leaves the border alone. The label is
+ * the colour pulled 30% toward --text-primary: an identity colour is chosen
+ * for recognition, not contrast, and the pull lightens it on dark grounds and
+ * darkens it on light ones so the word stays legible on either.
+ *
+ * SOLID is the one deliberate exception to "hierarchy from hue, not fill":
+ * on a screen already coloured by that identity, a tint of the same colour
+ * cannot stand out as the main action. Its label is black or white, chosen
+ * from the colour's own lightness (below), so no call site picks an ink.
+ *
+ * GHOST follows the plain ghost: no ground or border until hover, which tints.
+ *
+ * Disabled is the shared .ui-btn:disabled rule; nothing here overrides it. */
+.ui-btn[data-variant="color"] {
+  --ui-btn-color: var(--brand);
+  background: color-mix(in srgb, var(--ui-btn-color) 12%, transparent);
+  border-color: color-mix(in srgb, var(--ui-btn-color) 35%, transparent);
+  color: color-mix(in srgb, var(--ui-btn-color) 70%, var(--text-primary));
+}
+
+.ui-btn[data-variant="color"]:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--ui-btn-color) 20%, transparent);
+}
+
+.ui-btn[data-variant="color"]:active:not(:disabled) {
+  background: color-mix(in srgb, var(--ui-btn-color) 26%, transparent);
+}
+
+/* The FilterPills' ring, in the button's own colour, so focus reads as the
+   same control rather than a foreign brand-green outline. */
+.ui-btn[data-variant="color"]:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--ui-btn-color) 60%, transparent);
+  outline-offset: 1px;
+}
+
+.ui-btn[data-variant="color"][data-fill="ghost"] {
+  background: transparent;
+  border-color: transparent;
+}
+
+.ui-btn[data-variant="color"][data-fill="ghost"]:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--ui-btn-color) 12%, transparent);
+}
+
+.ui-btn[data-variant="color"][data-fill="ghost"]:active:not(:disabled) {
+  background: color-mix(in srgb, var(--ui-btn-color) 20%, transparent);
+}
+
+/* Solid: the fill IS the colour, and hover/active move it toward the text
+   colour and the page ground — a nudge either way that works in both themes
+   without knowing which one is showing. The border matches the fill so a
+   solid button is the same size as its tinted neighbours. */
+.ui-btn[data-variant="color"][data-fill="solid"] {
+  background: var(--ui-btn-color);
+  border-color: var(--ui-btn-color);
+  color: var(--bg);
+}
+
+.ui-btn[data-variant="color"][data-fill="solid"]:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--ui-btn-color) 85%, var(--text-primary));
+  border-color: color-mix(in srgb, var(--ui-btn-color) 85%, var(--text-primary));
+}
+
+.ui-btn[data-variant="color"][data-fill="solid"]:active:not(:disabled) {
+  background: color-mix(in srgb, var(--ui-btn-color) 80%, var(--bg));
+  border-color: color-mix(in srgb, var(--ui-btn-color) 80%, var(--bg));
+}
+
+/* The solid label, from the colour's own OKLCH lightness: at or above 0.6 the
+   fill is light enough that dark ink reads better than white, below it white
+   does. 0.6 sits where the two inks' contrast crosses for saturated mid-tone
+   accents. clamp() snaps the result to near-black or near-white, never grey.
+   Behind @supports because relative colour syntax is newer than color-mix; a
+   browser without it keeps the page ground as ink, which is dark in the dark
+   theme — the theme these accents are tuned for. */
+@supports (color: oklch(from red l c h)) {
+  .ui-btn[data-variant="color"][data-fill="solid"] {
+    color: oklch(from var(--ui-btn-color) clamp(0.2, (0.6 - l) * 1000, 0.98) 0 0);
+  }
+}
+
 /* ---- icon / spinner ----------------------------------------------------- */
 .ui-btn-icon,
 .ui-btn-spinner {

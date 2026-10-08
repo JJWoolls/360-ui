@@ -1,7 +1,7 @@
 "use client";
 
 import { forwardRef, useEffect, useImperativeHandle, useLayoutEffect, useRef } from "react";
-import type { InputHTMLAttributes, ReactNode, RefObject, TextareaHTMLAttributes } from "react";
+import type { CSSProperties, InputHTMLAttributes, ReactNode, RefObject, TextareaHTMLAttributes } from "react";
 import "./Input.css";
 
 // useLayoutEffect warns during server render; on the server there is nothing
@@ -54,6 +54,21 @@ const useIsoLayoutEffect = typeof window === "undefined" ? useEffect : useLayout
  */
 export type InputSize = "sm" | "md" | "touch";
 
+/**
+ * "field" — the boxed form field, every size above. The default.
+ * "inline" — a BARE editor that lives inside something else's box: a count
+ *          inside a pill, the L × W × H numbers inside a dimensions chip. The
+ *          pill is the box, so the field draws none — no border, no ground,
+ *          no fixed height — and inherits the pill's type size, weight and
+ *          colour so the value does not jump when it becomes editable. It
+ *          keeps a visible focus ring, because without a border the ring is
+ *          the only sign the cursor is in it. A number field hides the
+ *          browser's spinner arrows, which have no room inside a pill.
+ *          `size` and the affix props do not apply: the inline field has no
+ *          box to size or to put a mark in.
+ */
+export type InputVariant = "field" | "inline";
+
 type Shared = {
   /** Failed validation. Draws the danger edge and sets aria-invalid. */
   invalid?: boolean;
@@ -105,6 +120,14 @@ export type InputProps = Shared &
     onClear?: () => void;
     /** The clear button's accessible name. Default "Clear"; name what it clears ("Clear search"). */
     clearLabel?: string;
+    /** "inline" = the borderless in-place editor; see InputVariant. */
+    variant?: InputVariant;
+    /**
+     * Inline only: the field's width in characters (default 3). An inline
+     * editor sits in a pill that should not change width as the value is
+     * typed, so it is sized to the longest value it takes, not stretched.
+     */
+    chars?: number;
   };
 
 export type TextareaProps = Shared &
@@ -169,6 +192,8 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
     suffix,
     onClear,
     clearLabel = "Clear",
+    variant = "field",
+    chars = 3,
     ...rest
   },
   forwardedRef,
@@ -188,6 +213,23 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
   const { wrapRef, startRef, endRef } = useAffixWidths(hasPrefix, end);
   const inputRef = useRef<HTMLInputElement>(null);
   useImperativeHandle(forwardedRef, () => inputRef.current as HTMLInputElement, []);
+
+  // The inline editor is the bare element: no wrapper, no affixes, no size —
+  // the box it sits in is someone else's. Its width travels as a property so
+  // the CSS can add the padding to it.
+  if (variant === "inline") {
+    return (
+      <input
+        {...rest}
+        ref={inputRef}
+        className="ui-input"
+        data-variant="inline"
+        data-invalid={invalid || undefined}
+        aria-invalid={invalid || undefined}
+        style={{ ...rest.style, "--ui-input-chars": chars } as CSSProperties}
+      />
+    );
+  }
 
   const field = (
     <input

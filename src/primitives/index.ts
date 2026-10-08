@@ -23,6 +23,7 @@ export type { ScaleFactors, ScaleOverrides } from "./Scale/presets";
 // buttonProps hands the button's look to an element the kit cannot render —
 // a Next.js Link, a Tauri navigation anchor. For controls that NAVIGATE, where
 // rendering a <button> would take away middle-click and open-in-new-tab.
+// `color` takes an identity colour (a route, a stage) the tones cannot name.
 export { Button, buttonProps } from "./Button/Button";
 export type { ButtonProps, ButtonVariant, ButtonTone, ButtonSize } from "./Button/Button";
 
@@ -159,8 +160,9 @@ export type { MultiSelectState } from "./MultiSelect/logic";
 // Input / Textarea — the house text field, which is the Select's trigger
 // without the chevron. They live next to each other in the barrel because they
 // must stay identical in shape; see the note at the top of Input.css.
+// variant="inline" is the borderless editor that lives inside a pill or chip.
 export { Input, Textarea } from "./Input/Input";
-export type { InputProps, TextareaProps, InputSize } from "./Input/Input";
+export type { InputProps, TextareaProps, InputSize, InputVariant } from "./Input/Input";
 
 export { ContextMenu, useContextMenu } from "./ContextMenu/ContextMenu";
 export type { ContextMenuProps, ContextMenuItem } from "./ContextMenu/ContextMenu";

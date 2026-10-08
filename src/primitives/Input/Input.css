@@ -366,3 +366,63 @@
   min-height: var(--touch-target);
   margin-left: calc((var(--touch-target) - var(--ui-affix-start)) / -2);
 }
+
+/* ---- inline — the bare editor inside a pill or chip ------------------------
+ * The pill around it is the box, so this draws none: no border, no ground, no
+ * fixed height, and type size, weight, colour and line height all inherited
+ * so the value does not move when the pill becomes editable. It is centred
+ * because what it edits is a short value standing alone in a pill.
+ *
+ * Width is a character count (--ui-input-chars, set by Input.tsx) rather than
+ * the field's usual 100%: a pill sizes to its content, and a field that
+ * stretched to fill it would have nothing to stretch against. box-sizing is
+ * content-box so the count means the text, and the 2px side padding is extra.
+ *
+ * The focus ring stays: with no border it is the only mark of where the
+ * cursor is. Same brand outline as the boxed field, offset by a pixel so it
+ * clears the digits, on a small radius so it reads as a field inside a pill. */
+.ui-input[data-variant="inline"] {
+  display: inline-block;
+  box-sizing: content-box;
+  width: calc(var(--ui-input-chars, 3) * 1ch);
+  min-width: 1ch;
+  height: auto;
+  margin: 0;
+  padding: 0 2px;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-xs);
+  color: inherit;
+  font: inherit;
+  line-height: inherit;
+  text-align: center;
+}
+
+.ui-input[data-variant="inline"]:focus {
+  outline: 1px solid var(--brand);
+  outline-offset: 1px;
+}
+
+/* No border to turn red, so failed validation underlines the value instead —
+   still on the edge, never on the text, same as the boxed field. */
+.ui-input[data-variant="inline"][data-invalid] {
+  box-shadow: inset 0 -1px 0 var(--danger);
+}
+
+.ui-input[data-variant="inline"][data-invalid]:focus {
+  outline-color: var(--danger);
+}
+
+/* A number typed into a pill: the spinner arrows have no room there and step
+   by the browser's idea of a unit, not the field's. Arrow keys still step. */
+.ui-input[data-variant="inline"][type="number"] {
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+
+.ui-input[data-variant="inline"][type="number"]::-webkit-inner-spin-button,
+.ui-input[data-variant="inline"][type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  appearance: none;
+  margin: 0;
+}
