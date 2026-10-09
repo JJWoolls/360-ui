@@ -41,23 +41,29 @@ export interface SectionLabelProps {
   action?: ReactNode;
   /** "md" (default) or "sm". */
   size?: SectionLabelSize;
+  /**
+   * Drop the bottom gap. For a caption that sits BESIDE its value in a
+   * centred row (caption · value · caption · value) rather than above a
+   * block — the gap would push it off the row's centre line.
+   */
+  flush?: boolean;
 }
 
-export function SectionLabel({ children, as = "div", action, size = "md" }: SectionLabelProps) {
+export function SectionLabel({ children, as = "div", action, size = "md", flush = false }: SectionLabelProps) {
   const Tag = as;
 
   // No action means no row wrapper: the label is the element itself, so a
   // heading stays a heading in the outline rather than a heading inside a div.
   if (!action) {
     return (
-      <Tag className="ui-section-label" data-size={size}>
+      <Tag className="ui-section-label" data-size={size} data-flush={flush ? "" : undefined}>
         {children}
       </Tag>
     );
   }
 
   return (
-    <div className="ui-section-label-row">
+    <div className="ui-section-label-row" data-flush={flush ? "" : undefined}>
       <Tag className="ui-section-label" data-size={size}>
         {children}
       </Tag>

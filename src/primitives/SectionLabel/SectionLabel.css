@@ -46,3 +46,9 @@
   gap: calc(var(--s2) * var(--ui-space-scale, 1));
   flex: none;
 }
+
+/* flush: no bottom gap, for a caption sitting beside its value in a row. */
+.ui-section-label[data-flush],
+.ui-section-label-row[data-flush] {
+  margin-bottom: 0;
+}

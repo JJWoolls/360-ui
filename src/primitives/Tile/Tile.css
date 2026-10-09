@@ -1,0 +1,188 @@
+/* Tile — a clickable card. Tokens only.
+ *
+ * Ground is var(--surface-raised), edge is var(--border-strong): a tile sits
+ * ONE step above the page's cards, so a grid of tiles placed inside a Surface
+ * still reads as things to press rather than as more boxes. The strong edge is
+ * the house "pressable" signal (a border means it does something — Badge.css).
+ *
+ * Hover, keyboard focus and `selected` all land on the same brand edge, so the
+ * three states never invent three looks. Focus adds the kit's brand outline on
+ * top (the same 60% brand ring SectionTabs uses) because a border change alone
+ * is too quiet to find with the keyboard.
+ *
+ * The element may be a button, an anchor or a div, and each brings its own UA
+ * defaults (button font, centred text, link colour and underline). The resets
+ * sit in :where() (zero specificity) so a caller's layout class always wins
+ * over them, whatever order the stylesheets load in.
+ *
+ * No width: the grid or flex row owns the size. min-width: 0 on the root and
+ * every line is what lets the description truncate inside a grid track
+ * instead of forcing the track wider.
+ */
+
+:where(.ui-tile) {
+  margin: 0;
+  font: inherit;
+  text-align: left;
+  text-decoration: none;
+  appearance: none;
+}
+
+.ui-tile {
+  position: relative;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  background: var(--surface-raised);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  color: var(--text-primary);
+  transition: border-color var(--transition);
+}
+
+/* lg is the default. Hand-rolled tiles used 20px, which sits exactly between
+   s4 and s5; s5 is the step Card's tile kind already uses, so tiles and cards
+   in one grid share an inner edge. md is the denser step for tight grids. */
+.ui-tile[data-padding="md"] {
+  padding: calc(var(--s4) * var(--ui-space-scale, 1));
+}
+.ui-tile[data-padding="lg"] {
+  padding: calc(var(--s5) * var(--ui-space-scale, 1));
+}
+
+/* -------- interactive -------------------------------------------------------- */
+.ui-tile[data-interactive] {
+  cursor: pointer;
+}
+
+.ui-tile[data-interactive]:hover,
+.ui-tile[data-interactive]:focus-visible,
+.ui-tile[data-selected] {
+  border-color: var(--brand);
+}
+
+.ui-tile[data-interactive]:focus-visible {
+  outline: 2px solid rgba(var(--brand-rgb), 0.6);
+  outline-offset: 1px;
+}
+
+/* Disabled wins over hover: a tile you cannot press must not light up when
+   the pointer crosses it, or it promises an action it will refuse. */
+.ui-tile[data-disabled],
+.ui-tile[data-disabled]:hover {
+  border-color: var(--border-strong);
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+/* -------- caption row: icon + label, badge to the right --------------------- */
+.ui-tile-head {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--s2) * var(--ui-space-scale, 1));
+  min-width: 0;
+}
+
+.ui-tile-icon {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  color: var(--text-secondary);
+}
+
+/* 15px is the glyph size the hand-rolled tiles settled on; the type scale has
+   no 15px step, so it stays literal and follows the icon multiplier. */
+.ui-tile-icon > svg {
+  width: calc(15px * var(--ui-icon-scale, 1));
+  height: calc(15px * var(--ui-icon-scale, 1));
+}
+
+/* Tone colours the icon only. The caption and value stay neutral so a grid of
+   differently-toned tiles is still one quiet block with coloured marks. There
+   is no success token: success is drawn in brand, as Toast and AlertCard do. */
+.ui-tile[data-tone="brand"] .ui-tile-icon,
+.ui-tile[data-tone="success"] .ui-tile-icon {
+  color: var(--brand);
+}
+.ui-tile[data-tone="info"] .ui-tile-icon {
+  color: var(--info);
+}
+.ui-tile[data-tone="warn"] .ui-tile-icon {
+  color: var(--warn);
+}
+.ui-tile[data-tone="danger"] .ui-tile-icon {
+  color: var(--danger);
+}
+.ui-tile[data-tone="violet"] .ui-tile-icon {
+  color: var(--violet);
+}
+.ui-tile[data-tone="muted"] .ui-tile-icon {
+  color: var(--text-tertiary);
+}
+
+/* Normal case on purpose. Uppercase captions belong to Card's number tiles;
+   a tile's caption is a name to read, not a column header to scan. */
+.ui-tile-label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: calc(var(--text-sm) * var(--ui-type-scale, 1));
+  font-weight: var(--weight-medium);
+  color: var(--text-secondary);
+}
+
+.ui-tile-badge {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  margin-left: auto;
+}
+
+/* -------- value + description ---------------------------------------------- */
+.ui-tile-value {
+  min-width: 0;
+  margin-top: calc(var(--s2) * var(--ui-space-scale, 1));
+  font-size: calc(var(--text-base) * var(--ui-type-scale, 1));
+  font-weight: var(--weight-semibold);
+  font-variant-numeric: tabular-nums;
+  color: var(--text-primary);
+}
+
+/* At most two lines, then an ellipsis. The tile's height must not depend on how much the
+   caller wrote, or a row of tiles stops lining up; the full text belongs in a
+   title or the page the tile opens. */
+.ui-tile-desc {
+  min-width: 0;
+  margin-top: calc(var(--s1) * var(--ui-space-scale, 1));
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  font-size: calc(var(--text-xs) * var(--ui-type-scale, 1));
+  color: var(--text-tertiary);
+}
+
+/* -------- centred choice card --------------------------------------------- */
+/* The badge leaves the row and pins to the corner: kept in the row it would
+   push the centred caption off-centre by its own width. */
+.ui-tile[data-align="center"] {
+  align-items: center;
+  text-align: center;
+}
+.ui-tile[data-align="center"] .ui-tile-head {
+  justify-content: center;
+  max-width: 100%;
+}
+.ui-tile[data-align="center"] .ui-tile-value,
+.ui-tile[data-align="center"] .ui-tile-desc {
+  max-width: 100%;
+}
+.ui-tile[data-align="center"] .ui-tile-badge {
+  position: absolute;
+  top: calc(var(--s2) * var(--ui-space-scale, 1));
+  right: calc(var(--s2) * var(--ui-space-scale, 1));
+  margin-left: 0;
+}

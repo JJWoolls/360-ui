@@ -81,6 +81,12 @@ export type { FieldLabelProps } from "./FieldLabel/FieldLabel";
 export { Surface } from "./Surface/Surface";
 export type { SurfaceProps, SurfaceElement, SurfacePadding, SurfaceTone } from "./Surface/Surface";
 
+// Tile — a clickable card: caption (icon + label, badge), a short value, one
+// truncating description line. A link (href + your linkComponent), a button
+// (onClick), or a display tile. Not a Card (that is a number).
+export { Tile } from "./Tile/Tile";
+export type { TileProps, TileTone, TileAlign, TilePadding, TileLinkProps } from "./Tile/Tile";
+
 export { Card } from "./Card/Card";
 export type { CardProps, CardTone, CardKind } from "./Card/Card";
 
