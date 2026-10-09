@@ -6,13 +6,18 @@
  *
  * margin/list-style are reset because `as` may be li/section/header, and the
  * element's UA defaults would otherwise make the same box look different
- * depending on the element chosen.
+ * depending on the element chosen. The resets sit in :where() (zero
+ * specificity) so a caller's layout class (mb-4, mt-2) always wins over them,
+ * whatever order the stylesheets load in.
  */
+
+:where(.ui-surface) {
+  margin: 0;
+  list-style: none;
+}
 
 .ui-surface {
   box-sizing: border-box;
-  margin: 0;
-  list-style: none;
   min-width: 0;
   background: var(--surface);
   border: 1px solid var(--border-default);
