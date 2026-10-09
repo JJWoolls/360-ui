@@ -1,0 +1,63 @@
+/* FieldLabel — the label above one form field. Tokens only.
+ *
+ * Small, medium weight, secondary text colour. NO text-transform and NO
+ * letter-spacing: callers pass Title Case and it renders as written. See the
+ * note at the top of FieldLabel.tsx.
+ *
+ * The bottom gap is the label's own (or the row's, with an action), so a
+ * label sits the same distance above its field either way.
+ */
+
+.ui-field-label {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0 0 calc(var(--s1) * var(--ui-space-scale, 1));
+  padding: 0;
+  font-family: var(--font);
+  font-size: calc(var(--text-xs) * var(--ui-type-scale, 1)); /* 12px */
+  font-weight: var(--weight-medium);
+  line-height: 1.4;
+  letter-spacing: normal;
+  text-transform: none;
+  color: var(--text-secondary);
+  cursor: default;
+}
+
+.ui-field-label-text {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 2px;
+}
+
+/* Quiet, not alarming: the marker is a cue, not an error. */
+.ui-field-label-required {
+  color: var(--text-tertiary);
+  font-weight: var(--weight-normal);
+}
+
+.ui-field-label-hint {
+  font-weight: var(--weight-normal);
+  color: var(--text-tertiary);
+}
+
+/* With an action, the ROW carries the bottom gap and the label drops its own. */
+.ui-field-label-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: calc(var(--s2) * var(--ui-space-scale, 1));
+  margin-bottom: calc(var(--s1) * var(--ui-space-scale, 1));
+}
+
+.ui-field-label-row > .ui-field-label {
+  margin-bottom: 0;
+  min-width: 0;
+}
+
+.ui-field-label-action {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--s2) * var(--ui-space-scale, 1));
+  flex: none;
+}

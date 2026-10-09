@@ -71,6 +71,16 @@ export type { BadgeProps, BadgeTone, BadgeKind, BadgeSize, BadgePalette } from "
 export { SectionLabel } from "./SectionLabel/SectionLabel";
 export type { SectionLabelProps, SectionLabelElement, SectionLabelSize } from "./SectionLabel/SectionLabel";
 
+// FieldLabel — the Title Case label above one form field (htmlFor, a quiet
+// required marker, an optional hint line under it, a right-aligned action).
+export { FieldLabel } from "./FieldLabel/FieldLabel";
+export type { FieldLabelProps } from "./FieldLabel/FieldLabel";
+
+// Surface — a plain bordered box with no heading: card ground, border, radius,
+// a padding step and an optional sunken tone. Not a Card (that is a number).
+export { Surface } from "./Surface/Surface";
+export type { SurfaceProps, SurfaceElement, SurfacePadding, SurfaceTone } from "./Surface/Surface";
+
 export { Card } from "./Card/Card";
 export type { CardProps, CardTone, CardKind } from "./Card/Card";
 

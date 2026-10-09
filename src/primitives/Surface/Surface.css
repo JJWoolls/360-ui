@@ -1,0 +1,38 @@
+/* Surface — a plain bordered box. Tokens only.
+ *
+ * Ground and border use the same mapping Card.css documents for the app's
+ * shadcn pair: hsl(var(--card)) -> var(--surface), hsl(var(--border)) ->
+ * var(--border-default). Sunken uses var(--surface-inset).
+ *
+ * margin/list-style are reset because `as` may be li/section/header, and the
+ * element's UA defaults would otherwise make the same box look different
+ * depending on the element chosen.
+ */
+
+.ui-surface {
+  box-sizing: border-box;
+  margin: 0;
+  list-style: none;
+  min-width: 0;
+  background: var(--surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius);
+  color: var(--text-primary);
+}
+
+.ui-surface[data-tone="sunken"] {
+  background: var(--surface-inset);
+}
+
+.ui-surface[data-padding="none"] {
+  padding: 0;
+}
+.ui-surface[data-padding="sm"] {
+  padding: calc(var(--s3) * var(--ui-space-scale, 1));
+}
+.ui-surface[data-padding="md"] {
+  padding: calc(var(--s4) * var(--ui-space-scale, 1));
+}
+.ui-surface[data-padding="lg"] {
+  padding: calc(var(--s5) * var(--ui-space-scale, 1));
+}
