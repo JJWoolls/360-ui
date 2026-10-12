@@ -38,6 +38,20 @@ export type { ToggleProps } from "./Toggle/Toggle";
 export { FilterPills } from "./FilterPills/FilterPills";
 export type { FilterPillsProps, FilterPillOption, FilterPillsSize } from "./FilterPills/FilterPills";
 
+// ToggleChip — one on/off pill (<button aria-pressed>), FilterPills' look,
+// driven by the caller. `color` tints it when selected. ChipGroup is a
+// wrapping row of them, multi (T[]) or single (T | null). Use these for on/off
+// rows that are NOT list filters; filters stay on FilterPills.
+export { ToggleChip } from "./ToggleChip/ToggleChip";
+export type { ToggleChipProps, ToggleChipSize } from "./ToggleChip/ToggleChip";
+export { ChipGroup } from "./ChipGroup/ChipGroup";
+export type {
+  ChipGroupProps,
+  ChipGroupMultiProps,
+  ChipGroupSingleProps,
+  ChipGroupOption,
+} from "./ChipGroup/ChipGroup";
+
 // StatusTabs — the house single-select view picker: one segmented row of
 // tabs with counts, a real tablist (arrow keys move and select).
 export { StatusTabs } from "./StatusTabs/StatusTabs";

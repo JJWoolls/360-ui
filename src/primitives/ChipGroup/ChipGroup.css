@@ -1,0 +1,10 @@
+/* ChipGroup — the row only; each chip's look lives in ToggleChip.css.
+ * Wraps rather than scrolls: a chip hidden off the edge is a choice nobody
+ * sees. Same gap as the FilterPills row so the two sit together cleanly. */
+
+.ui-chips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: calc(var(--s1) * var(--ui-space-scale, 1));
+}

@@ -1,0 +1,102 @@
+/* ToggleChip — tokens only, plus the one colour a call site passes in.
+ *
+ * THE RECIPE is FilterPills' recipe, on purpose: a toggle chip and a filter
+ * pill are the same object (a pressable on/off word), so they must look the
+ * same. The difference is only who owns the selection — FilterPills owns a
+ * whole filter row and its gestures; a ToggleChip is one button the caller
+ * drives, for rows that are not filters (pick a handler, assign a station).
+ *
+ *   selected    ground 15%  ·  border 45%  ·  label = the colour, a third of
+ *               the way toward the text colour so a light hue stays readable
+ *   unselected  no ground   ·  neutral border  ·  tertiary label
+ *
+ * WHY color-mix: the colour is ANY CSS colour — a hex from the app's data or a
+ * var(--token) — so there is no -rgb companion to lean on. It arrives as
+ * --ui-chip-color, set inline by the component; the CSS owns the recipe and
+ * a call site can only choose the hue. With no colour the brand hue stands in.
+ *
+ * Unselected chips carry no colour at all (no dot, unlike FilterPills): in a
+ * pick-one row the colour belongs to the choice that was made, and a row of
+ * dots beside it reads as a second selection.
+ */
+
+.ui-chip {
+  --ui-chip-color: var(--brand);
+
+  display: inline-flex;
+  align-items: center;
+  gap: calc(var(--s1) * var(--ui-space-scale, 1));
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-tertiary);
+  font-family: var(--font);
+  font-weight: var(--weight-semibold);
+  line-height: 1.2;
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+  transition:
+    background-color var(--transition),
+    border-color var(--transition),
+    color var(--transition);
+}
+
+/* SIZES match FilterPills step for step, so a chip row beside a filter row
+ * lines up. "sm" is the dense size for modals and boards. */
+.ui-chip[data-size="md"] {
+  padding: calc(var(--s1) * var(--ui-space-scale, 1)) calc(var(--s3) * var(--ui-space-scale, 1));
+  font-size: calc(var(--text-sm) * var(--ui-type-scale, 1));
+  min-height: calc(var(--s6) * var(--ui-space-scale, 1));
+}
+
+.ui-chip[data-size="sm"] {
+  padding: calc(var(--s1) / 2 * var(--ui-space-scale, 1)) calc(var(--s2) * var(--ui-space-scale, 1));
+  font-size: calc(var(--text-xs) * var(--ui-type-scale, 1));
+  min-height: calc(var(--s5) * var(--ui-space-scale, 1));
+}
+
+.ui-chip:hover:not(:disabled) {
+  background: var(--surface-hover);
+  color: var(--text-secondary);
+}
+
+.ui-chip:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--ui-chip-color) 60%, transparent);
+  outline-offset: 1px;
+}
+
+.ui-chip:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+/* SELECTED — the chip wears its colour. Hover deepens the ground and leaves
+   the border alone: the border is the identity. */
+.ui-chip[aria-pressed="true"] {
+  background: color-mix(in srgb, var(--ui-chip-color) 15%, transparent);
+  border-color: color-mix(in srgb, var(--ui-chip-color) 45%, transparent);
+  color: color-mix(in srgb, var(--ui-chip-color) 70%, var(--text-primary));
+}
+
+.ui-chip[aria-pressed="true"]:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--ui-chip-color) 24%, transparent);
+  color: color-mix(in srgb, var(--ui-chip-color) 70%, var(--text-primary));
+}
+
+/* The icon follows the label colour and sizes with the icon scale. */
+.ui-chip__icon {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+}
+
+.ui-chip__icon > svg {
+  width: calc(14px * var(--ui-icon-scale, 1));
+  height: calc(14px * var(--ui-icon-scale, 1));
+}
+
+.ui-chip[data-size="sm"] .ui-chip__icon > svg {
+  width: calc(12px * var(--ui-icon-scale, 1));
+  height: calc(12px * var(--ui-icon-scale, 1));
+}
