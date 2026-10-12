@@ -92,6 +92,15 @@ export type ButtonProps = ((ButtonColour & { color?: never }) | ButtonIdentity) 
     icon?: ReactNode;
     /** Non-interactive + spinner. Distinct from `disabled`: this one is temporary. */
     loading?: boolean;
+    /**
+     * Stretch to the container's width — the one main action at the foot of a
+     * narrow form or a phone screen. A prop rather than a wrapper's
+     * `[&>button]:w-full` or an inline `width: 100%`, because the kit takes no
+     * className and a call site reaching into the element is the drift this
+     * primitive exists to stop. Content stays centred; size, colour, icon and
+     * loading are untouched.
+     */
+    fullWidth?: boolean;
     children?: ReactNode;
   };
 
@@ -102,6 +111,7 @@ export function Button({
   size = "md",
   icon,
   loading = false,
+  fullWidth = false,
   disabled = false,
   type = "button",
   children,
@@ -126,6 +136,7 @@ export function Button({
       type={type}
       className="ui-btn"
       data-size={size}
+      data-full-width={fullWidth || undefined}
       data-loading={loading || undefined}
       disabled={inert}
       aria-busy={loading || undefined}
@@ -171,10 +182,12 @@ export function buttonProps({
   variant,
   tone,
   size = "md",
-}: ButtonColour & { size?: ButtonSize } = {}) {
+  fullWidth = false,
+}: ButtonColour & { size?: ButtonSize; fullWidth?: boolean } = {}) {
   return {
     className: "ui-btn",
     "data-variant": tone ?? variant ?? "secondary",
     "data-size": size,
+    "data-full-width": fullWidth || undefined,
   } as const;
 }

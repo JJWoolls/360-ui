@@ -134,6 +134,14 @@
   }
 }
 
+/* fullWidth — fills its container. Width only: the box stays inline-flex and
+   centred, so every size, variant, icon and the loading spinner draw exactly
+   as they do at their natural width. Under the touch rule the min-width floor
+   is already below 100%, so nothing there fights it. */
+.ui-btn[data-full-width] {
+  width: 100%;
+}
+
 .ui-btn:disabled {
   cursor: not-allowed;
   opacity: 0.55;

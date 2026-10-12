@@ -242,6 +242,20 @@ accents.
   readable shade in light. An app that does not define them falls back to the
   plain hue.
 
+## Full-width buttons
+
+`fullWidth` stretches a `Button` to its container: the one main action at the
+foot of a narrow form or a phone screen.
+
+```tsx
+<Button variant="primary" fullWidth loading={save.saving}>Reserve</Button>
+<a href="/x" {...buttonProps({ variant: "primary", fullWidth: true })}>Open</a>
+```
+
+- Width only. Content stays centred, and every variant, size, icon and the
+  loading spinner draw as they do at natural width.
+- Never a wrapper's `[&>button]:w-full` or an inline `width: 100%` instead.
+
 ## Windows
 
 `Modal` (and `AlertDialog` on top of it) is the only pop-up window.
