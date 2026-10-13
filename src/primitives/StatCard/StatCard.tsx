@@ -80,6 +80,12 @@ export interface StatCardProps {
   onClick?: () => void;
   /** A filter card that is currently on (only with onClick). */
   selected?: boolean;
+  /**
+   * Something counted here is waiting on someone: a slow ring in `tone`
+   * (brand when untoned), static under reduced motion. Not while loading or
+   * dimmed. Reserve it for the tile a person must act on now.
+   */
+  pulse?: boolean;
 }
 
 const ARROW: Record<StatCardTrend["direction"], string> = { up: "▲", down: "▼", flat: "–" };
@@ -98,6 +104,7 @@ export function StatCard({
   loading = false,
   onClick,
   selected,
+  pulse = false,
 }: StatCardProps) {
   const state = zeroState({ value, zero, empty, loading, selected });
   if (state === "hidden") return null;
@@ -135,6 +142,7 @@ export function StatCard({
       empty={state === "dim"}
       onClick={onClick}
       selected={selected}
+      pulse={pulse && !loading && state !== "dim"}
     />
   );
 }

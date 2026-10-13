@@ -104,6 +104,13 @@ export interface CardProps {
    * carried by a border colour alone.
    */
   selected?: boolean;
+  /**
+   * Something this card counts is waiting on someone: a slow ring in the
+   * card's tone (brand when untoned), still under reduced motion. A STATE like
+   * `selected`, not a tone. Reserve it — if every card pulses, none does. Say
+   * what is waiting in the label or foot too; a glow is not read aloud.
+   */
+  pulse?: boolean;
 }
 
 export function Card({
@@ -121,12 +128,13 @@ export function Card({
   // aria-pressed attribute is omitted entirely and a navigating card keeps
   // announcing as a plain button.
   selected,
+  pulse = false,
 }: CardProps) {
   const clickable = typeof onClick === "function";
 
   // Plain is the untouched original: same DOM, same classes, data-tone on the
   // value element. Keeps every existing screen call site rendering byte-for-byte.
-  if (kind === "plain" && !clickable && !extra && !empty && !icon && !selected) {
+  if (kind === "plain" && !clickable && !extra && !empty && !icon && !selected && !pulse) {
     return (
       <div className="ui-card">
         <div className="ui-card-label">{label}</div>
@@ -180,6 +188,7 @@ export function Card({
         data-tone={tone}
         data-empty={empty ? "" : undefined}
         data-selected={selected ? "" : undefined}
+        data-pulse={pulse ? "" : undefined}
         aria-pressed={selected}
         onClick={onClick}
       >
@@ -195,6 +204,7 @@ export function Card({
       data-tone={tone}
       data-empty={empty ? "" : undefined}
       data-selected={selected ? "" : undefined}
+      data-pulse={pulse ? "" : undefined}
     >
       {body}
     </div>

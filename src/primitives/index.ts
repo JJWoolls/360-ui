@@ -199,7 +199,7 @@ export type { MultiSelectState } from "./MultiSelect/logic";
 // must stay identical in shape; see the note at the top of Input.css.
 // variant="inline" is the borderless editor that lives inside a pill or chip.
 export { Input, Textarea } from "./Input/Input";
-export type { InputProps, TextareaProps, InputSize, InputVariant } from "./Input/Input";
+export type { InputProps, TextareaProps, InputSize, InputVariant, InputTone } from "./Input/Input";
 
 export { ContextMenu, useContextMenu } from "./ContextMenu/ContextMenu";
 export type { ContextMenuProps, ContextMenuItem } from "./ContextMenu/ContextMenu";

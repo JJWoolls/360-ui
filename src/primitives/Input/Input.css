@@ -71,6 +71,32 @@
   outline-color: var(--danger);
 }
 
+/* ---- tone — a value that differs from its default -------------------------
+ * The Badge's tint recipe on a field: a light wash of the tone for the ground
+ * and the tone on the edge, so an overridden value is findable at a glance
+ * while the text itself stays foreground and readable. The edge is softened
+ * (not full strength) so a danger-toned field does not read as failed
+ * validation; Input.tsx drops the tone entirely when the field is invalid, so
+ * the two never stack. Focus follows the tone, as it follows danger above. */
+.ui-input[data-tone] {
+  --ui-input-tone-rgb: var(--brand-rgb);
+  background: rgba(var(--ui-input-tone-rgb), 0.08);
+  border-color: rgba(var(--ui-input-tone-rgb), 0.6);
+}
+.ui-input[data-tone="info"] {
+  --ui-input-tone-rgb: var(--info-rgb);
+}
+.ui-input[data-tone="warn"] {
+  --ui-input-tone-rgb: var(--warn-rgb);
+}
+.ui-input[data-tone="danger"] {
+  --ui-input-tone-rgb: var(--danger-rgb);
+}
+
+.ui-input[data-tone]:focus {
+  outline-color: rgb(var(--ui-input-tone-rgb));
+}
+
 /* The INLINE size — a field that appears in place inside a row or a card,
  * where a 36px box would push the row apart. Same border, same radius, same
  * focus: only the box and the type shrink, which is the rule the Badge already
@@ -411,6 +437,12 @@
 
 .ui-input[data-variant="inline"][data-invalid]:focus {
   outline-color: var(--danger);
+}
+
+/* No edge to colour, so a toned inline editor takes the wash alone. Listed
+   after the variant's own reset so the transparent ground does not win. */
+.ui-input[data-variant="inline"][data-tone] {
+  background: rgba(var(--ui-input-tone-rgb), 0.12);
 }
 
 /* A number typed into a pill: the spinner arrows have no room there and step

@@ -186,3 +186,51 @@
   right: calc(var(--s2) * var(--ui-space-scale, 1));
   margin-left: 0;
 }
+
+/* -------- pulse — something here is waiting on someone ----------------------
+ * The AlertCard's alarm pulse, gentler: a ring that breathes outward from the
+ * edge and back, in the tile's tone. One local property carries the hue so the
+ * ring, the glow and the reduced-motion fallback read it from one place.
+ * Slow on purpose — a fast flash reads as a fault in the screen, a slow
+ * breath reads as "look". A box-shadow, so nothing in the grid moves, and it
+ * stays clear of the focus outline, which is drawn outside it. A disabled tile
+ * never pulses (Tile.tsx): it cannot be acted on, so it is not waiting. */
+.ui-tile[data-pulse] {
+  --ui-tile-pulse-rgb: var(--brand-rgb);
+  animation: ui-tile-pulse 2.4s ease-in-out infinite;
+}
+.ui-tile[data-pulse][data-tone="info"] {
+  --ui-tile-pulse-rgb: var(--info-rgb);
+}
+.ui-tile[data-pulse][data-tone="warn"] {
+  --ui-tile-pulse-rgb: var(--warn-rgb);
+}
+.ui-tile[data-pulse][data-tone="danger"] {
+  --ui-tile-pulse-rgb: var(--danger-rgb);
+}
+.ui-tile[data-pulse][data-tone="violet"] {
+  --ui-tile-pulse-rgb: var(--violet-rgb);
+}
+.ui-tile[data-pulse][data-tone="muted"] {
+  --ui-tile-pulse-rgb: var(--muted-rgb);
+}
+
+@keyframes ui-tile-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 1px rgba(var(--ui-tile-pulse-rgb), 0.35);
+  }
+
+  50% {
+    box-shadow: 0 0 0 var(--s1) rgba(var(--ui-tile-pulse-rgb), 0.25);
+  }
+}
+
+/* Reduced motion: no breathing, a still ring at the pulse's midpoint, so the
+   tile is still marked as waiting — just without asking the eye to track it. */
+@media (prefers-reduced-motion: reduce) {
+  .ui-tile[data-pulse] {
+    animation: none;
+    box-shadow: 0 0 0 2px rgba(var(--ui-tile-pulse-rgb), 0.45);
+  }
+}

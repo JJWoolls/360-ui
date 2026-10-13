@@ -69,10 +69,24 @@ export type InputSize = "sm" | "md" | "touch";
  */
 export type InputVariant = "field" | "inline";
 
+/**
+ * A tint that marks the VALUE as different from its default — an override, a
+ * value inherited from somewhere else, a figure someone changed by hand. Light
+ * ground and an edge in the tone; the typed text stays foreground, because the
+ * value is still the thing to read.
+ *
+ * Not validation. `invalid` is a problem to fix; a tone is a fact to notice.
+ * When both are set, invalid wins and the tone is dropped, so a field that is
+ * wrong never reads as merely "changed".
+ */
+export type InputTone = "info" | "warn" | "danger" | "brand";
+
 type Shared = {
-  /** Failed validation. Draws the danger edge and sets aria-invalid. */
+  /** Failed validation. Draws the danger edge and sets aria-invalid. Beats `tone`. */
   invalid?: boolean;
   size?: InputSize;
+  /** Tints the field to mark a non-default value; see InputTone. */
+  tone?: InputTone;
 };
 
 // `size` and `prefix` are both real HTML attributes — size is a character
@@ -194,6 +208,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
     clearLabel = "Clear",
     variant = "field",
     chars = 3,
+    tone,
     ...rest
   },
   forwardedRef,
@@ -213,6 +228,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
   const { wrapRef, startRef, endRef } = useAffixWidths(hasPrefix, end);
   const inputRef = useRef<HTMLInputElement>(null);
   useImperativeHandle(forwardedRef, () => inputRef.current as HTMLInputElement, []);
+  const dataTone = invalid ? undefined : tone;
 
   // The inline editor is the bare element: no wrapper, no affixes, no size —
   // the box it sits in is someone else's. Its width travels as a property so
@@ -224,6 +240,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
         ref={inputRef}
         className="ui-input"
         data-variant="inline"
+        data-tone={dataTone}
         data-invalid={invalid || undefined}
         aria-invalid={invalid || undefined}
         style={{ ...rest.style, "--ui-input-chars": chars } as CSSProperties}
@@ -237,6 +254,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
       ref={inputRef}
       className="ui-input"
       data-size={size}
+      data-tone={dataTone}
       data-invalid={invalid || undefined}
       aria-invalid={invalid || undefined}
     />
@@ -326,13 +344,14 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
  * how tall it starts; the user can drag it taller and not narrower, because a
  * field narrower than the form it sits in just looks like a mistake.
  */
-export function Textarea({ invalid, size = "md", rows = 3, ...rest }: TextareaProps) {
+export function Textarea({ invalid, size = "md", tone, rows = 3, ...rest }: TextareaProps) {
   return (
     <textarea
       {...rest}
       rows={rows}
       className="ui-input ui-textarea"
       data-size={size}
+      data-tone={invalid ? undefined : tone}
       data-invalid={invalid || undefined}
       aria-invalid={invalid || undefined}
     />

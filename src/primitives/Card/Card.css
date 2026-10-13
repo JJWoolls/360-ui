@@ -399,3 +399,48 @@
   background: var(--surface);
   border-color: var(--border-subtle);
 }
+
+/* ---------------------------------------------------------------------------
+   PULSE — something this card counts is waiting on someone.
+   The same breathing ring as Tile.css (and a softer AlertCard alarm): a
+   box-shadow, so the grid never moves, in the card's tone, brand when untoned.
+   An empty card does not pulse — nothing in it can be waiting.
+   ------------------------------------------------------------------------- */
+.ui-card[data-pulse] {
+  --ui-card-pulse-rgb: var(--brand-rgb);
+  animation: ui-card-pulse 2.4s ease-in-out infinite;
+}
+.ui-card[data-pulse][data-tone="info"] {
+  --ui-card-pulse-rgb: var(--info-rgb);
+}
+.ui-card[data-pulse][data-tone="warn"] {
+  --ui-card-pulse-rgb: var(--warn-rgb);
+}
+.ui-card[data-pulse][data-tone="danger"] {
+  --ui-card-pulse-rgb: var(--danger-rgb);
+}
+.ui-card[data-pulse][data-tone="violet"] {
+  --ui-card-pulse-rgb: var(--violet-rgb);
+}
+.ui-card[data-pulse][data-empty] {
+  animation: none;
+}
+
+@keyframes ui-card-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 1px rgba(var(--ui-card-pulse-rgb), 0.35);
+  }
+
+  50% {
+    box-shadow: 0 0 0 var(--s1) rgba(var(--ui-card-pulse-rgb), 0.25);
+  }
+}
+
+/* Reduced motion: a still ring instead of a breathing one. */
+@media (prefers-reduced-motion: reduce) {
+  .ui-card[data-pulse]:not([data-empty]) {
+    animation: none;
+    box-shadow: 0 0 0 2px rgba(var(--ui-card-pulse-rgb), 0.45);
+  }
+}

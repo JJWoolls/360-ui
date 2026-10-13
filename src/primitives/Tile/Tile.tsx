@@ -32,6 +32,14 @@ import "./Tile.css";
  * TONE colours the icon only. The caption and value stay neutral so a grid of
  * tiles is one quiet block with coloured marks, not a wall of colours.
  *
+ * PULSE is "this is waiting on someone": a slow breathing ring in the tile's
+ * tone (brand when untoned). It is the AlertCard's alarm pulse, softer, and it
+ * shares that card's rule: if everything pulses, nothing does — reserve it for
+ * the one or two tiles a person must act on now. The ring is drawn as a
+ * box-shadow, so it never moves the layout; with reduced motion it holds still
+ * as a static ring. It is decoration, not information: say what is waiting in
+ * the label, value or badge, because a screen reader does not see a glow.
+ *
  * SELECTED is hover, held: the brand edge stays on. On a button it is also
  * announced as aria-pressed, so the state is not carried by colour alone.
  * Left undefined it is not a toggle at all and aria-pressed is omitted.
@@ -85,6 +93,8 @@ export interface TileProps extends Omit<HTMLAttributes<HTMLElement>, "onClick" |
   padding?: TilePadding;
   /** Holds the brand edge; aria-pressed on a button. */
   selected?: boolean;
+  /** A slow ring in the tile's tone: something here is waiting on someone. */
+  pulse?: boolean;
   /** Greys the tile out. A disabled link renders without its href, so it
    *  cannot be followed or focused. */
   disabled?: boolean;
@@ -108,6 +118,7 @@ export function Tile({
   padding = "lg",
   // Not defaulted: undefined means "not a toggle", so aria-pressed is omitted.
   selected,
+  pulse = false,
   disabled = false,
   className,
   ...rest
@@ -139,6 +150,7 @@ export function Tile({
     "data-padding": padding,
     "data-selected": selected ? "" : undefined,
     "data-disabled": disabled ? "" : undefined,
+    "data-pulse": pulse && !disabled ? "" : undefined,
     "data-interactive": interactive ? "" : undefined,
   };
 
