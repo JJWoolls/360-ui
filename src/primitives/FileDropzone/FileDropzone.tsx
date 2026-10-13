@@ -2,7 +2,7 @@
 
 import { useRef, useState } from "react";
 import type { ChangeEvent, DragEvent, KeyboardEvent, ReactNode } from "react";
-import { acceptFiles } from "./accept";
+import { acceptFiles, fileMatchesAccept } from "./accept";
 import "./FileDropzone.css";
 
 /**
@@ -17,9 +17,11 @@ import "./FileDropzone.css";
  *
  * WHY IT FILTERS. `accept` goes to the input as the picker's hint AND is
  * applied to every file that arrives, dropped or picked (see accept.ts): the
- * browser enforces it on neither path. Rejected files are dropped silently and
- * `onFiles` is only called when at least one file survived. Single-file zones
- * (the default) pass the first accepted file.
+ * browser enforces it on neither path. Rejected files never reach `onFiles`,
+ * which is only called when at least one file survived; they go to `onReject`
+ * instead, so the caller can say why nothing happened — a drop that does
+ * nothing and says nothing reads as a broken zone. Single-file zones (the
+ * default) pass the first accepted file.
  *
  * WHY THE INPUT IS RESET. A file input only fires `change` when its value
  * changes, so picking the same file twice in a row would do nothing the
@@ -45,6 +47,9 @@ export interface FileDropzoneProps {
   multiple?: boolean;
   /** The accepted files. Never called with an empty list. */
   onFiles: (files: File[]) => void;
+  /** Files that did not match `accept`, from the same drop or pick. Called
+   *  whether or not anything was accepted; never with an empty list. */
+  onReject?: (files: File[]) => void;
   disabled?: boolean;
   /** Main line. Defaults to "Drop files here or click to browse". */
   label?: ReactNode;
@@ -63,6 +68,7 @@ export function FileDropzone({
   accept,
   multiple = false,
   onFiles,
+  onReject,
   disabled = false,
   label = "Drop files here or click to browse",
   hint,
@@ -77,7 +83,10 @@ export function FileDropzone({
 
   function deliver(list: FileList | null) {
     if (!list || disabled) return;
-    const files = acceptFiles(Array.from(list), accept, multiple);
+    const all = Array.from(list);
+    const files = acceptFiles(all, accept, multiple);
+    const rejected = all.filter((f) => !fileMatchesAccept(f, accept));
+    if (rejected.length > 0) onReject?.(rejected);
     if (files.length > 0) onFiles(files);
   }
 
