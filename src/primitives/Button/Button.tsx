@@ -18,8 +18,13 @@ export type ButtonVariant = "primary" | "secondary" | "ghost" | "danger";
  * its text, and on a board read at a distance that costs visible rows. "xs"
  * is the height of the in-table Badge, so a pressable chip and a label chip in
  * the same row line up.
+ * "touch" — a surface a FINGER uses (a shared floor or kiosk screen): 44px
+ * tall (--touch-target), 16px type, comfortable padding — the same step as
+ * ToggleChip's "touch", so the two line up. A prop because a touch surface is
+ * a layout decision the page makes; the coarse-pointer floor in Button.css
+ * still covers sm / md on any touch device without it.
  */
-export type ButtonSize = "xs" | "sm" | "md";
+export type ButtonSize = "xs" | "sm" | "md" | "touch";
 
 /**
  * Where the content sits along the button.
@@ -101,6 +106,12 @@ export type ButtonProps = ((ButtonColour & { color?: never }) | ButtonIdentity) 
     size?: ButtonSize;
     /** Leading icon. Replaced by the spinner while `loading`. */
     icon?: ReactNode;
+    /**
+     * Trailing icon, drawn after the label (a chevron, an external-link mark).
+     * Kept while `loading` — the spinner replaces only the leading icon. With
+     * align="start" it sits at the far edge, since the label takes the row.
+     */
+    iconEnd?: ReactNode;
     /** Non-interactive + spinner. Distinct from `disabled`: this one is temporary. */
     loading?: boolean;
     /**
@@ -127,6 +138,7 @@ export function Button({
   color,
   size = "md",
   icon,
+  iconEnd,
   loading = false,
   fullWidth = false,
   align = "center",
@@ -168,6 +180,11 @@ export function Button({
         </span>
       ) : null}
       {children != null && <span className="ui-btn-label">{children}</span>}
+      {iconEnd ? (
+        <span className="ui-btn-icon" aria-hidden="true">
+          {iconEnd}
+        </span>
+      ) : null}
     </button>
   );
 }

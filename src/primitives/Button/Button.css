@@ -87,6 +87,25 @@
   min-height: calc(var(--s6) * var(--ui-space-scale, 1));
 }
 
+/* touch — the finger-sized button, chosen by the page (a shared floor or
+   kiosk screen), where the coarse-pointer rule below only catches the device.
+   Matches ToggleChip's touch size step for step so a button and a chip grid
+   side by side line up: 44px tall (--touch-target, grown with the space or
+   type scale), 16px type, and md's comfortable padding. min-width keeps an
+   icon-only touch button square. */
+.ui-btn[data-size="touch"] {
+  padding: calc(var(--s2) * var(--ui-space-scale, 1)) calc(var(--s4) * var(--ui-space-scale, 1));
+  font-size: max(16px, calc(16px * var(--ui-type-scale, 1)));
+  min-height: calc(var(--touch-target) * max(1, var(--ui-space-scale, 1), var(--ui-type-scale, 1)));
+  min-width: calc(var(--touch-target) * max(1, var(--ui-space-scale, 1), var(--ui-type-scale, 1)));
+}
+
+.ui-btn[data-size="touch"] .ui-btn-icon,
+.ui-btn[data-size="touch"] .ui-btn-spinner {
+  width: calc(18px * var(--ui-icon-scale, 1));
+  height: calc(18px * var(--ui-icon-scale, 1));
+}
+
 /* ---- touch — the 44px finger tap, automatic on a touch screen -------------
  *
  * Josh, 2026-10-02: the bench iPads could not hit the case Files buttons (an
