@@ -1,0 +1,112 @@
+/* FileDropzone — tokens only.
+ *
+ * At rest it is the EmptyState's box: dashed --border-default edge on the
+ * inset ground, centred column of small text. Both say "nothing here yet";
+ * the dropzone adds that you can put something here. The dashed edge is the
+ * affordance — a solid one would read as a card, and a card does not take a
+ * drop.
+ *
+ * DRAGGING tints the ground and edge brand with the Button's recipe numbers
+ * (ground 12%, edge 35% raised to a full-strength dash so it holds against the
+ * tint). Hover only deepens the edge to --text-hint: it is a click target, but
+ * the drop is what the highlight is for, and the two must not look the same.
+ *
+ * --*-rgb tokens are comma-separated: `rgba(var(--brand-rgb), 0.12)`.
+ */
+
+.ui-dropzone {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: calc(var(--s1) * var(--ui-space-scale, 1));
+  width: 100%;
+  min-width: 0;
+  border: 1px dashed var(--border-default);
+  border-radius: var(--radius);
+  background: var(--surface-inset);
+  color: var(--text-secondary);
+  font-family: var(--font);
+  text-align: center;
+  cursor: pointer;
+  user-select: none;
+  transition:
+    background-color var(--transition),
+    border-color var(--transition),
+    color var(--transition);
+}
+
+.ui-dropzone[data-size="md"] {
+  padding: calc(var(--s6) * var(--ui-space-scale, 1)) calc(var(--s4) * var(--ui-space-scale, 1));
+}
+
+.ui-dropzone[data-size="sm"] {
+  padding: calc(var(--s4) * var(--ui-space-scale, 1)) calc(var(--s3) * var(--ui-space-scale, 1));
+}
+
+.ui-dropzone:hover:not([data-disabled]) {
+  border-color: var(--text-hint);
+}
+
+/* The Button's identity-colour ring, in brand: focus and drop share a hue. */
+.ui-dropzone:focus-visible {
+  outline: 2px solid rgba(var(--brand-rgb), 0.6);
+  outline-offset: 1px;
+}
+
+.ui-dropzone[data-dragging] {
+  background: rgba(var(--brand-rgb), 0.12);
+  border-color: var(--brand);
+  color: var(--brand);
+}
+
+.ui-dropzone[data-disabled] {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.ui-dropzone-icon {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-hint);
+  transition: color var(--transition);
+}
+
+.ui-dropzone-icon > svg {
+  width: calc(var(--s5) * var(--ui-icon-scale, 1));
+  height: calc(var(--s5) * var(--ui-icon-scale, 1));
+}
+
+.ui-dropzone[data-size="sm"] .ui-dropzone-icon > svg {
+  width: calc(var(--s4) * var(--ui-icon-scale, 1));
+  height: calc(var(--s4) * var(--ui-icon-scale, 1));
+}
+
+.ui-dropzone[data-dragging] .ui-dropzone-icon {
+  color: var(--brand);
+}
+
+.ui-dropzone-label {
+  font-size: calc(var(--text-sm) * var(--ui-type-scale, 1));
+  font-weight: var(--weight-semibold);
+}
+
+/* One step below the label, as in EmptyState: the hint explains, never outranks. */
+.ui-dropzone-hint {
+  max-width: 48ch;
+  font-size: calc(var(--text-xs) * var(--ui-type-scale, 1));
+  color: var(--text-hint);
+}
+
+.ui-dropzone[data-dragging] .ui-dropzone-hint {
+  color: inherit;
+}
+
+/* Never drawn and never focused: the zone is the control, the input only
+   carries the picker. display:none still opens on a scripted click. */
+.ui-dropzone-input {
+  display: none;
+}

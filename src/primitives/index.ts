@@ -24,8 +24,9 @@ export type { ScaleFactors, ScaleOverrides } from "./Scale/presets";
 // a Next.js Link, a Tauri navigation anchor. For controls that NAVIGATE, where
 // rendering a <button> would take away middle-click and open-in-new-tab.
 // `color` takes an identity colour (a route, a stage) the tones cannot name.
+// align="start" is the clickable list row: content at the leading edge.
 export { Button, buttonProps } from "./Button/Button";
-export type { ButtonProps, ButtonVariant, ButtonTone, ButtonSize } from "./Button/Button";
+export type { ButtonProps, ButtonVariant, ButtonTone, ButtonSize, ButtonAlign } from "./Button/Button";
 
 export { Checkbox } from "./Checkbox/Checkbox";
 export type { CheckboxProps } from "./Checkbox/Checkbox";
@@ -73,6 +74,12 @@ export type { AvatarProps, AvatarSize } from "./Avatar/Avatar";
 
 export { EmptyState } from "./EmptyState/EmptyState";
 export type { EmptyStateProps } from "./EmptyState/EmptyState";
+
+// FileDropzone — drop files or click / Enter / Space to browse. The one place a
+// native file input lives; `accept` is enforced on dropped and picked files.
+export { FileDropzone } from "./FileDropzone/FileDropzone";
+export type { FileDropzoneProps, FileDropzoneSize } from "./FileDropzone/FileDropzone";
+export { fileMatchesAccept } from "./FileDropzone/accept";
 
 export { Spinner, Skeleton } from "./Loading/Loading";
 export type { SpinnerProps, SkeletonProps } from "./Loading/Loading";

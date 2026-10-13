@@ -22,6 +22,17 @@ export type ButtonVariant = "primary" | "secondary" | "ghost" | "danger";
 export type ButtonSize = "xs" | "sm" | "md";
 
 /**
+ * Where the content sits along the button.
+ *   "center" — the default; every ordinary button.
+ *   "start"  — icon and label at the leading edge, for a button that is really
+ *              a clickable ROW (a list of names that each open a detail). A
+ *              centred label in a full-width row drifts away from the column it
+ *              belongs to; reading down the list, the eye wants a ragged right
+ *              edge and a straight left one.
+ */
+export type ButtonAlign = "center" | "start";
+
+/**
  * The full colour vocabulary, matching the Badge's. Josh, 2026-07-28, asked
  * for it: "put the color button in the vocabulary."
  *
@@ -101,6 +112,12 @@ export type ButtonProps = ((ButtonColour & { color?: never }) | ButtonIdentity) 
      * loading are untouched.
      */
     fullWidth?: boolean;
+    /**
+     * "start" puts the icon and label at the leading edge and lets a long label
+     * truncate with an ellipsis instead of widening the row. For full-width
+     * clickable rows; works at natural width too. Defaults to "center".
+     */
+    align?: ButtonAlign;
     children?: ReactNode;
   };
 
@@ -112,6 +129,7 @@ export function Button({
   icon,
   loading = false,
   fullWidth = false,
+  align = "center",
   disabled = false,
   type = "button",
   children,
@@ -137,6 +155,7 @@ export function Button({
       className="ui-btn"
       data-size={size}
       data-full-width={fullWidth || undefined}
+      data-align={align === "start" ? "start" : undefined}
       data-loading={loading || undefined}
       disabled={inert}
       aria-busy={loading || undefined}
@@ -183,11 +202,13 @@ export function buttonProps({
   tone,
   size = "md",
   fullWidth = false,
-}: ButtonColour & { size?: ButtonSize; fullWidth?: boolean } = {}) {
+  align = "center",
+}: ButtonColour & { size?: ButtonSize; fullWidth?: boolean; align?: ButtonAlign } = {}) {
   return {
     className: "ui-btn",
     "data-variant": tone ?? variant ?? "secondary",
     "data-size": size,
     "data-full-width": fullWidth || undefined,
+    "data-align": align === "start" ? "start" : undefined,
   } as const;
 }
