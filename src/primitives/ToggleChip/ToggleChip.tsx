@@ -1,7 +1,11 @@
 "use client";
 
 import type { CSSProperties, KeyboardEvent, MouseEvent, ReactNode } from "react";
+import { nextToggleState } from "./logic";
+import type { ToggleChipState } from "./logic";
 import "./ToggleChip.css";
+
+export type { ToggleChipState } from "./logic";
 
 /**
  * ToggleChip — one on/off pill. A real <button aria-pressed>, so Tab reaches
@@ -17,14 +21,22 @@ import "./ToggleChip.css";
  * data or a var(--token). When the chip is selected it tints the ground and
  * border and colours the label; unselected chips are neutral. No colour =
  * the brand hue, the same as an uncoloured FilterPill.
+ *
+ * PARTIAL. `selected="mixed"` is the third state, for a chip that stands for
+ * a set which is only partly on (a parent over some selected children). It
+ * renders aria-pressed="mixed" and a look between off and on — half-strength
+ * tint behind a dashed border — and a press from it hands onToggle `true`.
  */
 
 export type ToggleChipSize = "sm" | "md" | "touch";
 
 export interface ToggleChipProps {
-  /** Pressed state — drives aria-pressed and the tinted look. */
-  selected: boolean;
-  /** Called with the NEXT state. Use this for a plain on/off chip. */
+  /**
+   * Pressed state — drives aria-pressed and the tinted look. "mixed" is the
+   * partial state: aria-pressed="mixed", a dashed half-tint look.
+   */
+  selected: ToggleChipState;
+  /** Called with the NEXT state (true when pressed from "mixed"). Use this for a plain on/off chip. */
   onToggle?: (next: boolean) => void;
   /** The raw click, for callers that need the event (runs before onToggle). */
   onClick?: (e: MouseEvent<HTMLButtonElement>) => void;
@@ -88,7 +100,7 @@ export function ToggleChip({
       onKeyDown={handleKeyDown}
       onClick={(e) => {
         onClick?.(e);
-        onToggle?.(!selected);
+        onToggle?.(nextToggleState(selected));
       }}
     >
       {icon != null && (

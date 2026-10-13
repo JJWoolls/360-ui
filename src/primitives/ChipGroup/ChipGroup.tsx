@@ -39,6 +39,12 @@ interface ChipGroupBase<T> {
   ariaLabel?: string;
   /** Disables every chip. */
   disabled?: boolean;
+  /**
+   * Extra content at the START of the row, before the options — e.g. a
+   * "Use Default" / inherit chip that should read first, ahead of the specific
+   * choices it stands in for. Rendered as-is, like `children`.
+   */
+  leading?: ReactNode;
   /** Extra content at the end of the row — e.g. a neutral "Use Default" chip. */
   children?: ReactNode;
 }
@@ -61,7 +67,7 @@ export interface ChipGroupSingleProps<T> extends ChipGroupBase<T> {
 export type ChipGroupProps<T> = ChipGroupMultiProps<T> | ChipGroupSingleProps<T>;
 
 export function ChipGroup<T extends string | number>(props: ChipGroupProps<T>) {
-  const { options, size = "md", ariaLabel, disabled = false, children } = props;
+  const { options, size = "md", ariaLabel, disabled = false, leading, children } = props;
   const values = options.map((o) => o.value);
 
   function isOn(v: T): boolean {
@@ -75,6 +81,7 @@ export function ChipGroup<T extends string | number>(props: ChipGroupProps<T>) {
 
   return (
     <div className="ui-chips" role="group" aria-label={ariaLabel} data-size={size}>
+      {leading}
       {options.map((o) => (
         <ToggleChip
           key={String(o.value)}

@@ -119,6 +119,22 @@
   color: color-mix(in srgb, var(--ui-chip-color) 70%, var(--text-primary));
 }
 
+/* MIXED — partly on. Half the selected ground and a dashed border in the
+   colour: the dash is what tells it apart from "on" at a glance, without
+   leaning on the tint strength alone. The label takes a lighter share of the
+   colour so it reads as between the tertiary off label and the on label. */
+.ui-chip[aria-pressed="mixed"] {
+  background: color-mix(in srgb, var(--ui-chip-color) 7%, transparent);
+  border-style: dashed;
+  border-color: color-mix(in srgb, var(--ui-chip-color) 45%, transparent);
+  color: color-mix(in srgb, var(--ui-chip-color) 45%, var(--text-secondary));
+}
+
+.ui-chip[aria-pressed="mixed"]:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--ui-chip-color) 14%, transparent);
+  color: color-mix(in srgb, var(--ui-chip-color) 55%, var(--text-primary));
+}
+
 /* The icon follows the label colour and sizes with the icon scale. */
 .ui-chip__icon {
   display: inline-flex;

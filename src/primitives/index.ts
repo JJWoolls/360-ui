@@ -44,7 +44,7 @@ export type { FilterPillsProps, FilterPillOption, FilterPillsSize } from "./Filt
 // wrapping row of them, multi (T[]) or single (T | null). Use these for on/off
 // rows that are NOT list filters; filters stay on FilterPills.
 export { ToggleChip } from "./ToggleChip/ToggleChip";
-export type { ToggleChipProps, ToggleChipSize } from "./ToggleChip/ToggleChip";
+export type { ToggleChipProps, ToggleChipSize, ToggleChipState } from "./ToggleChip/ToggleChip";
 export { ChipGroup } from "./ChipGroup/ChipGroup";
 export type {
   ChipGroupProps,

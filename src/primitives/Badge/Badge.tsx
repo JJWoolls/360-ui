@@ -26,9 +26,10 @@ import "./Badge.css";
  * word to say is not a badge — it is a dot, a stripe or a toned value, and
  * those are fine, they are just not this component.
  *
- * NOT this component: jb-dash's filter pills. Those are clickable controls with
- * on/off states — they get their own FilterChip primitive and are supposed to
- * look heavier. Don't fold them in here.
+ * NOT this component: clickable on/off pills. A Badge only says something; a
+ * pill you press is a control. A row that filters a view is FilterPills; an
+ * on/off pill that sets a value is ToggleChip, or ChipGroup for a row of them.
+ * Don't fold either into Badge.
  */
 
 export type BadgeTone = "brand" | "danger" | "warn" | "info" | "violet" | "muted";
