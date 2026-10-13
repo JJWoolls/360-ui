@@ -8,3 +8,9 @@
   align-items: center;
   gap: calc(var(--s1) * var(--ui-space-scale, 1));
 }
+
+/* A touch row spaces chips further apart, so a finger aimed at one chip does
+   not land on its neighbour. */
+.ui-chips[data-size="touch"] {
+  gap: calc(var(--s2) * var(--ui-space-scale, 1));
+}

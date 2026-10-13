@@ -19,7 +19,7 @@ import "./ToggleChip.css";
  * the brand hue, the same as an uncoloured FilterPill.
  */
 
-export type ToggleChipSize = "sm" | "md";
+export type ToggleChipSize = "sm" | "md" | "touch";
 
 export interface ToggleChipProps {
   /** Pressed state — drives aria-pressed and the tinted look. */
@@ -31,8 +31,21 @@ export interface ToggleChipProps {
   children: ReactNode;
   /** Identity colour — any CSS colour string. Omitted = brand. */
   color?: string;
-  /** "md" (default) for ordinary screens, "sm" for modals and dense boards. */
+  /**
+   * "md" (default) for ordinary screens, "sm" for modals and dense boards,
+   * "touch" for a surface a FINGER uses (a kiosk or bench screen): 44px tall
+   * (--touch-target, the Button's and Input's touch floor, so they line up),
+   * 16px type, and a long label ends in an ellipsis instead of widening the
+   * chip. A prop, not a `pointer: coarse` query, for the Input's reason: a
+   * touch surface is a layout decision its page already makes.
+   */
   size?: ToggleChipSize;
+  /**
+   * Fill the container's width — for chips laid in a CSS grid of tiles. The
+   * label packs to the leading edge and ends in an ellipsis when the cell is
+   * narrower than the text, so every tile in the grid is the same size.
+   */
+  fill?: boolean;
   disabled?: boolean;
   /** Leading icon, drawn in the label colour. */
   icon?: ReactNode;
@@ -47,6 +60,7 @@ export function ToggleChip({
   children,
   color,
   size = "md",
+  fill = false,
   disabled = false,
   icon,
   title,
@@ -67,6 +81,7 @@ export function ToggleChip({
       aria-label={ariaLabel}
       title={title}
       data-size={size}
+      data-fill={fill ? "" : undefined}
       data-coloured={color ? "" : undefined}
       disabled={disabled}
       style={style}

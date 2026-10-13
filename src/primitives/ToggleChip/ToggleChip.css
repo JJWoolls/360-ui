@@ -56,6 +56,41 @@
   min-height: calc(var(--s5) * var(--ui-space-scale, 1));
 }
 
+/* touch — the finger-sized chip. 44px tall (--touch-target, the same floor as
+ * the Button's and Input's touch size, so a chip grid and the touch controls
+ * beside it line up), grown with the space or type scale like the touch Input.
+ * 16px type matches the touch Input. max-width keeps a long label inside its
+ * container; the label then ends in an ellipsis (below) rather than spilling. */
+.ui-chip[data-size="touch"] {
+  max-width: 100%;
+  padding: calc(var(--s2) * var(--ui-space-scale, 1)) calc(var(--s3) * var(--ui-space-scale, 1));
+  font-size: max(16px, calc(16px * var(--ui-type-scale, 1)));
+  min-height: calc(var(--touch-target) * max(1, var(--ui-space-scale, 1), var(--ui-type-scale, 1)));
+  gap: calc(var(--s2) * var(--ui-space-scale, 1));
+}
+
+/* fill — the chip takes its cell's full width, for a CSS grid of tiles.
+ * Content packs to the leading edge (a column of names reads down one edge)
+ * and the label takes the rest of the row, so it truncates rather than
+ * pushing the cell wider. min-width: 0 is what lets a flex item shrink below
+ * its text width — the same move as the Button's align="start". */
+.ui-chip[data-fill] {
+  width: 100%;
+  justify-content: flex-start;
+  text-align: start;
+}
+
+.ui-chip[data-fill] .ui-chip__label,
+.ui-chip[data-size="touch"] .ui-chip__label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ui-chip[data-fill] .ui-chip__label {
+  flex: 1 1 auto;
+}
+
 .ui-chip:hover:not(:disabled) {
   background: var(--surface-hover);
   color: var(--text-secondary);
@@ -99,4 +134,9 @@
 .ui-chip[data-size="sm"] .ui-chip__icon > svg {
   width: calc(12px * var(--ui-icon-scale, 1));
   height: calc(12px * var(--ui-icon-scale, 1));
+}
+
+.ui-chip[data-size="touch"] .ui-chip__icon > svg {
+  width: calc(18px * var(--ui-icon-scale, 1));
+  height: calc(18px * var(--ui-icon-scale, 1));
 }
