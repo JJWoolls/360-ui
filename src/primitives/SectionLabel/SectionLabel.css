@@ -13,7 +13,8 @@
   margin: 0 0 calc(var(--s2) * var(--ui-space-scale, 1));
   padding: 0;
   font-family: var(--font);
-  font-size: calc(var(--text-sm) * var(--ui-type-scale, 1)); /* 14px */
+  /* --ui-section-label-size lets one surface resize its labels without a new variant. */
+  font-size: calc(var(--ui-section-label-size, var(--text-sm)) * var(--ui-type-scale, 1)); /* 14px */
   font-weight: var(--weight-semibold);
   line-height: 1.4;
   letter-spacing: 0.02em;
@@ -21,7 +22,13 @@
 }
 
 .ui-section-label[data-size="sm"] {
-  font-size: calc(var(--text-xs) * var(--ui-type-scale, 1)); /* 12px */
+  font-size: calc(var(--ui-section-label-size, var(--text-xs)) * var(--ui-type-scale, 1)); /* 12px */
+}
+
+/* strong: full-strength colour and bold, same size and spacing. */
+.ui-section-label[data-strong] {
+  font-weight: var(--weight-bold);
+  color: var(--text-primary);
 }
 
 /* With an action, the ROW carries the bottom gap and the label drops its own,
