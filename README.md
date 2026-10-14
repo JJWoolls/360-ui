@@ -272,6 +272,10 @@ foot of a narrow form or a phone screen.
   status) — muted and a step smaller.
 - `size="full"` fills the window less a small inset; head and footer stay put
   and the body scrolls. For boards, long grids and viewers only.
+- `size="screen"` is the whole window, edge to edge (no inset, radius or
+  border), safe areas padded in; head and footer stay put and the body
+  scrolls. For a full-screen work surface. A Modal or AlertDialog opened from
+  inside any modal sits a layer above it.
 - A notice with one answer is `AlertDialog` with `okLabel` and no `actions`:
   one primary button, no Cancel; Escape and the backdrop mean OK too.
 
@@ -591,6 +595,11 @@ An app paints its tables through the `--ui-table-*` properties declared in
   height and gets an invisible 44x44 tap area. A mouse never matches, so desktop
   is unchanged. An app that does not import `tokens.css` must define
   `--touch-target` itself.
+- **A screen built for fingers picks its size.** `size="touch"` (44px) on
+  `Button`, `ToggleChip`/`ChipGroup` and `Input`; `size="bench"` (56px, 16px
+  type, 20px icons, square when icon-only) on `Button` and
+  `ToggleChip`/`ChipGroup` for a full-screen workbench. `--bench-target`
+  overrides the 56px.
 - **React 18 surface only.** The LMS runs React 18 and the Workspace app runs
   19. Nothing in here may use an API that only exists in 19, until the LMS is
   upgraded.

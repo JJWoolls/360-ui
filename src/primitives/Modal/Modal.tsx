@@ -1,9 +1,10 @@
 "use client";
 
-import { useCallback, useEffect, useId, useRef } from "react";
+import { useCallback, useEffect, useId, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { scaleRootProps, useScale } from "../Scale/Scale";
+import { modalFrame, modalLayer, type ModalSize } from "./logic";
 import "./Modal.css";
 
 /**
@@ -74,8 +75,17 @@ interface ModalBase {
    * footer stay put and the body scrolls. `width` is ignored: the window is the
    * width. Omit for every ordinary dialog, which keeps its content-sized height
    * and top-anchored position.
+   *
+   * "screen" is the whole window, edge to edge: no inset, no rounded corners,
+   * no border — for a full-screen work surface (a tablet station) where a
+   * frame around the edge is wasted finger room and reads as "a box on top of
+   * the app" rather than the app. Head and footer stay put and the body
+   * scrolls, as with "full"; the device's safe areas (a notch, a home bar) are
+   * padded in so nothing sits under them. `width` is ignored. Everything else
+   * — focus trap, Escape, backdrop, stacking — is the same dialog, so a Modal
+   * or AlertDialog opened from inside it still lands on top.
    */
-  size?: "default" | "full";
+  size?: ModalSize;
   /**
    * Body padding. Off when the content brings its own edge-to-edge layout — a
    * full-bleed table or a list that needs to touch the sides. The head and the
@@ -170,16 +180,18 @@ export function Modal({
   const id = useId();
   const titleId = `${id}-title`;
   const subtitleId = `${id}-subtitle`;
-  const full = size === "full";
+  const scale = useScale();
+  const frame = modalFrame(size, width, !!scale);
   const showSubtitle = subtitle != null && title != null && !bare;
   const dialogRef = useRef<HTMLDivElement>(null);
-  // The overlay is portalled out of any <Scale>, so it carries the scale itself.
-  const scale = useScale();
+  // How many modals were already open under this one — sets its layer.
+  const [depth, setDepth] = useState(0);
 
   // Register in the stack while open, so Escape can find the top.
   useEffect(() => {
     if (!open) return;
     stack.push(id);
+    setDepth(stack.length - 1);
     return () => {
       const i = stack.lastIndexOf(id);
       if (i !== -1) stack.splice(i, 1);
@@ -271,9 +283,11 @@ export function Modal({
   return createPortal(
     <div
       className="ui-modal-overlay"
-      {...scaleRootProps(scale)}
+      // The overlay is portalled out of any <Scale>, so it carries the scale
+      // itself — and, when nested, a layer above the modal that opened it.
+      {...scaleRootProps(scale, depth > 0 ? { zIndex: modalLayer(depth) } : undefined)}
       data-tone={backdropTone}
-      data-size={full ? "full" : undefined}
+      data-size={frame.dataSize}
       // mousedown, not click: a click that STARTS inside the dialog and ends on
       // the backdrop (a drag across a text selection) must not close it.
       onMouseDown={(e) => {
@@ -284,16 +298,12 @@ export function Modal({
         className="ui-modal"
         // Overrides the stylesheet's max-width only when a caller asked. No
         // width prop means no inline style at all, so the house 460 stands.
-        // A full-size dialog is as wide as the window allows, so a width
-        // passed alongside it is ignored rather than fighting the stylesheet.
-        // Under a Scale the caller's width scales with the house 460.
-        style={
-          width == null || full
-            ? undefined
-            : { maxWidth: scale ? `calc(${width}px * var(--ui-space-scale, 1))` : width }
-        }
+        // A full- or screen-size dialog is as wide as the window allows, so a
+        // width passed alongside it is ignored rather than fighting the
+        // stylesheet. Under a Scale the caller's width scales with the house 460.
+        style={frame.maxWidth == null ? undefined : { maxWidth: frame.maxWidth }}
         ref={dialogRef}
-        data-size={full ? "full" : undefined}
+        data-size={frame.dataSize}
         data-bare={bare || undefined}
         role="dialog"
         aria-modal="true"

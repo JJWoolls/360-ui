@@ -1,5 +1,6 @@
-/* Button — tokens only. Sizes are the three we actually use (xs for a control
- * inside a dense table row); a fourth is a conversation, not a one-off.
+/* Button — tokens only. Sizes are the ones we actually use (xs for a control
+ * inside a dense table row, touch and bench for finger-driven screens); one
+ * more is a conversation, not a one-off.
  *
  * THE RULE (Josh, 2026-07-16) — one tint recipe, and the BORDER is the
  * affordance:
@@ -104,6 +105,41 @@
 .ui-btn[data-size="touch"] .ui-btn-spinner {
   width: calc(18px * var(--ui-icon-scale, 1));
   height: calc(18px * var(--ui-icon-scale, 1));
+}
+
+/* bench — the step above touch, for a full-screen workbench where the screen
+   IS the tool and every control is aimed at from arm's length. 56px tall,
+   grown with the space or type scale exactly the way touch grows. 56px is not
+   a shared token: an app that does not import tokens.css would have to define
+   one, and a missing token makes the whole declaration invalid — so the
+   fallback is written here and --bench-target can still override it.
+   The type stays 16px (touch's floor) — a label that grows with the box reads
+   as a shout, and the extra height is for the finger, not the eye. Padding,
+   gap and radius step up one rung each so the box keeps md's proportions;
+   min-width keeps an icon-only bench button square, as touch does. Weight is
+   the base rule's semibold, like every size. */
+.ui-btn[data-size="bench"] {
+  gap: calc(var(--s3) * var(--ui-space-scale, 1));
+  padding: calc(var(--s3) * var(--ui-space-scale, 1)) calc(var(--s5) * var(--ui-space-scale, 1));
+  font-size: max(16px, calc(16px * var(--ui-type-scale, 1)));
+  line-height: 1.25;
+  border-radius: var(--radius-lg);
+  min-height: calc(var(--bench-target, 56px) * max(1, var(--ui-space-scale, 1), var(--ui-type-scale, 1)));
+  min-width: calc(var(--bench-target, 56px) * max(1, var(--ui-space-scale, 1), var(--ui-type-scale, 1)));
+}
+
+/* Icon-only: the box's padding would make it wider than tall, so it drops to
+   the vertical padding on every side and min-width squares it. :has() keeps
+   the component from having to tell the stylesheet; where :has() is missing
+   the button is a little wider, never smaller. */
+.ui-btn[data-size="bench"]:not(:has(.ui-btn-label)) {
+  padding: calc(var(--s3) * var(--ui-space-scale, 1));
+}
+
+.ui-btn[data-size="bench"] .ui-btn-icon,
+.ui-btn[data-size="bench"] .ui-btn-spinner {
+  width: calc(20px * var(--ui-icon-scale, 1));
+  height: calc(20px * var(--ui-icon-scale, 1));
 }
 
 /* ---- touch — the 44px finger tap, automatic on a touch screen -------------

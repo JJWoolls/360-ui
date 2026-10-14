@@ -28,7 +28,7 @@ export type { ToggleChipState } from "./logic";
  * tint behind a dashed border — and a press from it hands onToggle `true`.
  */
 
-export type ToggleChipSize = "sm" | "md" | "touch";
+export type ToggleChipSize = "sm" | "md" | "touch" | "bench";
 
 export interface ToggleChipProps {
   /**
@@ -50,6 +50,8 @@ export interface ToggleChipProps {
    * 16px type, and a long label ends in an ellipsis instead of widening the
    * chip. A prop, not a `pointer: coarse` query, for the Input's reason: a
    * touch surface is a layout decision its page already makes.
+   * "bench" is the step above touch for a full-screen workbench: 56px tall,
+   * the Button's bench step, so a chip row and a bench button bar line up.
    */
   size?: ToggleChipSize;
   /**

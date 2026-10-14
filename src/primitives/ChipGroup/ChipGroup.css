@@ -14,3 +14,9 @@
 .ui-chips[data-size="touch"] {
   gap: calc(var(--s2) * var(--ui-space-scale, 1));
 }
+
+/* Bench chips are bigger targets aimed from further off; the gap grows a rung
+   with them. */
+.ui-chips[data-size="bench"] {
+  gap: calc(var(--s3) * var(--ui-space-scale, 1));
+}

@@ -23,8 +23,15 @@ export type ButtonVariant = "primary" | "secondary" | "ghost" | "danger";
  * ToggleChip's "touch", so the two line up. A prop because a touch surface is
  * a layout decision the page makes; the coarse-pointer floor in Button.css
  * still covers sm / md on any touch device without it.
+ * "bench" — one step above touch, for a full-screen workbench a person stands
+ * at and works with gloved or busy hands: 56px tall, 16px semibold type, a
+ * 20px icon, and room around the label. Touch is the floor for a finger;
+ * bench is the size a whole screen of controls is built from when the screen
+ * IS the tool. Same colour routes as every other size — size and colour never
+ * interact. ToggleChip has the same step, so a chip row and a button bar on
+ * that screen line up.
  */
-export type ButtonSize = "xs" | "sm" | "md" | "touch";
+export type ButtonSize = "xs" | "sm" | "md" | "touch" | "bench";
 
 /**
  * Where the content sits along the button.

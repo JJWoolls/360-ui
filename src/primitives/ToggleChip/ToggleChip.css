@@ -69,6 +69,19 @@
   gap: calc(var(--s2) * var(--ui-space-scale, 1));
 }
 
+/* bench — the Button's bench step (56px, --bench-target with the same written
+ * fallback, grown the same way), so a chip row beside a bench button bar
+ * lines up. Type stays touch's 16px; padding and radius step up one rung. The
+ * label truncates exactly as touch's does. */
+.ui-chip[data-size="bench"] {
+  max-width: 100%;
+  padding: calc(var(--s3) * var(--ui-space-scale, 1)) calc(var(--s4) * var(--ui-space-scale, 1));
+  font-size: max(16px, calc(16px * var(--ui-type-scale, 1)));
+  border-radius: var(--radius);
+  min-height: calc(var(--bench-target, 56px) * max(1, var(--ui-space-scale, 1), var(--ui-type-scale, 1)));
+  gap: calc(var(--s2) * var(--ui-space-scale, 1));
+}
+
 /* fill — the chip takes its cell's full width, for a CSS grid of tiles.
  * Content packs to the leading edge (a column of names reads down one edge)
  * and the label takes the rest of the row, so it truncates rather than
@@ -81,7 +94,8 @@
 }
 
 .ui-chip[data-fill] .ui-chip__label,
-.ui-chip[data-size="touch"] .ui-chip__label {
+.ui-chip[data-size="touch"] .ui-chip__label,
+.ui-chip[data-size="bench"] .ui-chip__label {
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -155,4 +169,9 @@
 .ui-chip[data-size="touch"] .ui-chip__icon > svg {
   width: calc(18px * var(--ui-icon-scale, 1));
   height: calc(18px * var(--ui-icon-scale, 1));
+}
+
+.ui-chip[data-size="bench"] .ui-chip__icon > svg {
+  width: calc(20px * var(--ui-icon-scale, 1));
+  height: calc(20px * var(--ui-icon-scale, 1));
 }

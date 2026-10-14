@@ -33,7 +33,7 @@ export interface ChipGroupOption<T> {
 
 interface ChipGroupBase<T> {
   options: readonly ChipGroupOption<T>[];
-  /** Every chip's size; "touch" also widens the gap between chips for fingers. */
+  /** Every chip's size; "touch" and "bench" also widen the gap between chips for fingers. */
   size?: ToggleChipSize;
   /** Names the row for assistive tech (role="group"). */
   ariaLabel?: string;

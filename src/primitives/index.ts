@@ -143,6 +143,7 @@ export type { ToasterProps, ToastOptions, ToastApi } from "./Toast/Toaster";
 
 export { Modal } from "./Modal/Modal";
 export type { ModalProps, ModalTone } from "./Modal/Modal";
+export type { ModalSize } from "./Modal/logic";
 
 // The alert family — one card, one colour per kind (danger, warn, info,
 // success), placed four ways: Toaster in the corner for things that need no

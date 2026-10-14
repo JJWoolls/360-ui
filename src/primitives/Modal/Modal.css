@@ -209,3 +209,44 @@
   align-self: stretch;
   max-height: none;
 }
+
+/* size="screen" — the whole window, edge to edge. A full-screen work surface
+   (a tablet station) wants every pixel for content and none for a frame: no
+   inset, no radius, no border, no shadow, no max-width. The overlay keeps its
+   backdrop paint only so the page behind never flashes through while the
+   dialog mounts.
+
+   Height is the window's — 100vh first, then 100dvh where supported, so a
+   phone or tablet's browser chrome does not push the footer under its own
+   toolbar. The device's safe areas (a notch, a rounded corner, a home bar)
+   are padded INTO the overlay rather than the dialog, so the dialog's own
+   head, body and footer keep their ordinary padding and simply sit inside the
+   usable area. env() falls back to 0 on a device without them.
+
+   The min-height: 0 chain is what makes the body the only thing that scrolls:
+   the dialog is a flex column the overlay's height, head and footer are
+   flex: none, and the body is flex: 1 with min-height: 0 (its base rule) —
+   without the zero a flex child refuses to shrink below its content and the
+   footer is pushed off the screen. */
+.ui-modal-overlay[data-size="screen"] {
+  --ui-modal-top: 0px;
+  align-items: stretch;
+  height: 100vh;
+  height: 100dvh;
+  padding:
+    env(safe-area-inset-top, 0px)
+    env(safe-area-inset-right, 0px)
+    env(safe-area-inset-bottom, 0px)
+    env(safe-area-inset-left, 0px);
+}
+
+.ui-modal[data-size="screen"] {
+  width: 100%;
+  max-width: none;
+  height: 100%;
+  max-height: none;
+  min-height: 0;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+}
