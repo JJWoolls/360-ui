@@ -40,9 +40,15 @@ import "./StatusTabs.css";
  * so a mixed row ("All" plus coloured entries) works without extra props. The
  * colour only shows on the selected tab; unselected tabs stay neutral so the
  * track still reads as one control with one answer.
+ *
+ * BENCH SIZE is for a screen that IS the tool, used from arm's length: the
+ * tabs are the main way to move between the bench's work queues, so they
+ * fill the row (each an equal share) and stand finger-tall, and the count
+ * becomes a bubble big enough to read across the bench. Only the box and the
+ * count change; semantics, keyboard and colour are the same at every size.
  */
 
-export type StatusTabsSize = "sm" | "md";
+export type StatusTabsSize = "sm" | "md" | "bench";
 
 export interface StatusTabItem<T extends string = string> {
   value: T;
@@ -59,7 +65,9 @@ export interface StatusTabsProps<T extends string = string> {
   /** The selected tab's value. */
   value: T;
   onChange: (value: T) => void;
-  /** "sm" for dense boards, "md" (default) for ordinary screens. */
+  /** "sm" for dense boards, "md" (default) for ordinary screens, "bench" for
+   *  a full-screen finger-driven workbench: tall tabs that share the row width
+   *  evenly, with the count drawn as a bubble. */
   size?: StatusTabsSize;
   /** Names the row for assistive tech — the tabs have no visible heading. */
   "aria-label"?: string;

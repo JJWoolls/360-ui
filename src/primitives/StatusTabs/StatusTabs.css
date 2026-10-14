@@ -64,6 +64,38 @@
   min-height: calc((var(--s5) - var(--s1)) * var(--ui-space-scale, 1));
 }
 
+/* bench — the finger-sized row for a full-screen workbench, where the screen
+ * IS the tool and the tabs are aimed at from arm's length (Button's bench, one
+ * step up). The track stops hugging its tabs and fills the row; each tab takes
+ * an equal share (flex: 1 1 0), so the targets are as wide as the screen
+ * allows and do not shift as counts change. 64px tall — a tab row is the
+ * bench's primary navigation, so it sits a step above Button's 56px bench
+ * and reads as the row the buttons serve — grown with the space or type scale
+ * exactly the way Button's touch and bench sizes grow. --bench-tab-target can
+ * override it; the fallback is written in so an app without tokens.css still
+ * gets a valid declaration. The label steps up to 18px: unlike a button label,
+ * a tab label is read from across the bench to know where you are. */
+.ui-status-tabs[data-size="bench"] {
+  display: flex;
+  width: 100%;
+  gap: calc(var(--s2) * var(--ui-space-scale, 1));
+  padding: calc(var(--s1) * var(--ui-space-scale, 1));
+  border-radius: var(--radius-lg);
+}
+
+.ui-status-tabs[data-size="bench"] .ui-status-tab {
+  flex: 1 1 0;
+  min-width: 0;
+  justify-content: center;
+  gap: calc(var(--s3) * var(--ui-space-scale, 1));
+  padding: calc(var(--s2) * var(--ui-space-scale, 1)) calc(var(--s4) * var(--ui-space-scale, 1));
+  font-size: max(18px, calc(18px * var(--ui-type-scale, 1)));
+  line-height: 1.25;
+  border-width: 2px;
+  border-radius: var(--radius);
+  min-height: calc(var(--bench-tab-target, 64px) * max(1, var(--ui-space-scale, 1), var(--ui-type-scale, 1)));
+}
+
 .ui-status-tab:hover {
   background: var(--surface-hover);
   color: var(--text-primary);
@@ -119,4 +151,24 @@
 
 .ui-status-tab[aria-selected="true"] .ui-status-tab__count {
   opacity: 0.85;
+}
+
+/* BENCH COUNT — a bubble, not a muted trailing number: on a workbench the
+ * count is how many jobs wait in that queue, read at a glance from a step
+ * back, so it gets its own ground and a size above the label. The ground is a
+ * wash of currentColor, so one rule serves every state: secondary grey on an
+ * unselected tab (and still visible on its hover surface), the brand or the
+ * item's own hue on the selected one, where label and bubble read as one
+ * unit. min-width keeps one- and two-digit counts the same width. */
+.ui-status-tabs[data-size="bench"] .ui-status-tab__count {
+  min-width: 2em;
+  padding: 0.1em 0.45em;
+  border-radius: var(--radius);
+  background: color-mix(in srgb, currentColor 14%, transparent);
+  font-size: 1.1em;
+  font-weight: var(--weight-bold);
+  line-height: 1.3;
+  text-align: center;
+  opacity: 1;
+  box-sizing: border-box;
 }
