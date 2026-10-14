@@ -221,3 +221,12 @@ export type { DateRange, DateRangePreset, DateRangePresetKey, PresetRangeOptions
 // ExportButton — the one "Export CSV" control; pair it with downloadCsv.
 export { ExportButton } from "./ExportButton/ExportButton";
 export type { ExportButtonProps } from "./ExportButton/ExportButton";
+
+// Stepper — the bench count control: two 56px buttons around a rolling number,
+// no text input (the number is a keyboard-drivable spinbutton). For counts
+// entered standing at a shelf; clampStepperValue / stepStepperValue are its
+// arithmetic.
+export { Stepper } from "./Stepper/Stepper";
+export type { StepperProps } from "./Stepper/Stepper";
+export { clampStepperValue, stepStepperValue, stepperGlyphs } from "./Stepper/logic";
+export type { StepperBounds, StepperGlyph } from "./Stepper/logic";

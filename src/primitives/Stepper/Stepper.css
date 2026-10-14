@@ -1,0 +1,97 @@
+/* Stepper — minus, rolling number, plus. Bench size only: the buttons are the
+   kit Button at size="bench" (56px via --bench-target), and the number box is
+   the same height so the three sit on one line. Everything grows with Scale
+   the way the bench button does. */
+
+.ui-stepper {
+  --ui-stepper-h: calc(var(--bench-target, 56px) * max(1, var(--ui-space-scale, 1), var(--ui-type-scale, 1)));
+  display: inline-flex;
+  align-items: center;
+  gap: calc(var(--s2, 8px) * var(--ui-space-scale, 1));
+  font-family: var(--font, inherit);
+}
+
+.ui-stepper-value {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  height: var(--ui-stepper-h);
+  min-width: calc(var(--ui-stepper-h) * 1.4);
+  padding: 0 calc(var(--s3, 12px) * var(--ui-space-scale, 1));
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg, 12px);
+  background: var(--surface-inset);
+  color: var(--text-primary);
+  cursor: default;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.ui-stepper-value:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--brand) 60%, transparent);
+  outline-offset: 2px;
+}
+
+.ui-stepper[data-disabled] .ui-stepper-value {
+  color: var(--text-disabled);
+}
+
+/* The digits: one line, tabular so the box does not twitch as they roll. */
+.ui-stepper-digits {
+  --ui-stepper-cell: 1.15em;
+  display: inline-flex;
+  font-size: max(28px, calc(28px * var(--ui-type-scale, 1)));
+  font-weight: var(--weight-semibold, 600);
+  font-variant-numeric: tabular-nums;
+  line-height: var(--ui-stepper-cell);
+}
+
+/* A window one digit tall; the strip inside holds 0-9 stacked and slides. */
+.ui-stepper-cell {
+  display: inline-block;
+  height: var(--ui-stepper-cell);
+  overflow: hidden;
+}
+
+.ui-stepper-strip {
+  display: flex;
+  flex-direction: column;
+  transition: transform 220ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  will-change: transform;
+}
+
+.ui-stepper-strip > span {
+  display: block;
+  height: var(--ui-stepper-cell);
+  text-align: center;
+}
+
+.ui-stepper-unit {
+  margin-top: -2px;
+  font-size: max(12px, calc(12px * var(--ui-type-scale, 1)));
+  line-height: 1.2;
+  color: var(--text-tertiary);
+}
+
+/* The marks are the whole label, so they draw a step larger than a bench
+   button's 20px icon. */
+.ui-stepper .ui-btn[data-size="bench"] .ui-btn-icon {
+  width: calc(24px * var(--ui-icon-scale, 1));
+  height: calc(24px * var(--ui-icon-scale, 1));
+}
+
+.ui-stepper .ui-btn-icon svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* No roll for anyone who asked for less motion: the number just changes.
+   Stated here because the kit cannot assume an app's base stylesheet. */
+@media (prefers-reduced-motion: reduce) {
+  .ui-stepper-strip {
+    transition: none;
+  }
+}

@@ -360,6 +360,28 @@ Single-select; for any-of-these filtering use `FilterPills`.
 The reasoning is written at the top of
 `src/primitives/StatusTabs/StatusTabs.tsx`.
 
+## Stepper
+
+A bench count control: a 56px minus, the number, a 56px plus. No text input.
+
+```tsx
+<Stepper label="Nitrile Gloves L" value={count} onChange={setCount} min={0} max={99} unit="boxes" />
+```
+
+- `label` is required: it names the number and the two buttons
+  ("Decrease Nitrile Gloves L"); override with `decrementLabel` /
+  `incrementLabel`.
+- `min` defaults to 0, `max` to none, `step` to 1. A button disables at its
+  bound; `onChange` only ever gets a clamped value.
+- The number is a `role="spinbutton"`: arrows step, Page Up/Down step ten,
+  Home/End jump to the bounds. It never opens an on-screen keyboard.
+- Each digit rolls to its value (a 0–9 strip with a transform transition);
+  reduced motion gets the number with no roll.
+- The buttons are `Button size="bench"`, so they follow `--bench-target` and
+  `Scale` like every bench control.
+
+The reasoning is written at the top of `src/primitives/Stepper/Stepper.tsx`.
+
 ## SectionTabs
 
 One underline strip of links across a multi-page section: `SectionTabs`. For
