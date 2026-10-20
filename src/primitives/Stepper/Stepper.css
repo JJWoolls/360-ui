@@ -88,6 +88,74 @@
   height: 100%;
 }
 
+/* Typeable mode (opt-in). The box is the same box; the number is a real text
+   field laid over the digits row. Idle, the field's own text is transparent
+   and the rolling digits show through; with focus the digits hide and the
+   typed text shows. The I-beam says "you can type here". */
+.ui-stepper[data-typeable] .ui-stepper-value {
+  cursor: text;
+}
+
+.ui-stepper[data-typeable] .ui-stepper-value:focus-within {
+  outline: 2px solid color-mix(in srgb, var(--brand) 60%, transparent);
+  outline-offset: 2px;
+  border-color: var(--brand);
+}
+
+.ui-stepper-field {
+  position: relative;
+  display: inline-flex;
+}
+
+.ui-stepper-sizer {
+  visibility: hidden;
+  white-space: pre;
+}
+
+.ui-stepper-input {
+  position: absolute;
+  inset: 0;
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: transparent;
+  caret-color: var(--text-primary);
+  font: inherit;
+  font-size: max(28px, calc(28px * var(--ui-type-scale, 1)));
+  font-weight: var(--weight-semibold, 600);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.15em;
+  text-align: center;
+  cursor: text;
+  /* The box is user-select: none; Safari would carry that into the field. */
+  user-select: text;
+  -webkit-user-select: text;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.ui-stepper-value[data-editing] .ui-stepper-input {
+  color: var(--text-primary);
+}
+
+.ui-stepper-input::selection {
+  background: color-mix(in srgb, var(--brand) 35%, transparent);
+}
+
+.ui-stepper-input:disabled {
+  cursor: default;
+}
+
+.ui-stepper[data-typeable][data-disabled] .ui-stepper-value {
+  cursor: default;
+}
+
 /* No roll for anyone who asked for less motion: the number just changes.
    Stated here because the kit cannot assume an app's base stylesheet. */
 @media (prefers-reduced-motion: reduce) {

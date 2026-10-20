@@ -362,11 +362,22 @@ The reasoning is written at the top of
 
 ## Stepper
 
-A bench count control: a 56px minus, the number, a 56px plus. No text input.
+A bench count control: a 56px minus, the number, a 56px plus. No text input
+unless `typeable` asks for one.
 
 ```tsx
 <Stepper label="Nitrile Gloves L" value={count} onChange={setCount} min={0} max={99} unit="boxes" />
+<Stepper typeable label="Nitrile Gloves L" value={count} onChange={setCount} />
 ```
+
+- `typeable` (opt-in, default off): tap the number to type it. It becomes a
+  numeric text field (`inputMode="numeric"`, or `"decimal"` for a fractional
+  step) with everything selected on focus, so the first digit replaces the
+  old count. It commits on blur or Enter, snapped to `step` and clamped to
+  `min`/`max`; a blank or non-number puts the old value back; Escape reverts
+  (inside a `Modal`, the first Escape reverts and the next closes the window).
+  Up/Down and Page Up/Down still step; Left/Right/Home/End move the caret.
+  The field is the `role="spinbutton"`. The digits still roll while idle.
 
 - `label` is required: it names the number and the two buttons
   ("Decrease Nitrile Gloves L"); override with `decrementLabel` /

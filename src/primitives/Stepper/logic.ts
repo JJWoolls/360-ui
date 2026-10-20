@@ -31,6 +31,53 @@ export function stepStepperValue(value: number, times: number, bounds: StepperBo
   return d === 0 ? next : Number(next.toFixed(d));
 }
 
+/** The value as plain text at the step's precision ("3", "2.5"). */
+export function formatStepperValue(value: number, step = 1): string {
+  const d = decimalsOf(step);
+  return d === 0 ? String(Math.round(value)) : value.toFixed(d);
+}
+
+/**
+ * Snap a typed value onto the step grid (counted from min, or 0 with no
+ * floor), then clamp it. 7 with step 5 from 0 -> 5; 8 -> 10.
+ */
+export function snapStepperValue(value: number, bounds: StepperBounds): number {
+  const base = Number.isFinite(bounds.min) ? bounds.min : 0;
+  const snapped = bounds.step > 0 ? base + Math.round((value - base) / bounds.step) * bounds.step : value;
+  const next = clampStepperValue(snapped, bounds);
+  const d = decimalsOf(bounds.step);
+  return d === 0 ? next : Number(next.toFixed(d));
+}
+
+/**
+ * What the typed text commits to, or null when it is not a number (blank, a
+ * lone "-" or "."), in which case the field reverts to the value it had.
+ * Accepts a real minus sign and thousands commas.
+ */
+export function parseStepperText(text: string, bounds: StepperBounds): number | null {
+  const t = text.trim().replace(/[−–]/g, "-").replace(/,/g, "");
+  if (t === "" || t === "-" || t === "." || t === "-.") return null;
+  const n = Number(t);
+  if (!Number.isFinite(n)) return null;
+  return snapStepperValue(n, bounds);
+}
+
+/**
+ * Keep only what could be part of a number while typing: digits, a "-" when
+ * the floor is below zero, a "." when the step is fractional.
+ */
+export function filterStepperText(text: string, bounds: Pick<StepperBounds, "min" | "step">): string {
+  const allowMinus = bounds.min < 0;
+  const allowDot = decimalsOf(bounds.step) > 0;
+  let out = "";
+  for (const ch of text.replace(/[−–]/g, "-")) {
+    if (ch >= "0" && ch <= "9") out += ch;
+    else if (ch === "-" && allowMinus && out === "") out += ch;
+    else if (ch === "." && allowDot && !out.includes(".")) out += ch;
+  }
+  return out;
+}
+
 export type StepperGlyph =
   | { kind: "digit"; digit: number; key: string }
   | { kind: "char"; char: string; key: string };
@@ -41,9 +88,7 @@ export type StepperGlyph =
  * a tens column, instead of every column re-mounting.
  */
 export function stepperGlyphs(value: number, step = 1): StepperGlyph[] {
-  const d = decimalsOf(step);
-  const text = d === 0 ? String(Math.round(value)) : value.toFixed(d);
-  const chars = [...text];
+  const chars = [...formatStepperValue(value, step)];
   return chars.map((ch, i) => {
     const key = `p${chars.length - 1 - i}`;
     return ch >= "0" && ch <= "9"

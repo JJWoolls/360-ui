@@ -223,10 +223,19 @@ export { ExportButton } from "./ExportButton/ExportButton";
 export type { ExportButtonProps } from "./ExportButton/ExportButton";
 
 // Stepper — the bench count control: two 56px buttons around a rolling number,
-// no text input (the number is a keyboard-drivable spinbutton). For counts
-// entered standing at a shelf; clampStepperValue / stepStepperValue are its
-// arithmetic.
+// no text input by default (the number is a keyboard-drivable spinbutton);
+// `typeable` opts in to tapping the number to type it. For counts entered
+// standing at a shelf; clampStepperValue / stepStepperValue /
+// parseStepperText are its arithmetic.
 export { Stepper } from "./Stepper/Stepper";
 export type { StepperProps } from "./Stepper/Stepper";
-export { clampStepperValue, stepStepperValue, stepperGlyphs } from "./Stepper/logic";
+export {
+  clampStepperValue,
+  stepStepperValue,
+  stepperGlyphs,
+  formatStepperValue,
+  snapStepperValue,
+  parseStepperText,
+  filterStepperText,
+} from "./Stepper/logic";
 export type { StepperBounds, StepperGlyph } from "./Stepper/logic";
