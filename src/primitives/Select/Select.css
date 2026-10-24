@@ -297,3 +297,25 @@
   font-size: calc(var(--text-base) * var(--ui-type-scale, 1));
   text-align: center;
 }
+
+/* ---- touch — the 44px finger tap on a phone or iPad -----------------------
+ * The trigger keeps its 36px (28px sm) box so it still lines up with the Input
+ * beside it in a form row; on a touch screen it gets the full 44x44 TAP AREA
+ * from an invisible ::before centred on it — the Button's xs recipe. Same
+ * `pointer: coarse` query as the Button: a mouse never matches, so a desktop
+ * looks and behaves exactly as before. */
+@media (pointer: coarse) {
+  .ui-select-trigger {
+    position: relative;
+  }
+
+  .ui-select-trigger::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: max(100%, var(--touch-target));
+    height: max(100%, var(--touch-target));
+    transform: translate(-50%, -50%);
+  }
+}

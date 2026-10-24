@@ -185,8 +185,12 @@
 }
 
 /* Actions bottom-right, primary last — the caller passes them in that order. */
+/* flex-wrap: a footer with several actions (Update, Approve, Close, Save) is
+   wider than a phone; the buttons wrap onto a second line, right-aligned,
+   instead of pushing Save off the edge. A footer that fits is unchanged. */
 .ui-modal-foot {
   display: flex;
+  flex-wrap: wrap;
   justify-content: flex-end;
   gap: calc(var(--s2) * var(--ui-space-scale, 1));
   flex: none;

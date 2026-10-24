@@ -127,3 +127,13 @@
   opacity: 0.75;
   font-variant-numeric: tabular-nums;
 }
+
+/* ---- touch — the 44px finger tap on a phone or iPad -----------------------
+ * Same as StatusTabs: the sm and md pills grow to the touch floor on a touch
+ * screen (the row wraps), the way Button sm/md grow. A mouse never matches. */
+@media (pointer: coarse) {
+  .ui-pills[data-size="md"] .ui-pill,
+  .ui-pills[data-size="sm"] .ui-pill {
+    min-height: var(--touch-target);
+  }
+}

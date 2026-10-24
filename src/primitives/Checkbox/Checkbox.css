@@ -84,3 +84,24 @@
   gap: 0;
   margin-inline-start: 0;
 }
+
+/* ---- touch — the 44px finger tap on a phone or iPad -----------------------
+ * A 16px box inside a short label row is a hard target for a finger. On a
+ * touch screen the whole control gets a 44x44 TAP AREA from an invisible
+ * ::before (the Button's xs recipe), so a list of tick boxes keeps its row
+ * height while each box becomes hittable. A mouse never matches. */
+@media (pointer: coarse) {
+  .ui-check {
+    position: relative;
+  }
+
+  .ui-check::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: max(100%, var(--touch-target));
+    height: max(100%, var(--touch-target));
+    transform: translate(-50%, -50%);
+  }
+}

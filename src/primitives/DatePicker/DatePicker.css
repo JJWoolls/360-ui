@@ -222,3 +222,23 @@
   cursor: not-allowed;
   opacity: 0.6; /* MiniCalendar disabled opacity 0.6, exact */
 }
+
+/* ---- touch — the 44px finger tap on a phone or iPad -----------------------
+ * Same as the Select trigger: the 36px field keeps lining up with its form
+ * row, and a touch screen gets a 44x44 tap area from an invisible ::before.
+ * A mouse never matches. */
+@media (pointer: coarse) {
+  .ui-datefield {
+    position: relative;
+  }
+
+  .ui-datefield::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: max(100%, var(--touch-target));
+    height: max(100%, var(--touch-target));
+    transform: translate(-50%, -50%);
+  }
+}

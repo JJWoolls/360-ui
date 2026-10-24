@@ -175,3 +175,15 @@
   width: calc(20px * var(--ui-icon-scale, 1));
   height: calc(20px * var(--ui-icon-scale, 1));
 }
+
+/* ---- touch floor on a phone or iPad ---------------------------------------
+ * The "touch" and "bench" SIZES stay a page's layout choice (see the size
+ * prop). This is only the floor: on a touch screen an md or sm chip is at
+ * least 44px tall so a finger can hit it, the way Button sm/md grow. A mouse
+ * never matches, so desktop chips are unchanged. */
+@media (pointer: coarse) {
+  .ui-chip[data-size="md"],
+  .ui-chip[data-size="sm"] {
+    min-height: var(--touch-target);
+  }
+}

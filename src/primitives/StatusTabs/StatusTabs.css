@@ -172,3 +172,16 @@
   opacity: 1;
   box-sizing: border-box;
 }
+
+/* ---- touch — the 44px finger tap on a phone or iPad -----------------------
+ * The sm and md tab rows (about 20 and 28px) are too small for a finger. On a
+ * touch screen they GROW to the touch floor, the way Button sm/md grow: the
+ * row is the page's navigation, so a taller row is the right trade, and the
+ * track already wraps on a narrow screen. bench is above the floor already.
+ * A mouse never matches, so desktop rows are unchanged. */
+@media (pointer: coarse) {
+  .ui-status-tabs[data-size="md"] .ui-status-tab,
+  .ui-status-tabs[data-size="sm"] .ui-status-tab {
+    min-height: var(--touch-target);
+  }
+}
