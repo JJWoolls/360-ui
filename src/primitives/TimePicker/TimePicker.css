@@ -1,0 +1,44 @@
+/* TimePicker — the time list inside the house Modal. Tokens only. The field
+   reuses DateField's trigger classes (ui-datefield*), so the two read as one
+   family; DatePicker.css holds those (imported by TimePicker.tsx). */
+
+.ui-timepicker-list {
+  max-height: calc(300px * var(--ui-space-scale, 1)); /* mockup list height */
+  overflow-y: auto;
+  padding: calc(var(--s2) * var(--ui-space-scale, 1));
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-default) transparent;
+}
+
+.ui-timepicker-item {
+  display: block;
+  width: 100%;
+  padding: calc(7px * var(--ui-space-scale, 1)) calc(var(--s3) * var(--ui-space-scale, 1)); /* mockup 7px 12px */
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  font-family: var(--font);
+  font-size: calc(var(--text-sm) * var(--ui-type-scale, 1));
+  text-align: left;
+  cursor: pointer;
+  transition:
+    background-color var(--transition),
+    color var(--transition);
+}
+
+.ui-timepicker-item:hover:not([data-selected]) {
+  background: var(--surface-hover);
+  color: var(--text-primary);
+}
+
+.ui-timepicker-item[data-selected] {
+  background: var(--brand);
+  color: var(--brand-on);
+  font-weight: var(--weight-bold);
+}
+
+.ui-timepicker-item:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: -2px;
+}

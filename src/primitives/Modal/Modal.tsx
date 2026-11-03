@@ -59,6 +59,12 @@ interface ModalBase {
   /** Buttons. Bottom-right, primary LAST — the eye lands there. */
   footer?: ReactNode;
   /**
+   * Small icon-only controls in the head, just left of the X — a view toggle
+   * (the date picker's second month), not an action. Give each an aria-label.
+   * Drawn only when there is a title, like the head itself.
+   */
+  headActions?: ReactNode;
+  /**
    * How wide the dialog is allowed to get, in px. Omit and it stays at the house
    * 460, which is right for a confirm and wrong for a form.
    *
@@ -168,6 +174,7 @@ export function Modal({
   iconTone = "brand",
   subtitle,
   footer,
+  headActions,
   width,
   size = "default",
   padded = true,
@@ -339,6 +346,7 @@ export function Modal({
                     </span>
                   )}
                 </span>
+                {headActions != null && <span className="ui-modal-head-actions">{headActions}</span>}
                 <button
                   type="button"
                   className="ui-modal-x"

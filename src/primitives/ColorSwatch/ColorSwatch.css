@@ -1,0 +1,94 @@
+/* ColorSwatchPicker — round swatches in a wrapping row. Tokens only; each
+   swatch's own colour arrives as --ui-swatch (a var() for a tone, a hex for
+   a custom colour). */
+
+.ui-swatches {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: calc(var(--s2) * var(--ui-space-scale, 1));
+  --ui-swatch-size: calc(var(--s5) * var(--ui-icon-scale, 1));
+}
+
+.ui-swatches[data-size="sm"] {
+  gap: calc(var(--s1) * var(--ui-space-scale, 1));
+  --ui-swatch-size: calc(var(--s4) * var(--ui-icon-scale, 1));
+}
+
+.ui-swatch {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: var(--ui-swatch-size);
+  height: var(--ui-swatch-size);
+  padding: 0;
+  border: 2px solid transparent;
+  border-radius: 50%;
+  background: var(--ui-swatch, transparent);
+  background-clip: padding-box;
+  color: var(--text-tertiary);
+  cursor: pointer;
+  transition:
+    transform var(--transition),
+    box-shadow var(--transition);
+}
+
+.ui-swatch:hover:not(:disabled) {
+  transform: scale(1.08);
+}
+
+.ui-swatch:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+
+.ui-swatch:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* The chosen swatch: a ring in the page ground, then one in its own colour. */
+.ui-swatch[data-on] {
+  box-shadow:
+    0 0 0 2px var(--surface),
+    0 0 0 4px var(--ui-swatch, var(--text-secondary));
+}
+
+/* Custom (unset) and None draw as dashed outlines holding a glyph. */
+.ui-swatch[data-kind="custom"]:not([data-on]),
+.ui-swatch[data-kind="none"] {
+  background: transparent;
+  border: 1px dashed var(--border-strong);
+}
+
+.ui-swatch svg {
+  width: 60%;
+  height: 60%;
+}
+
+/* The system colour chooser's input: present for .click(), never seen. */
+.ui-swatch-native {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  border: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.ui-swatches {
+  position: relative;
+}
+
+@media (pointer: coarse) {
+  .ui-swatch::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: max(100%, var(--touch-target));
+    height: max(100%, var(--touch-target));
+    transform: translate(-50%, -50%);
+  }
+}

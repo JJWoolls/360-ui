@@ -144,6 +144,43 @@
   color: var(--text-secondary);
 }
 
+.ui-modal-head-actions {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: calc(var(--s1) * var(--ui-space-scale, 1));
+}
+
+/* A head toggle uses the X's recipe; aria-pressed lights it brand. */
+.ui-modal-head-actions > button {
+  display: grid;
+  place-items: center;
+  padding: calc(var(--s1) * var(--ui-space-scale, 1));
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  color: var(--text-hint);
+  cursor: pointer;
+  transition:
+    background-color var(--transition),
+    color var(--transition);
+}
+
+.ui-modal-head-actions > button:hover {
+  background: var(--surface-hover);
+  color: var(--text-primary);
+}
+
+.ui-modal-head-actions > button[aria-pressed="true"] {
+  background: rgba(var(--brand-rgb), 0.15);
+  color: var(--brand);
+}
+
+.ui-modal-head-actions > button svg {
+  width: calc(var(--s4) * var(--ui-icon-scale, 1));
+  height: calc(var(--s4) * var(--ui-icon-scale, 1));
+}
+
 .ui-modal-x {
   display: grid;
   place-items: center;

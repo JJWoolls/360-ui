@@ -34,8 +34,11 @@ export interface ListRowProps {
    * "#1168" in a call site is indistinguishable from a 4-digit hex color —
    * lint flags it, correctly, and the honest fix is to stop writing colors and
    * ids in the same shape rather than to teach the linter to look away.
+   *
+   * Optional: a list whose records have no number a person reads (practices,
+   * people) leaves it out and the row starts at the marker or the title.
    */
-  id: string;
+  id?: string;
   /** The type marker's glyph. An inert <svg> using currentColor. */
   icon?: ReactNode;
   /** Tints the icon tile. The type vocabulary (Bug/Feature/Future) maps here. */
@@ -45,7 +48,18 @@ export interface ListRowProps {
   badge?: ReactNode;
   /** Right-aligned, hidden under 640px. Who filed it, usually. */
   meta?: string;
+  /** A second, quieter line under the title — a city, a code. Truncates. */
+  subtitle?: string;
+  /**
+   * The row is the current choice in a pick-one list (a picker window, a
+   * master list beside its detail). Brand edge and tint, and aria-pressed so
+   * a screen reader hears which row is on. Leave undefined on a plain
+   * navigation list — that row is not a toggle and must not announce as one.
+   */
+  selected?: boolean;
   onClick?: () => void;
+  /** Double-click — a picker's "choose and close". */
+  onDoubleClick?: () => void;
 }
 
 export function ListRow({
@@ -55,17 +69,34 @@ export function ListRow({
   title,
   badge,
   meta,
+  subtitle,
+  selected,
   onClick,
+  onDoubleClick,
 }: ListRowProps) {
   return (
-    <button type="button" className="ui-row" onClick={onClick}>
-      <span className="ui-row-id">#{id}</span>
+    <button
+      type="button"
+      className="ui-row"
+      aria-pressed={selected}
+      data-selected={selected || undefined}
+      onClick={onClick}
+      onDoubleClick={onDoubleClick}
+    >
+      {id != null && <span className="ui-row-id">#{id}</span>}
       {icon && (
         <span className="ui-row-tile" data-tone={iconTone} aria-hidden="true">
           {icon}
         </span>
       )}
-      <span className="ui-row-title">{title}</span>
+      {subtitle ? (
+        <span className="ui-row-text">
+          <span className="ui-row-title">{title}</span>
+          <span className="ui-row-subtitle">{subtitle}</span>
+        </span>
+      ) : (
+        <span className="ui-row-title">{title}</span>
+      )}
       {badge}
       {meta && <span className="ui-row-meta">{meta}</span>}
     </button>

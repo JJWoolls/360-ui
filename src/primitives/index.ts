@@ -177,7 +177,47 @@ export type { StateFrameSize } from "./StateFrame/StateFrame";
 export { AsyncBoundary } from "./AsyncBoundary/AsyncBoundary";
 export type { AsyncBoundaryProps } from "./AsyncBoundary/AsyncBoundary";
 
-export { DatePicker, DateField, type DatePickerProps, type DateFieldProps } from "./DatePicker/DatePicker";
+// DatePicker / DateField — the house date pop-up: one month, two in the last
+// 7 days of a month, a head toggle for the second month any time.
+export {
+  DatePicker,
+  DateField,
+  inMonthEndWindow,
+  type DatePickerProps,
+  type DateFieldProps,
+  type DatePickerMonths,
+} from "./DatePicker/DatePicker";
+
+// TimePicker / TimeField — the same pop-up for a time: one scrolling list,
+// 7:00 AM to 5:00 PM in 30-minute steps by default.
+export { TimePicker, TimeField } from "./TimePicker/TimePicker";
+export type { TimePickerProps, TimeFieldProps } from "./TimePicker/TimePicker";
+export { timeOptions, formatTime12 } from "./TimePicker/logic";
+
+// RadioGroup — one choice from a short list that stays on screen.
+export { RadioGroup } from "./Radio/Radio";
+export type { RadioGroupProps, RadioOption } from "./Radio/Radio";
+
+// NumberInput — the house typed-number field (the Input with a number contract).
+export { NumberInput } from "./NumberInput/NumberInput";
+export type { NumberInputProps } from "./NumberInput/NumberInput";
+export { parseNumberText, formatNumberText, clampNumber } from "./NumberInput/logic";
+
+// ColorSwatchPicker — a stored colour picked as a house tone name (or a custom
+// hex). Read the stored value back with swatchCss / swatchTint, never by hand.
+export { ColorSwatchPicker } from "./ColorSwatch/ColorSwatchPicker";
+export type { ColorSwatchPickerProps } from "./ColorSwatch/ColorSwatchPicker";
+export {
+  SWATCH_TONES,
+  SWATCH_TONE_LABELS,
+  parseSwatchValue,
+  isSwatchTone,
+  isHexColor,
+  swatchCss,
+  swatchTint,
+  swatchLabel,
+} from "./ColorSwatch/logic";
+export type { SwatchTone, SwatchValue } from "./ColorSwatch/logic";
 
 export { OptionField } from "./OptionPicker/OptionField";
 export type { OptionFieldProps } from "./OptionPicker/OptionField";

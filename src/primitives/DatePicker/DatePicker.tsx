@@ -21,10 +21,8 @@ import "./DatePicker.css";
  * The day-cell hover comes from date-time-picker.tsx:353 because MiniCalendar
  * defines none — it is the only day-cell hover value the LMS has.
  *
- * The preset row is ported from the follow-up picker popover shared by
- * cs-dash/jb-dash (app/cs-dash/page.tsx:986): Today / Tomorrow / 3 Days /
- * 1 Week / 2 Weeks, rendered with the house Button per the one-tint-recipe
- * rule rather than the popover's inline styles.
+ * The preset row is the confirmed house picker's: Today / Tomorrow / 1 Week /
+ * 2 Weeks, rendered with the house Button per the one-tint-recipe rule.
  *
  * The field pattern (grayed "Not Set" -> brand when set) is Josh's standing
  * field rule; the optional `warnPast` danger state ports the "overdue" tone
@@ -38,6 +36,13 @@ import "./DatePicker.css";
  * bounding month. Both kinds of limit apply together; the tighter one wins.
  * ISO strings compare correctly as plain strings, so no Date math is needed.
  *
+ * ONE MONTH OR TWO (Josh 2026-11-03, the house picker ruling). The window
+ * opens on one month, except in the last 7 days of a month, when it opens on
+ * this month and next side by side so a date a few days out never needs a
+ * page turn. The head's two-calendar toggle shows or hides the second month
+ * at any time. With one month, the next month's days that fill the last row
+ * are pickable (muted); with two, the panels carry no spill-over days.
+ *
  * Value contract: ISO date string "YYYY-MM-DD" or null. No Date objects at
  * the boundary — same contract as the LMS pickers.
  */
@@ -48,14 +53,16 @@ const MONTHS = [
 ];
 const DAYS = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
 
-/** Presets ported verbatim from cs-dash/jb-dash "Set follow-up" popover. */
+/** The quick-set row of the confirmed house picker (2026-11-03). */
 const PRESETS: { label: string; days: number }[] = [
   { label: "Today", days: 0 },
   { label: "Tomorrow", days: 1 },
-  { label: "3 Days", days: 3 },
   { label: "1 Week", days: 7 },
   { label: "2 Weeks", days: 14 },
 ];
+
+/** In the last N days of a month the picker opens on two months. */
+const TWO_MONTH_WINDOW = 7;
 
 const pad2 = (n: number) => String(n).padStart(2, "0");
 const toIso = (y: number, m: number, d: number) => `${y}-${pad2(m + 1)}-${pad2(d)}`;
@@ -76,6 +83,19 @@ function shiftDays(iso: string, delta: number): string {
   return toIso(dt.getFullYear(), dt.getMonth(), dt.getDate());
 }
 
+/** Is `iso` in the last TWO_MONTH_WINDOW days of its month? */
+export function inMonthEndWindow(iso: string): boolean {
+  const { y, m, d } = fromIso(iso);
+  const dim = new Date(y, m + 1, 0).getDate();
+  return d > dim - TWO_MONTH_WINDOW;
+}
+
+type YM = { y: number; m: number };
+const nextYM = (v: YM): YM => (v.m === 11 ? { y: v.y + 1, m: 0 } : { y: v.y, m: v.m + 1 });
+const prevYM = (v: YM): YM => (v.m === 0 ? { y: v.y - 1, m: 11 } : { y: v.y, m: v.m - 1 });
+const ymKey = (v: YM) => v.y * 12 + v.m;
+const monthOf = (iso: string): YM => { const b = fromIso(iso); return { y: b.y, m: b.m }; };
+
 /** Display format ported from date-time-picker.tsx:270 — "Jul 17, 2026". */
 function formatDisplay(iso: string): string {
   const { y, m, d } = fromIso(iso);
@@ -87,32 +107,54 @@ function formatDisplay(iso: string): string {
 }
 
 interface Cell {
-  iso: string;
+  /** null = a blank slot (two-month view: no spill-over days). */
+  iso: string | null;
   day: number;
   current: boolean;
 }
 
-/** 42-cell month grid — ported logic from MiniCalendar / date-time-picker. */
-function buildCells(year: number, month: number): Cell[] {
+/**
+ * One month panel. Single month: the previous month's days lead in and the
+ * next month's days fill ONLY the last row, all pickable. Two months: those
+ * slots are blank, since the neighbouring panel already shows those days.
+ */
+export function buildCells(year: number, month: number, blankAdjacent = false): Cell[] {
   const firstDow = new Date(year, month, 1).getDay();
   const daysInMonth = new Date(year, month + 1, 0).getDate();
   const daysInPrev = new Date(year, month, 0).getDate();
+  const pm = month === 0 ? 11 : month - 1;
+  const py = month === 0 ? year - 1 : year;
+  const nm = month === 11 ? 0 : month + 1;
+  const ny = month === 11 ? year + 1 : year;
   const cells: Cell[] = [];
   for (let i = firstDow - 1; i >= 0; i--) {
-    const pm = month === 0 ? 11 : month - 1;
-    const py = month === 0 ? year - 1 : year;
-    cells.push({ iso: toIso(py, pm, daysInPrev - i), day: daysInPrev - i, current: false });
+    cells.push(blankAdjacent
+      ? { iso: null, day: 0, current: false }
+      : { iso: toIso(py, pm, daysInPrev - i), day: daysInPrev - i, current: false });
   }
   for (let d = 1; d <= daysInMonth; d++) {
     cells.push({ iso: toIso(year, month, d), day: d, current: true });
   }
-  const remaining = 42 - cells.length;
+  const remaining = (7 - (cells.length % 7)) % 7;
   for (let d = 1; d <= remaining; d++) {
-    const nm = month === 11 ? 0 : month + 1;
-    const ny = month === 11 ? year + 1 : year;
-    cells.push({ iso: toIso(ny, nm, d), day: d, current: false });
+    cells.push(blankAdjacent
+      ? { iso: null, day: 0, current: false }
+      : { iso: toIso(ny, nm, d), day: d, current: false });
   }
   return cells;
+}
+
+/**
+ * Which month the window opens on. Two months at month end open on THIS
+ * month when the value is unset or within this month or next, so today and
+ * the next few days sit side by side; otherwise the value's month, else today's.
+ */
+export function openingView(value: string | null, today: string, two: boolean, auto: boolean): YM {
+  const base = monthOf(value ?? today);
+  if (!(two && auto)) return base;
+  const t = monthOf(today);
+  const gap = ymKey(base) - ymKey(t);
+  return gap === 0 || gap === 1 ? t : base;
 }
 
 /* Inert glyphs (Modal/Button expect currentColor <svg>; no icon lib here). */
@@ -120,6 +162,13 @@ const CalendarGlyph = (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" focusable="false">
     <rect x="3" y="4" width="18" height="18" rx="2" />
     <path d="M16 2v4M8 2v4M3 10h18" />
+  </svg>
+);
+const TwoMonthsGlyph = (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" focusable="false">
+    <rect x="1.5" y="5" width="10" height="15" rx="1.5" />
+    <rect x="12.5" y="5" width="10" height="15" rx="1.5" />
+    <path d="M1.5 9.5h10M12.5 9.5h10M4.5 3v3M8.5 3v3M15.5 3v3M19.5 3v3" />
   </svg>
 );
 const ChevronLeftGlyph = (
@@ -138,6 +187,8 @@ const XGlyph = (
   </svg>
 );
 
+export type DatePickerMonths = "auto" | "one" | "two";
+
 export interface DatePickerProps {
   open: boolean;
   onClose: () => void;
@@ -146,7 +197,7 @@ export interface DatePickerProps {
   onChange: (value: string | null) => void;
   /** Modal title. */
   title?: string;
-  /** Quick-set row (Today / Tomorrow / ...). Ported from cs-dash; on by default. */
+  /** Quick-set row (Today / Tomorrow / 1 Week / 2 Weeks). On by default. */
   presets?: boolean;
   disablePast?: boolean;
   disableFuture?: boolean;
@@ -154,6 +205,11 @@ export interface DatePickerProps {
   min?: string;
   /** Latest selectable date, "YYYY-MM-DD", inclusive. */
   max?: string;
+  /**
+   * "auto" (default): two months in the last 7 days of a month, else one.
+   * "one" / "two" fix the opening view. The head toggle works in every mode.
+   */
+  months?: DatePickerMonths;
 }
 
 /** Clamp an ISO date into [min, max]; either bound may be absent. */
@@ -174,15 +230,18 @@ export function DatePicker({
   disableFuture = false,
   min,
   max,
+  months = "auto",
 }: DatePickerProps) {
   const today = todayIso();
   // Open on the value, else today — pulled inside the bounds so a picker
   // limited to last year does not open on an all-disabled month.
   const startIso = () => value ?? clampIso(todayIso(), min, max);
-  const [view, setView] = useState(() => {
-    const b = fromIso(startIso());
-    return { y: b.y, m: b.m };
-  });
+  const openTwo = () => (months === "auto" ? inMonthEndWindow(todayIso()) : months === "two");
+  const startView = (two: boolean) =>
+    openingView(value, clampIso(todayIso(), min, max), two, months === "auto");
+
+  const [two, setTwo] = useState(openTwo);
+  const [view, setView] = useState<YM>(() => startView(openTwo()));
   // Roving keyboard focus, as an ISO date. Arrows move it; Enter selects it.
   const [focusIso, setFocusIso] = useState<string>(startIso);
   const gridRef = useRef<HTMLDivElement>(null);
@@ -191,12 +250,12 @@ export function DatePicker({
   // Re-sync to the value (or today) every time the picker opens.
   useEffect(() => {
     if (!open) return;
-    const base = startIso();
-    const b = fromIso(base);
-    setView({ y: b.y, m: b.m });
-    setFocusIso(base);
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- startIso reads only value/min/max
-  }, [open, value, min, max]);
+    const t = openTwo();
+    setTwo(t);
+    setView(startView(t));
+    setFocusIso(startIso());
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- reads only value/min/max/months
+  }, [open, value, min, max, months]);
 
   // After an arrow move, put real DOM focus on the newly focused day.
   useEffect(() => {
@@ -205,7 +264,7 @@ export function DatePicker({
     gridRef.current
       ?.querySelector<HTMLButtonElement>(`[data-iso="${focusIso}"]`)
       ?.focus();
-  }, [open, focusIso, view]);
+  }, [open, focusIso, view, two]);
 
   const isDisabled = (iso: string) =>
     (disablePast && iso < today) ||
@@ -218,25 +277,20 @@ export function DatePicker({
     onClose();
   };
 
-  const prevMonth = () =>
-    setView(v => (v.m === 0 ? { y: v.y - 1, m: 11 } : { y: v.y, m: v.m - 1 }));
-  const nextMonth = () =>
-    setView(v => (v.m === 11 ? { y: v.y + 1, m: 0 } : { y: v.y, m: v.m + 1 }));
+  const panels: YM[] = two ? [view, nextYM(view)] : [view];
+  const lastView = panels[panels.length - 1];
+  const panelCells = panels.map(p => buildCells(p.y, p.m, two));
+  const visible = new Set<string>();
+  panelCells.forEach(cs => cs.forEach(c => { if (c.iso) visible.add(c.iso); }));
 
   // Ported nav clamping from MiniCalendar.tsx:50-51.
   // A bound stops navigation at the month that contains it.
-  const atOrBefore = (iso: string) => {
-    const b = fromIso(iso);
-    return view.y < b.y || (view.y === b.y && view.m <= b.m);
-  };
-  const atOrAfter = (iso: string) => {
-    const b = fromIso(iso);
-    return view.y > b.y || (view.y === b.y && view.m >= b.m);
-  };
   const prevDisabled =
-    (disablePast && atOrBefore(today)) || (min != null && atOrBefore(min));
+    (disablePast && ymKey(view) <= ymKey(monthOf(today))) ||
+    (min != null && ymKey(view) <= ymKey(monthOf(min)));
   const nextDisabled =
-    (disableFuture && atOrAfter(today)) || (max != null && atOrAfter(max));
+    (disableFuture && ymKey(lastView) >= ymKey(monthOf(today))) ||
+    (max != null && ymKey(lastView) >= ymKey(monthOf(max)));
 
   const onGridKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
     const delta =
@@ -245,19 +299,20 @@ export function DatePicker({
       e.key === "ArrowUp" ? -7 :
       e.key === "ArrowDown" ? 7 : 0;
     if (delta === 0) return; // Enter/Space select natively; Escape is Modal's.
+    if (!(e.target instanceof HTMLElement) || !e.target.classList.contains("ui-datepicker-day")) return;
     e.preventDefault();
     const next = shiftDays(focusIso, delta);
     if (isDisabled(next)) return; // clamp at a disabled boundary
-    const b = fromIso(next);
-    setView({ y: b.y, m: b.m });
+    // Page only when the day is not already on screen.
+    if (!visible.has(next)) {
+      const f = monthOf(next);
+      setView(ymKey(f) < ymKey(view) ? f : two ? prevYM(f) : f);
+    }
     setFocusIso(next);
     focusPending.current = true;
   };
 
-  const cells = buildCells(view.y, view.m);
-  const focusTarget = cells.some(c => c.iso === focusIso)
-    ? focusIso
-    : toIso(view.y, view.m, 1);
+  const focusTarget = visible.has(focusIso) ? focusIso : toIso(view.y, view.m, 1);
 
   const visiblePresets = PRESETS.filter(
     p => !(disableFuture && p.days > 0) && !(disablePast && p.days < 0) &&
@@ -270,6 +325,17 @@ export function DatePicker({
       onClose={onClose}
       title={title}
       icon={CalendarGlyph}
+      width={two ? 560 : undefined}
+      headActions={
+        <button
+          type="button"
+          aria-pressed={two}
+          aria-label="Show two months"
+          onClick={() => setTwo(t => !t)}
+        >
+          {TwoMonthsGlyph}
+        </button>
+      }
       footer={
         value != null ? (
           <Button variant="danger" size="sm" onClick={() => { onChange(null); onClose(); }}>
@@ -288,60 +354,73 @@ export function DatePicker({
         </div>
       )}
 
-      <div className="ui-datepicker-cal">
-        <div className="ui-datepicker-head">
-          <button
-            type="button"
-            className="ui-datepicker-nav"
-            aria-label="Previous Month"
-            onClick={prevMonth}
-            disabled={prevDisabled}
-          >
-            {ChevronLeftGlyph}
-          </button>
-          <span className="ui-datepicker-month">
-            {MONTHS[view.m]} {view.y}
-          </span>
-          <button
-            type="button"
-            className="ui-datepicker-nav"
-            aria-label="Next Month"
-            onClick={nextMonth}
-            disabled={nextDisabled}
-          >
-            {ChevronRightGlyph}
-          </button>
-        </div>
+      <div className="ui-datepicker-cals" ref={gridRef} onKeyDown={onGridKeyDown}>
+        {panels.map((p, i) => (
+          <div className="ui-datepicker-cal" key={`${p.y}-${p.m}`}>
+            <div className="ui-datepicker-head">
+              {i === 0 ? (
+                <button
+                  type="button"
+                  className="ui-datepicker-nav"
+                  aria-label="Previous Month"
+                  onClick={() => setView(prevYM)}
+                  disabled={prevDisabled}
+                >
+                  {ChevronLeftGlyph}
+                </button>
+              ) : (
+                <span className="ui-datepicker-nav-spacer" aria-hidden="true" />
+              )}
+              <span className="ui-datepicker-month">
+                {MONTHS[p.m]} {p.y}
+              </span>
+              {i === panels.length - 1 ? (
+                <button
+                  type="button"
+                  className="ui-datepicker-nav"
+                  aria-label="Next Month"
+                  onClick={() => setView(nextYM)}
+                  disabled={nextDisabled}
+                >
+                  {ChevronRightGlyph}
+                </button>
+              ) : (
+                <span className="ui-datepicker-nav-spacer" aria-hidden="true" />
+              )}
+            </div>
 
-        <div className="ui-datepicker-grid" ref={gridRef} onKeyDown={onGridKeyDown}>
-          {DAYS.map(d => (
-            <span key={d} className="ui-datepicker-dow" aria-hidden="true">
-              {d}
-            </span>
-          ))}
-          {cells.map(c => {
-            const disabled = isDisabled(c.iso);
-            const { y, m, d } = fromIso(c.iso);
-            return (
-              <button
-                key={c.iso}
-                type="button"
-                className="ui-datepicker-day"
-                data-iso={c.iso}
-                data-adjacent={c.current ? undefined : true}
-                data-today={c.iso === today || undefined}
-                data-selected={c.iso === value || undefined}
-                aria-label={`${MONTHS[m]} ${d}, ${y}`}
-                aria-current={c.iso === today ? "date" : undefined}
-                tabIndex={c.iso === focusTarget ? 0 : -1}
-                disabled={disabled}
-                onClick={() => pick(c.iso)}
-              >
-                {c.day}
-              </button>
-            );
-          })}
-        </div>
+            <div className="ui-datepicker-grid">
+              {DAYS.map(d => (
+                <span key={d} className="ui-datepicker-dow" aria-hidden="true">
+                  {d}
+                </span>
+              ))}
+              {panelCells[i].map((c, k) => {
+                if (c.iso == null) return <span key={`blank-${k}`} aria-hidden="true" />;
+                const iso = c.iso;
+                const { y, m, d } = fromIso(iso);
+                return (
+                  <button
+                    key={iso}
+                    type="button"
+                    className="ui-datepicker-day"
+                    data-iso={iso}
+                    data-adjacent={c.current ? undefined : true}
+                    data-today={iso === today || undefined}
+                    data-selected={iso === value || undefined}
+                    aria-label={`${MONTHS[m]} ${d}, ${y}`}
+                    aria-current={iso === today ? "date" : undefined}
+                    tabIndex={iso === focusTarget ? 0 : -1}
+                    disabled={isDisabled(iso)}
+                    onClick={() => pick(iso)}
+                  >
+                    {c.day}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        ))}
       </div>
     </Modal>
   );
@@ -369,6 +448,16 @@ export interface DateFieldProps {
   min?: string;
   /** Latest selectable date, "YYYY-MM-DD", inclusive. Passed to the picker. */
   max?: string;
+  /** Passed to the picker: one month, two, or "auto" (default). */
+  months?: DatePickerMonths;
+  /** id on the trigger button, so a FieldLabel htmlFor can point at it. */
+  id?: string;
+  /** Names the trigger when no FieldLabel points at it. */
+  ariaLabel?: string;
+  /** Opens the picker as soon as the field mounts (a grid cell editor). */
+  defaultOpen?: boolean;
+  /** Called after the picker closes, picked or not (a grid cell editor ends). */
+  onClose?: () => void;
 }
 
 export function DateField({
@@ -383,8 +472,13 @@ export function DateField({
   disableFuture,
   min,
   max,
+  months,
+  id,
+  ariaLabel,
+  defaultOpen = false,
+  onClose,
 }: DateFieldProps) {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(defaultOpen);
   const state: "empty" | "set" | "past" =
     value == null ? "empty" : warnPast && value < todayIso() ? "past" : "set";
 
@@ -392,6 +486,9 @@ export function DateField({
     <>
       <button
         type="button"
+        id={id}
+        aria-label={ariaLabel}
+        aria-haspopup="dialog"
         className="ui-datefield"
         data-state={state}
         disabled={disabled}
@@ -422,7 +519,10 @@ export function DateField({
       </button>
       <DatePicker
         open={open}
-        onClose={() => setOpen(false)}
+        onClose={() => {
+          setOpen(false);
+          onClose?.();
+        }}
         value={value}
         onChange={onChange}
         title={pickerTitle}
@@ -431,6 +531,7 @@ export function DateField({
         disableFuture={disableFuture}
         min={min}
         max={max}
+        months={months}
       />
     </>
   );

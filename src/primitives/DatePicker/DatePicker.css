@@ -113,11 +113,27 @@
   min-width: calc(60px * var(--ui-space-scale, 1)); /* cs-dash minWidth: 60 */
 }
 
+/* ---- Month panels: one, or two side by side (wraps on a phone) ---------- */
+
+.ui-datepicker-cals {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start;
+  gap: calc(var(--s3) * var(--ui-space-scale, 1));
+}
+
+/* Holds the nav button's footprint (14px glyph + 2 x 4px padding) on the
+   inner edges of a two-month view, so both month names stay centred. */
+.ui-datepicker-nav-spacer {
+  width: calc(22px * var(--ui-icon-scale, 1));
+  height: calc(22px * var(--ui-icon-scale, 1));
+}
+
 /* ---- Calendar panel (MiniCalendar.tsx:53) -------------------------------- */
 
 .ui-datepicker-cal {
   width: calc(240px * var(--ui-space-scale, 1)); /* MiniCalendar width: 240, exact */
-  margin: 0 auto;
   padding: calc(10px * var(--ui-space-scale, 1)); /* MiniCalendar padding: 10 — off scale, kept literal */
   background: var(--bg); /* LMS hsl(--background) #121212 = --bg, exact */
   border: 1px solid var(--border-default); /* LMS --border #2b2b2b -> #333333 nearest */
@@ -196,6 +212,11 @@
 
 /* The one dropdown-picker borrow: hover:bg-[hsl(--secondary)] (#262626 ->
    --surface-hover nearest). MiniCalendar has no hover at all. */
+.ui-datepicker-day:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 1px;
+}
+
 .ui-datepicker-day:hover:not(:disabled):not([data-selected]) {
   background: var(--surface-hover);
 }

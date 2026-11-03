@@ -1,0 +1,129 @@
+/* RadioGroup — buttons wearing role="radio". Tokens only; the Checkbox's
+   recipe with a round mark. */
+
+.ui-radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--s2) * var(--ui-space-scale, 1));
+}
+
+.ui-radio-group-label {
+  font-family: var(--font);
+  font-size: calc(var(--text-xs) * var(--ui-type-scale, 1));
+  font-weight: var(--weight-medium);
+  color: var(--text-secondary);
+}
+
+.ui-radio-options {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--s1) * var(--ui-space-scale, 1));
+}
+
+.ui-radio-group[data-direction="row"] .ui-radio-options {
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: calc(var(--s1) * var(--ui-space-scale, 1)) calc(var(--s4) * var(--ui-space-scale, 1));
+}
+
+.ui-radio {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: calc(var(--s2) * var(--ui-space-scale, 1));
+  padding: calc(var(--s1) * var(--ui-space-scale, 1)) calc(var(--s2) * var(--ui-space-scale, 1));
+  margin-inline-start: calc(var(--s2) * -1 * var(--ui-space-scale, 1)); /* optical: mark aligns to the grid */
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-family: var(--font);
+  font-size: calc(var(--text-xs) * var(--ui-type-scale, 1));
+  text-align: start;
+  cursor: pointer;
+  transition: background-color var(--transition);
+}
+
+.ui-radio:hover:not(:disabled) {
+  background: var(--surface-hover);
+}
+
+.ui-radio:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 1px;
+}
+
+.ui-radio:disabled {
+  cursor: not-allowed;
+  color: var(--text-disabled);
+}
+
+.ui-radio-dot {
+  position: relative;
+  flex: none;
+  /* centre the mark on the first line of the label */
+  margin-top: calc((1.4em - var(--s4) * var(--ui-icon-scale, 1)) / 2);
+  width: calc(var(--s4) * var(--ui-icon-scale, 1));
+  height: calc(var(--s4) * var(--ui-icon-scale, 1));
+  border: 1px solid var(--border-strong);
+  border-radius: 50%;
+  background: var(--surface-inset);
+  transition:
+    background-color var(--transition),
+    border-color var(--transition);
+}
+
+.ui-radio-dot[data-state="on"] {
+  border-color: var(--brand);
+  background: var(--brand);
+}
+
+.ui-radio-dot[data-state="on"]::after {
+  content: "";
+  position: absolute;
+  inset: 30%;
+  border-radius: 50%;
+  background: var(--brand-on);
+}
+
+.ui-radio:disabled .ui-radio-dot {
+  border-color: var(--border-default);
+}
+
+.ui-radio:disabled .ui-radio-dot[data-state="on"] {
+  background: var(--text-disabled);
+  border-color: var(--text-disabled);
+}
+
+.ui-radio-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.ui-radio-label {
+  font-weight: var(--weight-medium);
+  line-height: 1.4;
+}
+
+.ui-radio-desc {
+  color: var(--text-tertiary);
+  line-height: 1.4;
+}
+
+/* touch — the Checkbox's 44px invisible tap area */
+@media (pointer: coarse) {
+  .ui-radio {
+    position: relative;
+  }
+
+  .ui-radio::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: max(100%, var(--touch-target));
+    height: max(100%, var(--touch-target));
+    transform: translate(-50%, -50%);
+  }
+}

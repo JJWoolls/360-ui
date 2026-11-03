@@ -23,6 +23,18 @@
   border-color: var(--border-default);
 }
 
+.ui-row:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 1px;
+}
+
+/* selected — the current choice in a pick-one list: brand edge, brand tint. */
+.ui-row[data-selected],
+.ui-row[data-selected]:hover {
+  background: rgba(var(--brand-rgb), 0.1);
+  border-color: var(--brand);
+}
+
 /* Fixed box, left-justified: markers stay on one rail regardless of digits.
    flex: none or the id column collapses as soon as a title gets long. */
 .ui-row-id {
@@ -82,6 +94,25 @@
   min-width: 0;
   font-size: calc(var(--text-base) * var(--ui-type-scale, 1));
   font-weight: var(--weight-medium);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ui-row-text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.ui-row-text .ui-row-title {
+  flex: none;
+}
+
+.ui-row-subtitle {
+  font-size: calc(var(--text-xs) * var(--ui-type-scale, 1));
+  color: var(--text-tertiary);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
