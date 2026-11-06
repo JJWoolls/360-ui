@@ -127,7 +127,7 @@ export type { TableProps, TableColumn, TableRowKey } from "./Table/Table";
 
 // Pagination — the house 100-per-page rule (Josh, 2026-09-29). The Table uses
 // it by default; a list that is not a Table uses the hook and the controls.
-export { Pagination, usePagination, DEFAULT_PAGE_SIZE } from "./Pagination/Pagination";
+export { Pagination, usePagination, usePageSizeChoice, DEFAULT_PAGE_SIZE, PAGE_SIZE_OPTIONS } from "./Pagination/Pagination";
 export type { PaginationProps, PaginationState } from "./Pagination/Pagination";
 
 export { Tooltip } from "./Tooltip/Tooltip";

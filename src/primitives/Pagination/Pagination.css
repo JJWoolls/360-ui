@@ -22,6 +22,43 @@
   gap: calc(var(--s2) * var(--ui-space-scale, 1));
 }
 
+.ui-pagination-sizes {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--s1) * var(--ui-space-scale, 1));
+  margin-left: auto;
+}
+
+.ui-pagination-sizes-label {
+  font-size: calc(var(--text-sm) * var(--ui-type-scale, 1));
+  color: var(--text-hint);
+  margin-right: calc(var(--s1) * var(--ui-space-scale, 1));
+}
+
+.ui-pagination-size {
+  font: inherit;
+  font-size: calc(var(--text-sm) * var(--ui-type-scale, 1));
+  font-variant-numeric: tabular-nums;
+  color: var(--text-secondary);
+  background: transparent;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 2px calc(var(--s2) * var(--ui-space-scale, 1));
+  cursor: pointer;
+}
+
+.ui-pagination-size:hover {
+  color: var(--text-primary);
+  border-color: var(--border-default);
+}
+
+.ui-pagination-size[aria-pressed="true"] {
+  color: hsl(var(--primary));
+  background: rgba(var(--success-rgb, 62, 207, 142), 0.15);
+  border-color: rgba(var(--success-rgb, 62, 207, 142), 0.4);
+  cursor: default;
+}
+
 .ui-pagination-page {
   font-size: calc(var(--text-sm) * var(--ui-type-scale, 1));
   color: var(--text-secondary);

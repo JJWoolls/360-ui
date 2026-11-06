@@ -10,7 +10,7 @@ import type {
 import { Checkbox } from "../Checkbox/Checkbox";
 import { EmptyState } from "../EmptyState/EmptyState";
 import { Skeleton } from "../Loading/Loading";
-import { DEFAULT_PAGE_SIZE, Pagination, usePagination } from "../Pagination/Pagination";
+import { DEFAULT_PAGE_SIZE, Pagination, usePageSizeChoice, usePagination } from "../Pagination/Pagination";
 import "./Table.css";
 
 /**
@@ -130,8 +130,14 @@ export interface TableProps<T> {
   /** The identifying column stays put while the table scrolls sideways. */
   stickyFirstColumn?: boolean;
 
-  /** Rows per page. Defaults to the house 100; `null` turns paging off. */
+  /** Rows per page to start at. Defaults to the house 25; `null` turns paging
+      off. The reader can switch between 25 / 50 / 100 from the page controls. */
   pageSize?: number | null;
+  /** Names this table so the reader's rows-per-page choice is remembered in
+      this browser. Without it the choice lasts while the screen is open. */
+  pageSizeKey?: string;
+  /** Server mode: shows the rows picker; the caller refetches at the new size. */
+  onPageSizeChange?: (size: number) => void;
   /** SERVER PAGING: the total row count on the server. Setting it switches the
       Table to server mode — `rows` is taken as the current page, nothing is
       sliced, and the controls are driven by `page` / `onPageChange`. */
@@ -248,7 +254,9 @@ export function Table<T>({
   maxHeight,
   stickyHeader = false,
   stickyFirstColumn = false,
-  pageSize = DEFAULT_PAGE_SIZE,
+  pageSize: startSize = DEFAULT_PAGE_SIZE,
+  pageSizeKey,
+  onPageSizeChange,
   totalRows,
   page,
   onPageChange,
@@ -266,6 +274,10 @@ export function Table<T>({
 }: TableProps<T>) {
   const idBase = useId();
   const serverMode = totalRows !== undefined;
+  const [pageSize, choosePageSize] = usePageSizeChoice(
+    startSize,
+    serverMode ? undefined : pageSizeKey,
+  );
   const selecting = selectedKeys !== undefined || onSelectionChange !== undefined;
   const expanding = renderExpanded !== undefined;
 
@@ -305,7 +317,7 @@ export function Table<T>({
 
   // The reset key is the displayed keys in order plus the sort, not array
   // identity — most callers rebuild `rows` every render.
-  const resetKey = `${sortCol ?? ""}|${sortDir}|${ordered.map(rowKey).join("\n")}`;
+  const resetKey = `${pageSize ?? ""}|${sortCol ?? ""}|${sortDir}|${ordered.map(rowKey).join("\n")}`;
   const pager = usePagination(ordered, serverMode ? null : pageSize, resetKey);
 
   const serverSize = pageSize != null && pageSize > 0 ? pageSize : null;
@@ -634,6 +646,14 @@ export function Table<T>({
         total={paging.total}
         pageSize={paging.pageSize}
         onPage={paging.onPage}
+        onPageSize={
+          serverMode
+            ? onPageSizeChange
+            : (n) => {
+                choosePageSize(n);
+                onPageSizeChange?.(n);
+              }
+        }
       />
     </>
   );
