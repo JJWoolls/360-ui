@@ -7,7 +7,7 @@
 
 .ui-table {
   --ui-table-head-bg: var(--surface-raised);
-  --ui-table-head-fg: var(--text-tertiary);
+  --ui-table-head-fg: var(--text-secondary);
   --ui-table-head-hover: var(--text-primary);
   --ui-table-head-size: var(--text-xs);
   --ui-table-active: var(--brand);
@@ -19,6 +19,8 @@
   --ui-table-expanded-bg: var(--surface-inset);
   /* Checkbox / toggle column. 48px in both apps' scales. */
   --ui-table-util-w: calc(var(--s4) * 3 * var(--ui-space-scale, 1));
+  /* Vertical cell padding: 10px in both apps' scales, a little roomier than s2. */
+  --ui-table-pad-y: calc((var(--s2) + var(--s1) / 2) * var(--ui-space-scale, 1));
 }
 
 .ui-table-scroll {
@@ -47,12 +49,12 @@
   z-index: 20;
 }
 
+/* Headers are Title Case as written — never transformed or letter-spaced (the
+   house rule for every label; Josh 2026-11-06 on the Intake list). */
 .ui-table thead th {
-  padding: calc(var(--s2) * var(--ui-space-scale, 1)) calc(var(--s4) * var(--ui-space-scale, 1));
+  padding: var(--ui-table-pad-y) calc(var(--s4) * var(--ui-space-scale, 1));
   font-size: calc(var(--ui-table-head-size) * var(--ui-type-scale, 1));
-  font-weight: var(--weight-semibold);
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
+  font-weight: var(--weight-medium);
   text-align: left;
   color: var(--ui-table-head-fg);
   user-select: none;
@@ -76,7 +78,7 @@
 .ui-table-sort {
   display: block;
   width: 100%;
-  padding: calc(var(--s2) * var(--ui-space-scale, 1)) calc(var(--s4) * var(--ui-space-scale, 1));
+  padding: var(--ui-table-pad-y) calc(var(--s4) * var(--ui-space-scale, 1));
   background: none;
   border: none;
   font: inherit;
@@ -104,7 +106,7 @@
 }
 
 .ui-table tbody td {
-  padding: calc(var(--s2) * var(--ui-space-scale, 1)) calc(var(--s4) * var(--ui-space-scale, 1));
+  padding: var(--ui-table-pad-y) calc(var(--s4) * var(--ui-space-scale, 1));
 }
 
 .ui-table td[data-numeric] {
